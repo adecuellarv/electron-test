@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Pantalla 1</title>
+  <link rel="stylesheet" href="index.css" />
+  <link href="bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-12">
+      <h1>Video 1</h1>
+    </div>
+    <div class="col-12">
+      <div id="video">
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    function addElement(divid, content) {
+      document.getElementById(divid).innerHTML = content;
+    }
+    ipcRenderer.on('screen1:status', (e, statusScreen) => {
+      if (statusScreen === 1) {
+        addElement('video', `<video width="400" controls autoplay>
+                            <source src="1.webm" type="video/webm">
+                            Your browser does not support HTML video.
+                          </video>`);
+      }
+      if (statusScreen === 0) {
+        addElement('video', `<video width="400" controls autoplay>
+                            <source src="2.webm" type="video/webm">
+                            Your browser does not support HTML video.
+                          </video>`);
+      }
+    })
+
+
+  </script>
+</body>
+
+</html>

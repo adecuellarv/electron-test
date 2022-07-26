@@ -1,12 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Principal</title>
+  <link rel="stylesheet" href="index.css" />
+  <link href="bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-12">
+      <h1>Demo 2</h1>
+    </div>
+    <div class="col-10">
+      <label>Selecciona puerto</label>
+      <div class="input-group mb-3">
+        <select class="form-select" aria-label="Default select example" id="portNum">
+          <option value="COM1">COM1</option>
+          <option value="COM2">COM2</option>
+          <option value="COM3">COM3</option>
+          <option value="COM4">COM4</option>
+          <option value="COM5">COM5</option>
+          <option value="COM6">COM6</option>
+          <option value="COM7">COM7</option>
+          <option value="COM8">COM8</option>
+          <option value="COM9">COM9</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-success" id="btnSend">Enviar letra "o"</button>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 60px">
+    <div class="col-12">
+      <h1>Simular pantalla</h1>
+    </div>
+    <div class="col-6" style="text-align: left;">
+      <button type="button" class="btn btn-danger" id="btnWrong">Fallo</button>
+    </div>
+    <div class="col-6" style="text-align: right;">
+      <button type="button" class="btn btn-success" id="btnSuccess">Correcto</button>
+    </div>
+  </div>
+  <script>
+    const { ipcRenderer } = require('electron');
+    var portid = 'COM1';
+    let screen1 = '';
+
+    const button1 = document.getElementById('btnWrong');
+    button1.addEventListener('click', () => {
+      screen1 = 0;
+      ipcRenderer.send('screen1:status', screen1);
+    });
+
+    const button2 = document.getElementById('btnSuccess');
+    button2.addEventListener('click', () => {
+      screen1 = 1;
+      ipcRenderer.send('screen1:status', screen1);
+    });
+
+    const select = document.getElementById('portNum');
+    select.addEventListener("change", function () {
+      portid = select.value;
+      
+    });
+
+
+    const button3 = document.getElementById('btnSend');
+    button3.addEventListener('click', () => {
+      console.log('ejecutar-comando-shell', portid);
+    });
+
+  </script>
+</body>
+
 </html>
