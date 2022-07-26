@@ -46,6 +46,8 @@
   </div>
   <script>
     const { ipcRenderer } = require('electron');
+    const { exec } = require('child_process');
+
     var portid = 'COM1';
     let screen1 = '';
 
@@ -53,6 +55,17 @@
     button1.addEventListener('click', () => {
       screen1 = 0;
       ipcRenderer.send('screen1:status', screen1);
+
+      exec(`mode ${portid} BAUD=2400 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=on`, (error, stdout, stderr) => {
+        //exec(`start`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          alert('error al enviar info');
+          return;
+        } else {
+          exec(`set /p x="turnon_lights" <nul >\\\\.\\${portid}`);
+        }
+      });
     });
 
     const button2 = document.getElementById('btnSuccess');
@@ -64,14 +77,26 @@
     const select = document.getElementById('portNum');
     select.addEventListener("change", function () {
       portid = select.value;
-      
+
     });
 
 
     const button3 = document.getElementById('btnSend');
     button3.addEventListener('click', () => {
-      console.log('ejecutar-comando-shell', portid);
+      exec(`mode ${portid} BAUD=2400 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=on`, (error, stdout, stderr) => {
+        //exec(`start`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          alert('error al enviar info');
+          return;
+        } else {
+          exec(`set /p x="o" <nul >\\\\.\\${portid}`);
+        }
+      });
     });
+
+
+
 
   </script>
 </body>
