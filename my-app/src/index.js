@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 //const electronReload = require('electron-reload')
 const path = require('path');
 
@@ -37,6 +37,26 @@ const createWindow = () => {
 };
 
 const createSecondWindow = () => {
+  const displays = screen.getAllDisplays()
+  const externalDisplay = displays.find((display) => {
+    return display.bounds.x !== 0 || display.bounds.y !== 0
+  })
+
+  if (externalDisplay) {
+    screen1Window = new BrowserWindow({
+      x: externalDisplay.bounds.x + 50,
+      y: externalDisplay.bounds.y + 50,
+      title: "Video 1",
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    })
+    //screen1Window.loadURL('https://github.com')
+    screen1Window.loadFile(path.join(__dirname, 'video1.html'));
+  }
+  /*
   // Create the browser window.
   screen1Window = new BrowserWindow({
     width: 800,
@@ -53,7 +73,7 @@ const createSecondWindow = () => {
   screen1Window.loadFile(path.join(__dirname, 'video1.html'));
 
   // Open the DevTools.
-  //screen1Window.webContents.openDevTools();
+  //screen1Window.webContents.openDevTools();*/
 };
 
 // This method will be called when Electron has finished
