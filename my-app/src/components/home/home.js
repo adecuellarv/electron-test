@@ -1,6 +1,5 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const { ipcRenderer } = require('electron');
 const { exec } = require('child_process');
 
 const Home = () => {
