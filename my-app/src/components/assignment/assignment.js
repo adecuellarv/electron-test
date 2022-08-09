@@ -1,7 +1,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { exec } = require('child_process');
-const { useEffect, useState } = require('react');
+const { useState } = require('react');
 
 const Assignment = () => {
     const [teamBlue, setTeamBlue] = useState([]);
@@ -55,41 +55,42 @@ const Assignment = () => {
         }
     }
 
-    const saveBlue = () => {
-        localStorage.setItem("teamBlue", teamBlue);
-    };
-
-    const saveRed = () => {
-        localStorage.setItem("teamRed", teamRed);
-    };
-
     const start = () => {
-        const lteamBlue = localStorage.getItem("teamBlue");
-        const lteamRead = localStorage.getItem("teamRed");
-        if (lteamBlue && lteamBlue.length && lteamRead && lteamRead.length) {
 
+        if (teamBlue.length && teamRed.length) {
+            if (teamBlue.length <= 8 && teamRed.length <= 8) {
+                if (teamBlue.length === teamRed.length) {
+                    localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+                    localStorage.setItem("teamRed", JSON.stringify(teamRed));
+                    
+                } else {
+                    alert('Asegurate que la cantidad de jugadores sea la misma para ambos equipos');
+                }
+            } else {
+                alert('El máximo de jugadores es 8');
+            }
         } else alert('Selecciona posiciones de equipos');
     }
-
 
     return (
         <>
             <div className="container">
                 <div className="row">
-                    <button
-                        style={{
-                            position: 'absolute',
-                            top: 30
-                        }}
-                        onClick={start}
-                    >Comiencen</button>
+                    <div className="col-sm-12">
+                        <button
+                            style={{
+                                textAlign: 'center'
+                            }}
+                            onClick={start}
+                        >Comiencen</button>
+                    </div>
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6">
                                 <h1>Equipo azul</h1>
                             </div>
                             <div className="col-sm-6">
-                                <button onClick={saveBlue}>Guardar</button>
+
                             </div>
                         </div>
                         <div className="div-array">
@@ -114,7 +115,7 @@ const Assignment = () => {
                                 <h1>Equipo rojo</h1>
                             </div>
                             <div className="col-sm-6">
-                                <button onClick={saveRed}>Guardar</button>
+
                             </div>
                         </div>
                         <div className="div-array">
