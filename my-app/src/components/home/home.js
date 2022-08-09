@@ -4,19 +4,18 @@ const { exec } = require('child_process');
 
 const Home = () => {
     const test = () => {
-        exec('start chrome');
+        //exec('start chrome');
+        //alert('amonos');
     };
 
     return (
         <>
             <h1>Home</h1>
 
-            <button onClick={test}>Click me</button>
+            <a href="assignment.html">Comenzar</a>
         </>
     )
 };
-
-//export default Home;
 
 if (document.getElementById('home')) {
     ReactDOM.render(<Home />, document.getElementById('home'));
