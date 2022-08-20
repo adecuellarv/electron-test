@@ -1,18 +1,14 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-//const bg  = require("./img/bg.png");
-//import * as bg from './img/bg.png';
 //const { exec } = require('child_process');
 const bgimage = document.getElementById('bgimage');
 const boxcenter = document.getElementById('boxcenter');
 const buttonstart = document.getElementById('buttonstart');
 const Home = () => {
-    const height = window.innerHeight;
     const test = () => {
         //exec('start chrome');
         //alert('amonos');
     };
-    console.log('height', height)
     return (
         <div className="home-container"
             style={{

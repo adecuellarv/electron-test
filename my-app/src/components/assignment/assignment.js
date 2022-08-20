@@ -3,6 +3,8 @@ const ReactDOM = require('react-dom/client');
 const { exec } = require('child_process');
 const { useState } = require('react');
 
+const bgimage = document.getElementById('bgimage');
+const saveimage = document.getElementById('saveimage');
 const Assignment = () => {
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
@@ -73,21 +75,33 @@ const Assignment = () => {
     }
 
     return (
-        <>
+        <div
+            style={{
+                backgroundImage: `url(${bgimage?.src})`,
+                backgroundPosition: '100% 100%',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                position: 'relative',
+                width: '100%',
+                height: '100vh',
+            }}
+        >
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
-                        <button
+                        <img 
+                            onClick={start} 
+                            src={saveimage?.src} 
                             style={{
-                                textAlign: 'center'
+                                cursor: 'pointer'
                             }}
-                            onClick={start}
-                        >Comiencen</button>
+                        />
+
                     </div>
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6">
-                                <h1>Equipo azul</h1>
+                                <h1 style={{color: 'blue'}}>Equipo azul</h1>
                             </div>
                             <div className="col-sm-6">
 
@@ -112,7 +126,7 @@ const Assignment = () => {
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6">
-                                <h1>Equipo rojo</h1>
+                                <h1 style={{color: 'red'}}>Equipo rojo</h1>
                             </div>
                             <div className="col-sm-6">
 
@@ -136,7 +150,7 @@ const Assignment = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 };
 
