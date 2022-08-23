@@ -1,13 +1,22 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { exec } = require('child_process');
-const { useState } = require('react');
+const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage');
+const logo = document.getElementById('logo');
+const boxleft = document.getElementById('boxleft');
+const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
+
 const Assignment = () => {
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
+    const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
+    const [paddingTopContent, setPaddingTopContent] = useState(0);
+    const refBoxLeft = useRef(null);
+    const refLogo = useRef(null);
+    const refBtn = useRef(null);
 
     const saveChoice = (team, row, column) => {
         if (team === 1) {
@@ -74,6 +83,33 @@ const Assignment = () => {
         } else alert('Selecciona posiciones de equipos');
     }
 
+    useEffect(() => {
+        const handleResize = () => {
+            const widthLeft = refBoxLeft?.current?.offsetWidth;
+            if (widthLeft) {
+                const size = (widthLeft - 140) / 7;
+                setSizeBtnPositions(size - 2);
+            }
+            const heightLogo = refLogo?.current.offsetHeight;
+            const heightBtn = refBtn?.current.offsetHeight;
+            const heightBoxes = refBoxLeft?.current.offsetHeight;
+            if (heightBoxes && heightLogo && heightBtn) {
+                const heightWindow = window?.innerHeight;
+                if (heightWindow) {
+                    const div = heightWindow - (heightBoxes + heightLogo + heightBtn);
+                    if (div > 0) {
+                        setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
+                    }
+                }
+            }
+
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+        return () => window.removeEventListener("resize", handleResize);
+    }, [])
+
     return (
         <div
             style={{
@@ -86,66 +122,121 @@ const Assignment = () => {
                 height: '100vh',
             }}
         >
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
-                        <img 
-                            onClick={start} 
-                            src={saveimage?.src} 
+            <div
+                style={{
+                    //top: '50%',
+                    //transform: 'translateY(-50%)',
+                    //height: 'calc(100vh - 100px)'
+                }}
+            >
+                <div className="container"
+                    style={{
+                        paddingTop: paddingTopContent
+                    }}
+                >
+                    <div className="row">
+                        <div
+                            className="col-sm-12"
                             style={{
-                                cursor: 'pointer'
+                                textAlign: 'center',
+                                //marginTop: 30,
                             }}
-                        />
-
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <h1 style={{color: 'blue'}}>Equipo azul</h1>
-                            </div>
-                            <div className="col-sm-6">
-
-                            </div>
+                            ref={refLogo}
+                        >
+                            <img
+                                src={logo?.src}
+                                style={{
+                                    width: '20%',
+                                }}
+                            />
                         </div>
-                        <div className="div-array">
-                            {listLetters.map((i, key) =>
-                                <div key={key}>
-                                    {listNumbers.map((j, k) =>
-                                        <button
-                                            className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
-                                            key={k}
-                                            onClick={() => saveChoice(1, i, j)}
-                                        >
-                                            {`${i}${j}`}
-                                        </button>
+                        <div className="col-sm-6" style={{ marginTop: -30 }}>
+                            <div
+                                style={{
+                                    backgroundImage: `url(${boxleft?.src})`,
+                                    backgroundPosition: '50% 50%',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    position: 'relative',
+                                    width: '100%',
+                                    //height: 'calc(100vh - 170px)',
+                                }}
+                            >
+
+                                <div className="div-array" ref={refBoxLeft}>
+                                    <label style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                    {listLetters.map((i, key) =>
+                                        <div key={key}>
+                                            {listNumbers.map((j, k) =>
+                                                <button
+                                                    className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                    style={{
+                                                        width: sizeBtnPositions,
+                                                        height: sizeBtnPositions,
+                                                        fontSize: sizeBtnPositions / 3
+                                                    }}
+                                                    key={k}
+                                                    onClick={() => saveChoice(1, i, j)}
+                                                >
+                                                    {`${i}${j}`}
+                                                </button>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
-                    </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <h1 style={{color: 'red'}}>Equipo rojo</h1>
-                            </div>
-                            <div className="col-sm-6">
-
                             </div>
                         </div>
-                        <div className="div-array">
-                            {listLetters.map((i, key) =>
-                                <div key={key}>
-                                    {listNumbers.map((j, k) =>
-                                        <button
-                                            className={`buttons-lists ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
-                                            key={k}
-                                            onClick={() => saveChoice(2, i, j)}
-                                        >
-                                            {`${i}${j}`}
-                                        </button>
+                        <div className="col-sm-6" style={{ marginTop: -30 }}>
+                            <div
+                                style={{
+                                    backgroundImage: `url(${boxright?.src})`,
+                                    backgroundPosition: '50% 50%',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    position: 'relative',
+                                    width: '100%',
+                                    //height: 'calc(100vh - 170px)',
+                                }}
+                            >
+                                <div className="div-array">
+                                    <label style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                    {listLetters.map((i, key) =>
+                                        <div key={key}>
+                                            {listNumbers.map((j, k) =>
+                                                <button
+                                                    className={`buttons-lists ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                    style={{
+                                                        width: sizeBtnPositions,
+                                                        height: sizeBtnPositions,
+                                                        fontSize: sizeBtnPositions / 3
+                                                    }}
+                                                    key={k}
+                                                    onClick={() => saveChoice(2, i, j)}
+                                                >
+                                                    {`${i}${j}`}
+                                                </button>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
-                            )}
+                            </div>
+                        </div>
+                        <div
+                            className="col-sm-12"
+                            style={{
+                                textAlign: 'center',
+                                marginTop: 20
+                            }}
+                            ref={refBtn}
+                        >
+                            <img
+                                onClick={start}
+                                src={saveimage?.src}
+                                style={{
+                                    cursor: 'pointer'
+                                }}
+                            />
+
                         </div>
                     </div>
                 </div>

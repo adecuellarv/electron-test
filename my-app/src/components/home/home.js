@@ -28,17 +28,21 @@ const Home = () => {
                     position: 'relative',
                     width: '50%',
                     margin: '0 auto',
-                    height: 'calc(100vh - 100px)',
-                    paddingTop: 100
+                    height: '50%',
+                    top: '50%',
+                    transform: 'translateY(-50%)'
+                    //
+                    //height: 'calc(100vh - 100px)',
+                    //paddingTop: 100
                 }}
             >
                 <div
                     style={{
                         position: 'absolute',
-                        width: '20%',
-                        left: '40%',
+                        width: '25%',
+                        left: '37.5%',
                         //margin: '0 auto',
-                        bottom: '0px'
+                        bottom: '-20%'
                     }}
                 >
                     <a href="assignment.html">
@@ -50,7 +54,6 @@ const Home = () => {
                     </a>
                 </div>
             </div>
-
         </div>
     )
 };

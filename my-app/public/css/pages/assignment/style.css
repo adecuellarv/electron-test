@@ -1,12 +1,18 @@
+.div-array{
+  width: 100%;
+  /*margin: 0 auto;*/
+  padding: 70px;
+}
 .buttons-lists {
-  width: 50px;
-  height: 50px;
+  background: #bcb5b5;
+  border: 2px solid #060606;
+  font-weight: 800;
 }
 
 .button-active-b {
-  background: blue;
+  background: #1975cb;
 }
 
 .button-active-r {
-  background: red;
+  background: #ff0000;
 }
