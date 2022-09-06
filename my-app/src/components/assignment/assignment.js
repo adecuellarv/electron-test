@@ -18,7 +18,34 @@ const Assignment = () => {
     const refLogo = useRef(null);
     const refBtn = useRef(null);
 
-    const saveChoice = (team, row, column) => {
+    const saveChoice = (team, row, column, rowNum, columnNum) => { 
+        //console.log('countByRow', team, row, column)
+        //console.log('position1', position1 + 1, 'position2', position2 + 1)
+        const filaNum = rowNum + 1, position = columnNum + 1;
+        const canalesDMX = [];
+        if (filaNum < 8) {
+            let startIn;
+            if (team === 1) {
+                startIn = 1;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 1;
+                }
+            } else {
+                startIn = 162;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 162;
+                }
+            }
+            
+            const topByPosition = position * 3 + startIn;
+            const startByPostion = topByPosition - 3;
+            for (let index = startByPostion; index < topByPosition; index++) {
+                const element = index;
+                canalesDMX.push(element);
+            }
+            //console.log('canalesDMX', canalesDMX)
+        }
+
         if (team === 1) {
             const newArray = teamBlue;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
@@ -27,7 +54,8 @@ const Assignment = () => {
                 const obj = {
                     row,
                     column,
-                    name: `${row}${column}`
+                    name: `${row}${column}`,
+                    canalesDMX
                 }
                 newArray.push(obj);
             } else
@@ -42,7 +70,8 @@ const Assignment = () => {
                 const obj = {
                     row,
                     column,
-                    name: `${row}${column}`
+                    name: `${row}${column}`,
+                    canalesDMX
                 }
                 newArray.push(obj);
             } else
@@ -110,6 +139,8 @@ const Assignment = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+
+
     return (
         <div
             style={{
@@ -167,20 +198,26 @@ const Assignment = () => {
                                     <label style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
                                     {listLetters.map((i, key) =>
                                         <div key={key}>
-                                            {listNumbers.map((j, k) =>
-                                                <button
-                                                    className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
-                                                    style={{
-                                                        width: sizeBtnPositions,
-                                                        height: sizeBtnPositions,
-                                                        fontSize: sizeBtnPositions / 3
-                                                    }}
-                                                    key={k}
-                                                    onClick={() => saveChoice(1, i, j)}
-                                                >
-                                                    {`${i}${j}`}
-                                                </button>
-                                            )}
+                                            {listNumbers.map((j, k) => {
+                                                //port = port + 3;
+                                                //count = count + 1;
+
+                                                //console.log('port', port)
+                                                return (
+                                                    <button
+                                                        className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                        style={{
+                                                            width: sizeBtnPositions,
+                                                            height: sizeBtnPositions,
+                                                            fontSize: sizeBtnPositions / 3
+                                                        }}
+                                                        key={k}
+                                                        onClick={() => saveChoice(1, i, j, key, k)}
+                                                    >
+                                                        {`${i}${j}`}
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
                                     )}
                                 </div>
@@ -211,7 +248,7 @@ const Assignment = () => {
                                                         fontSize: sizeBtnPositions / 3
                                                     }}
                                                     key={k}
-                                                    onClick={() => saveChoice(2, i, j)}
+                                                    onClick={() => saveChoice(2, i, j, key, k)}
                                                 >
                                                     {`${i}${j}`}
                                                 </button>
