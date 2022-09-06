@@ -14,11 +14,12 @@ const Assignment = () => {
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
+    const [channels, setChannels] = useState([]);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
 
-    const saveChoice = (team, row, column, rowNum, columnNum) => { 
+    const saveChoice = (team, row, column, rowNum, columnNum) => {
         //console.log('countByRow', team, row, column)
         //console.log('position1', position1 + 1, 'position2', position2 + 1)
         const filaNum = rowNum + 1, position = columnNum + 1;
@@ -36,7 +37,7 @@ const Assignment = () => {
                     startIn = (filaNum - 1) * 21 + 162;
                 }
             }
-            
+
             const topByPosition = position * 3 + startIn;
             const startByPostion = topByPosition - 3;
             for (let index = startByPostion; index < topByPosition; index++) {
@@ -102,7 +103,9 @@ const Assignment = () => {
                 if (teamBlue.length === teamRed.length) {
                     localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
                     localStorage.setItem("teamRed", JSON.stringify(teamRed));
-                    window.location.href = "game-deskt1.html";
+                    if (sendCommands()) {
+                        window.location.href = "game-deskt1.html";
+                    }
                 } else {
                     alert('Asegurate que la cantidad de jugadores sea la misma para ambos equipos');
                 }
@@ -110,6 +113,47 @@ const Assignment = () => {
                 alert('El máximo de jugadores es 8');
             }
         } else alert('Selecciona posiciones de equipos');
+    }
+
+    const sendCommands = () => {
+        //console.log(teamBlue, teamRed); 
+        teamBlue.map(item => {
+            console.log('position', item.name)
+            if (item.canalesDMX && item.canalesDMX.length) {
+                item.canalesDMX.map((i, k) => {
+                    const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                    executecCMD(codeToSend);
+                    //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
+                });
+            }
+        });
+        teamRed.map(item => {
+            //console.log('position', item.name)
+            if (item.canalesDMX && item.canalesDMX.length) {
+                item.canalesDMX.map((i, k) => {
+                    const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                    executecCMD(codeToSend);
+                    //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
+                });
+            }
+        });
+        
+        return false;
+
+    };
+
+    const executecCMD = (code) => {
+        const portid = 'COM3';
+        exec(`mode ${portid} BAUD=2400 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=on`, (error, stdout, stderr) => {
+            //exec(`start`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                alert(`error al enviar ${code}`);
+                return;
+            } else {
+                exec(`set /p x="${code}" <nul >\\\\.\\${portid}`);
+            }
+        });
     }
 
     useEffect(() => {
