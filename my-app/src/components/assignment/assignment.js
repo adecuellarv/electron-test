@@ -143,7 +143,7 @@ const Assignment = () => {
     };
 
     const executecCMD = (code) => {
-        const portid = 'COM3';
+        const portid = 'COM1';
         exec(`mode ${portid} BAUD=2400 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=on`, (error, stdout, stderr) => {
             //exec(`start`, (error, stdout, stderr) => {
             if (error) {

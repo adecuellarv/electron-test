@@ -22,7 +22,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 600,
-    //fullscreen: true,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -34,7 +34,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
