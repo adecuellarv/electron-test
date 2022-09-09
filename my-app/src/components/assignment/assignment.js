@@ -1,6 +1,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { exec } = require('child_process');
+const { SerialPort } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage');
@@ -115,14 +116,34 @@ const Assignment = () => {
         } else alert('Selecciona posiciones de equipos');
     }
 
-    const sendCommands = () => {
+    const sendCommands = () => { 
+        
+        const port = new SerialPort({
+            path: 'COM1',
+            baudRate: 9600,
+            databits: 8,
+            parity: 'even',
+            stopbits: 1,
+            flowControl: false
+        })
+        //executecCMD('hola', port);
         //console.log(teamBlue, teamRed); 
+        const portid = 'COM1';
+        /*
+        exec(`mode ${portid} BAUD=9600 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=off`, (error, stdout, stderr) => {
+            //exec(`start`, (error, stdout, stderr) => {
+            if (error) {
+                //console.error(`exec error: ${error}`);
+                alert(`error al enviar datos`);
+                return;
+            } else {*/
+
         teamBlue.map(item => {
-            console.log('position', item.name)
+            //console.log('position', item.name)
             if (item.canalesDMX && item.canalesDMX.length) {
                 item.canalesDMX.map((i, k) => {
                     const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                    executecCMD(codeToSend);
+                    executecCMD(codeToSend, port);
                     //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
                 });
             }
@@ -132,28 +153,36 @@ const Assignment = () => {
             if (item.canalesDMX && item.canalesDMX.length) {
                 item.canalesDMX.map((i, k) => {
                     const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                    executecCMD(codeToSend);
+                    executecCMD(codeToSend, port);
                     //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
                 });
             }
         });
-        
+        /*}
+    });*/
+
         return false;
 
     };
 
-    const executecCMD = (code) => {
-        const portid = 'COM1';
-        exec(`mode ${portid} BAUD=2400 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=on`, (error, stdout, stderr) => {
-            //exec(`start`, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                alert(`error al enviar ${code}`);
-                return;
-            } else {
-                exec(`set /p x="${code}" <nul >\\\\.\\${portid}`);
+    const executecCMD = (code, port) => {
+        
+        port.write(code, function (err) {
+            if (err) {
+                alert(err.message);
+                return console.log('Error on write: ', err.message)
             }
-        });
+            console.log('message written')
+        })
+
+        // Open errors will be emitted as an error event
+        port.on('error', function (err) {
+            console.log('Error general: ', err.message)
+            alert(err.message)
+        })
+
+        //console.log(`mode ${portid} BAUD=9600 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=off`);
+        //exec(`set /p x="${code}" <nul >\\\\.\\${portid}`);
     }
 
     useEffect(() => {
