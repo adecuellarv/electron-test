@@ -15,7 +15,6 @@ const Assignment = () => {
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
-    const [channels, setChannels] = useState([]);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
@@ -97,18 +96,15 @@ const Assignment = () => {
         }
     }
 
-    const start = () => {
-
+    const start = async () => {
         if (teamBlue.length && teamRed.length) {
             if (teamBlue.length <= 8 && teamRed.length <= 8) {
-                if (teamBlue.length === teamRed.length) {
-                    localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
-                    localStorage.setItem("teamRed", JSON.stringify(teamRed));
-                    if (sendCommands()) {
-                        window.location.href = "game-deskt1.html";
-                    }
-                } else {
-                    alert('Asegurate que la cantidad de jugadores sea la misma para ambos equipos');
+                //if (teamBlue.length === teamRed.length) {
+                localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+                localStorage.setItem("teamRed", JSON.stringify(teamRed));
+                const resp = await sendCommands();
+                if (resp) {
+                    window.location.href = "game-deskt1.html";
                 }
             } else {
                 alert('El máximo de jugadores es 8');
@@ -116,73 +112,94 @@ const Assignment = () => {
         } else alert('Selecciona posiciones de equipos');
     }
 
-    const sendCommands = () => { 
-        
+    const sendCommands = async () => {
+
         const port = new SerialPort({
             path: 'COM1',
             baudRate: 9600,
             databits: 8,
             parity: 'even',
             stopbits: 1,
-            flowControl: false
-        })
-        //executecCMD('hola', port);
-        //console.log(teamBlue, teamRed); 
-        const portid = 'COM1';
+            flowControl: false,
+            //autoOpen: false
+        });
+
+        let totalItems = 0, totalSuccess = 0;
+
+        const bothArrays = teamBlue.concat(teamRed);
+
+        const respGroupOne = await
+            new Promise(async function (resolve, reject) {
+                //let countSuccess = 0;
+                await bothArrays.map(async item => {
+                    if (item.canalesDMX.length && item.canalesDMX.length) {
+                        await item.canalesDMX.map(async (i, k) => {
+                            totalItems = totalItems + 1;
+                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                            const resp = await new Promise(async function (resolve, reject) {
+                                const subresp = await executecCMD(codeToSend, port);
+                                resolve(subresp);
+                            })
+                            if (resp) totalSuccess = totalSuccess + 1;
+
+                            resolve(true);
+                        });
+                    }
+                })
+            });
+        ///funciono chico el de abajo////////////
         /*
-        exec(`mode ${portid} BAUD=9600 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=off`, (error, stdout, stderr) => {
-            //exec(`start`, (error, stdout, stderr) => {
-            if (error) {
-                //console.error(`exec error: ${error}`);
-                alert(`error al enviar datos`);
-                return;
-            } else {*/
+        const respGroupOne = await
+            new Promise(async function (resolve, reject) {
+                //let countSuccess = 0;
+                await teamBlue.map(async item => {
+                    if (item.canalesDMX.length && item.canalesDMX.length) {
+                        await item.canalesDMX.map(async (i, k) => {
+                            totalItems = totalItems + 1;
+                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                            const resp = await executecCMD(codeToSend, port);
+                            if (resp) {
+                                totalSuccess = totalSuccess + 1;
+                            }
+                            resolve(true);
+                            //countSuccess++;
+                        });
+                    }
+                })
+            });*/
+        ///funciono chico fin//////////////
 
-        teamBlue.map(item => {
-            //console.log('position', item.name)
-            if (item.canalesDMX && item.canalesDMX.length) {
-                item.canalesDMX.map((i, k) => {
-                    const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                    executecCMD(codeToSend, port);
-                    //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
-                });
+        if (respGroupOne) {
+            console.log('totalItems', totalItems, 'totalSuccess', totalSuccess)
+            if (totalItems === totalSuccess) {
+                port.close();
+                return true;
+            } else {
+                alert('Error al enviar datos');
+                port.close();
+                return false;
             }
-        });
-        teamRed.map(item => {
-            //console.log('position', item.name)
-            if (item.canalesDMX && item.canalesDMX.length) {
-                item.canalesDMX.map((i, k) => {
-                    const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                    executecCMD(codeToSend, port);
-                    //console.log('enviar: ', `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`)
-                });
-            }
-        });
-        /*}
-    });*/
+        }
 
-        return false;
 
     };
 
-    const executecCMD = (code, port) => {
-        
-        port.write(code, function (err) {
-            if (err) {
-                alert(err.message);
-                return console.log('Error on write: ', err.message)
-            }
-            console.log('message written')
-        })
+    const executecCMD = async (code, port) => {
 
-        // Open errors will be emitted as an error event
-        port.on('error', function (err) {
-            console.log('Error general: ', err.message)
-            alert(err.message)
-        })
+        const resp = await new Promise(function (resolve, reject) {
+            port.write(code, function (err) {
+                if (err) {
+                    return console.log('Error on write: ', err.message)
+                }
+                resolve(true);
+            });
+            port.on('error', function (err) {
+                resolve(false);
+                //console.log('Error general: ', err.message)
+            });
+        });
 
-        //console.log(`mode ${portid} BAUD=9600 PARITY=n DATA=8 STOP=1 xon=off octs=off rts=off`);
-        //exec(`set /p x="${code}" <nul >\\\\.\\${portid}`);
+        return resp;
     }
 
     useEffect(() => {
