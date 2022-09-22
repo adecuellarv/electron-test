@@ -1,6 +1,5 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-const { exec } = require('child_process');
 const { SerialPort } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
@@ -20,8 +19,6 @@ const Assignment = () => {
     const refBtn = useRef(null);
 
     const saveChoice = (team, row, column, rowNum, columnNum) => {
-        //console.log('countByRow', team, row, column)
-        //console.log('position1', position1 + 1, 'position2', position2 + 1)
         const filaNum = rowNum + 1, position = columnNum + 1;
         const canalesDMX = [];
         if (filaNum < 8) {
@@ -44,7 +41,6 @@ const Assignment = () => {
                 const element = index;
                 canalesDMX.push(element);
             }
-            //console.log('canalesDMX', canalesDMX)
         }
 
         if (team === 1) {
@@ -147,30 +143,8 @@ const Assignment = () => {
                     }
                 })
             });
-        ///funciono chico el de abajo////////////
-        /*
-        const respGroupOne = await
-            new Promise(async function (resolve, reject) {
-                //let countSuccess = 0;
-                await teamBlue.map(async item => {
-                    if (item.canalesDMX.length && item.canalesDMX.length) {
-                        await item.canalesDMX.map(async (i, k) => {
-                            totalItems = totalItems + 1;
-                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                            const resp = await executecCMD(codeToSend, port);
-                            if (resp) {
-                                totalSuccess = totalSuccess + 1;
-                            }
-                            resolve(true);
-                            //countSuccess++;
-                        });
-                    }
-                })
-            });*/
-        ///funciono chico fin//////////////
 
         if (respGroupOne) {
-            console.log('totalItems', totalItems, 'totalSuccess', totalSuccess)
             if (totalItems === totalSuccess) {
                 port.close();
                 return true;
@@ -180,8 +154,6 @@ const Assignment = () => {
                 return false;
             }
         }
-
-
     };
 
     const executecCMD = async (code, port) => {
@@ -195,6 +167,7 @@ const Assignment = () => {
             });
             port.on('error', function (err) {
                 resolve(false);
+                //grabar error en el log///
                 //console.log('Error general: ', err.message)
             });
         });
@@ -285,7 +258,7 @@ const Assignment = () => {
                             >
 
                                 <div className="div-array" ref={refBoxLeft}>
-                                    <label style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                    <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
                                     {listLetters.map((i, key) =>
                                         <div key={key}>
                                             {listNumbers.map((j, k) => {
@@ -295,7 +268,7 @@ const Assignment = () => {
                                                 //console.log('port', port)
                                                 return (
                                                     <button
-                                                        className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                        className={`buttons-lists machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
                                                         style={{
                                                             width: sizeBtnPositions,
                                                             height: sizeBtnPositions,
@@ -326,12 +299,12 @@ const Assignment = () => {
                                 }}
                             >
                                 <div className="div-array">
-                                    <label style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                    <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
                                     {listLetters.map((i, key) =>
                                         <div key={key}>
                                             {listNumbers.map((j, k) =>
                                                 <button
-                                                    className={`buttons-lists ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                    className={`buttons-lists machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
                                                     style={{
                                                         width: sizeBtnPositions,
                                                         height: sizeBtnPositions,

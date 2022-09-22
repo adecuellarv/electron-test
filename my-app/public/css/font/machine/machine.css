@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Machine';
+  src: url('a831b9f809b26c4eccf896ff84964ade.eot'); /* IE9*/
+  src: url('a831b9f809b26c4eccf896ff84964ade.eot?#iefix')
+      format('embedded-opentype'),
+    /* IE6-IE8 */ url('a831b9f809b26c4eccf896ff84964ade.woff2') format('woff2'),
+    /* chrome、firefox */ url('a831b9f809b26c4eccf896ff84964ade.woff')
+      format('woff'),
+    /* chrome、firefox */ url('a831b9f809b26c4eccf896ff84964ade.ttf')
+      format('truetype'),
+    /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+      url('a831b9f809b26c4eccf896ff84964ade.svg#Machine') format('svg'); /* iOS 4.1- */
+}
+.machineFont {
+  font-family: 'Machine' !important;
+  font-style: normal;
+}
