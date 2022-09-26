@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-const { exec } = require('child_process');
+const { SerialPort } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage');
@@ -145,6 +145,52 @@ const Desk1 = () => {
             }
         }
     };
+
+    const sendCommands = async (canalesDMX) => {
+        const port = new SerialPort({
+            path: 'COM1',
+            baudRate: 9600,
+            databits: 8,
+            parity: 'even',
+            stopbits: 1,
+            flowControl: false,
+            //autoOpen: false
+        });
+
+        let totalItems = 0, totalSuccess = 0;
+        const respGroupOne = await canalesDMX.map(async (i, k) => {
+            totalItems = totalItems + 1;
+            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000\\r`;
+            console.log('enviando...', codeToSend);
+            const resp = await new Promise(async function (resolve, reject) {
+                const subresp = await executecCMD(codeToSend, port);
+                resolve(subresp);
+            })
+            if (resp) totalSuccess = totalSuccess + 1;
+
+            resolve(true);
+        }); 
+    };
+
+    const executecCMD = async (code, port) => {
+
+        const resp = await new Promise(function (resolve, reject) {
+            port.write(code, function (err) {
+                if (err) {
+                    return console.log('Error on write: ', err.message)
+                }
+                resolve(true);
+            });
+            port.on('error', function (err) {
+                console.log(err);
+                resolve(true);
+                //grabar error en el log///
+                //console.log('Error general: ', err.message)
+            });
+        });
+
+        return resp;
+    }
 
     useEffect(() => {
         const handleResize = () => {
