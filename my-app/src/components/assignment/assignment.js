@@ -126,12 +126,12 @@ const Assignment = () => {
 
         const respGroupOne = await
             new Promise(async function (resolve, reject) {
-                //let countSuccess = 0;
                 await bothArrays.map(async item => {
                     if (item.canalesDMX.length && item.canalesDMX.length) {
                         await item.canalesDMX.map(async (i, k) => {
                             totalItems = totalItems + 1;
-                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000\\r`;
+                            console.log('enviando...', codeToSend);
                             const resp = await new Promise(async function (resolve, reject) {
                                 const subresp = await executecCMD(codeToSend, port);
                                 resolve(subresp);
@@ -146,11 +146,11 @@ const Assignment = () => {
 
         if (respGroupOne) {
             if (totalItems === totalSuccess) {
-                port.close();
+                //port.close();
                 return true;
             } else {
                 alert('Error al enviar datos');
-                port.close();
+                //port.close();
                 return false;
             }
         }
@@ -166,7 +166,8 @@ const Assignment = () => {
                 resolve(true);
             });
             port.on('error', function (err) {
-                resolve(false);
+                console.log(err);
+                resolve(true);
                 //grabar error en el log///
                 //console.log('Error general: ', err.message)
             });
@@ -196,7 +197,7 @@ const Assignment = () => {
             }
 
         };
-
+        localStorage.clear();
         window.addEventListener("resize", handleResize);
         handleResize();
         return () => window.removeEventListener("resize", handleResize);

@@ -1,9 +1,25 @@
-.div-array{
+.div-array {
   width: 100%;
   /*margin: 0 auto;*/
   padding: 70px;
 }
+/*
 .buttons-lists {
     width: 50px;
     height: 50px;
-  }
+  }*/
+.buttons-lists {
+  background: #bcb5b5;
+  border: 2px solid #060606;
+  font-weight: 800;
+}
+
+.btn-onfucus {
+  background: #1975cb;
+}
+.btn-red{
+  background: red;
+}
+.btn-white{
+  background: #ffffff;
+}

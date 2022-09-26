@@ -13,6 +13,7 @@ const Desk1 = () => {
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
+    const [itemsSelected, setItemsSelected] = useState([]);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
@@ -36,27 +37,17 @@ const Desk1 = () => {
             if (turnOF === 1) {
                 const position = teamRed.findIndex(item => item.name === itemSelected.name);
                 if (position !== -1) {
-                    console.log('1.- enviar señal a jorge');
-                    console.log('2.- enviar video1 a pantalla equipo azul');
-                    console.log('3.- actualizar pantalla de equipo azul');
-                    console.log('4.- marcar rojo en pantalla principial (aquí)');
+                    actionsSuccess(1, 2, position);
                 } else {
-                    console.log('2.- enviar video2 a pantalla equipo azul');
-                    console.log('3.- actualizar pantalla de equipo azul');
-                    console.log('4.- marcar blanco en pantalla principial (aquí)');
+                    actionsError(1, 2);
                 }
                 setTurnOF(2);
             } else {
                 const position = teamBlue.findIndex(item => item.name === itemSelected.name);
                 if (position !== -1) {
-                    console.log('1.- enviar señal a jorge');
-                    console.log('2.- enviar video1 a pantalla equipo rojo');
-                    console.log('3.- actualizar pantalla de equipo rojo');
-                    console.log('4.- marcar rojo en pantalla principial (aquí)');
+                    actionsSuccess(2, 1, position);
                 } else {
-                    console.log('2.- enviar video2 a pantalla equipo rojo');
-                    console.log('3.- actualizar pantalla de equipo rojo');
-                    console.log('4.- marcar blanco en pantalla principial (aquí)');
+                    actionsError(2, 1);
                 }
                 setTurnOF(1);
             }
@@ -65,21 +56,95 @@ const Desk1 = () => {
         }
     };
 
-    const isActive = (team, name) => {
-        return false;
-        /*
-        if (team === 1) {
-            const newArray = teamBlue;
-            const position = newArray.findIndex(item => item.name === name);
-            if (position === -1) return false;
-            else return true;
+    const actionsSuccess = (teamGame, teamShutter, positionArray) => {
+        console.log('1.- enviar señal a jorge');
+        if (teamGame === 1) {
+            console.log('2.- enviar video1 a pantalla equipo azul');
+            console.log('3.- actualizar pantalla de equipo azul');
         } else {
-            const newArray = teamRed;
-            const position = newArray.findIndex(item => item.name === name);
-            if (position === -1) return false;
-            else return true;
-        }*/
-    }
+            console.log('2.- enviar video1 a pantalla equipo rojo');
+            console.log('3.- actualizar pantalla de equipo rojo');
+        }
+
+        const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
+        const teamRed = JSON.parse(localStorage.getItem('teamRed'));
+        if (teamShutter === 2) {
+            teamRed[positionArray].killed = 'true';
+            localStorage.setItem("teamRed", JSON.stringify(teamRed));
+        }
+        if (teamShutter === 1) {
+            teamBlue[positionArray].killed = 'true';
+            localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+        }
+
+        setItemSelected({});
+    };
+
+    const actionsError = (teamGame, teamShutter) => {
+        console.log('1.- enviar señal a jorge');
+        if (teamGame === 1) {
+            console.log('2.- enviar video2 a pantalla equipo azul');
+            console.log('3.- actualizar pantalla de equipo azul');
+        } else {
+            console.log('2.- enviar video2 a pantalla equipo rojo');
+            console.log('3.- actualizar pantalla de equipo rojo');
+        }
+
+        const newArray = itemsSelected;
+        if (newArray.length) {
+            const position = itemsSelected.findIndex(item => item.teamShutter === teamShutter && item.name === itemSelected.name);
+            if (position === -1) {
+                const obj = {
+                    teamShutter,
+                    name: itemSelected.name
+                };
+                newArray.push(obj);
+            }
+        } else {
+            const obj = {
+                teamShutter,
+                name: itemSelected.name
+            };
+            newArray.push(obj);
+        }
+
+        setItemsSelected([...newArray]);
+        setItemSelected({});
+    };
+
+    const getColorBtn = (team, row, column) => {
+        const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
+        const teamRed = JSON.parse(localStorage.getItem('teamRed'));
+        
+        let teamCurrently = team === 1 ? 2 : 1;
+        if (itemSelected?.team == teamCurrently && itemSelected?.name === `${row}${column}`) {
+            return 'btn-onfucus';
+        } else {
+            if (team === 1) {
+                const position = teamRed.findIndex(item => item.name === `${row}${column}`);
+                if (position !== -1 && teamRed[position]?.killed === 'true') {
+                    return 'btn-red';
+                } else {
+                    const positionS = itemsSelected.findIndex(item => item.teamShutter === 2 && item.name === `${row}${column}`);
+                    if (positionS !== -1) {
+                        return 'btn-white';
+                    }
+                }
+            }
+
+            if (team === 2) {
+                const position = teamBlue.findIndex(item => item.name === `${row}${column}`);
+                if (position !== -1 && teamBlue[position]?.killed === 'true') {
+                    return 'btn-red';
+                } else {
+                    const positionS = itemsSelected.findIndex(item => item.teamShutter === 1 && item.name === `${row}${column}`);
+                    if (positionS !== -1) {
+                        return 'btn-white';
+                    }
+                }
+            }
+        }
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -157,12 +222,22 @@ const Desk1 = () => {
                             <div className="div-array" ref={refBoxLeft}>
                                 <div className="row">
                                     <div className="col-sm-6">
-                                        <label style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
                                     </div>
-                                    <div className="col-sm-6">
+                                    <div
+                                        className="col-sm-6"
+                                        style={{ textAlign: 'right', marginBottom: 10 }}
+                                    >
                                         <button
+                                            className="machineFont"
                                             disabled={turnOF === 1}
                                             onClick={send}
+                                            style={{
+                                                marginRight: 15,
+                                                border: 0,
+                                                padding: '5px 25px',
+                                                fontSize: 22
+                                            }}
                                         >Enviar</button>
                                     </div>
                                 </div>
@@ -170,7 +245,10 @@ const Desk1 = () => {
                                     <div key={key}>
                                         {listNumbers.map((j, k) =>
                                             <button
-                                                className={`buttons-lists ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                className={
+                                                    `buttons-lists machineFont  
+                                                    ${getColorBtn(2, i, j)}
+                                                `}
                                                 style={{
                                                     width: sizeBtnPositions,
                                                     height: sizeBtnPositions,
@@ -178,7 +256,7 @@ const Desk1 = () => {
                                                 }}
                                                 key={k}
                                                 onClick={() => saveChoice(1, i, j)}
-                                                disabled={turnOF === 1}
+                                                disabled={turnOF === 1 || getColorBtn(2, i, j) === 'btn-red' || getColorBtn(2, i, j) === 'btn-white' }
                                             >
                                                 {`${i}${j}`}
                                             </button>
@@ -203,12 +281,22 @@ const Desk1 = () => {
                             <div className="div-array">
                                 <div className="row">
                                     <div className="col-sm-6">
-                                        <label style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
                                     </div>
-                                    <div className="col-sm-6">
+                                    <div
+                                        className="col-sm-6"
+                                        style={{ textAlign: 'right', marginBottom: 10 }}
+                                    >
                                         <button
+                                            className="machineFont"
                                             disabled={turnOF === 2}
                                             onClick={send}
+                                            style={{
+                                                marginRight: 15,
+                                                border: 0,
+                                                padding: '5px 25px',
+                                                fontSize: 22
+                                            }}
                                         >Enviar</button>
                                     </div>
                                 </div>
@@ -216,7 +304,8 @@ const Desk1 = () => {
                                     <div key={key}>
                                         {listNumbers.map((j, k) =>
                                             <button
-                                                className={`buttons-lists ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                className={
+                                                    `buttons-lists machineFont ${getColorBtn(1, i, j)}`}
                                                 style={{
                                                     width: sizeBtnPositions,
                                                     height: sizeBtnPositions,
@@ -224,7 +313,8 @@ const Desk1 = () => {
                                                 }}
                                                 key={k}
                                                 onClick={() => saveChoice(2, i, j)}
-                                                disabled={turnOF === 2}
+                                                disabled={turnOF === 2 || getColorBtn(1, i, j) === 'btn-red' || getColorBtn(1, i, j) === 'btn-white' }
+                                                //disabled={turnOF === 2}
                                             >
                                                 {`${i}${j}`}
                                             </button>
@@ -242,7 +332,7 @@ const Desk1 = () => {
                         }}
                         ref={refBtn}
                     >
-                        
+
                     </div>
                 </div>
             </div>
