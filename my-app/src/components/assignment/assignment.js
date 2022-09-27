@@ -167,7 +167,7 @@ const Assignment = () => {
             });
             port.on('error', function (err) {
                 console.log(err);
-                resolve(true);
+                resolve(false);
                 //grabar error en el log///
                 //console.log('Error general: ', err.message)
             });
