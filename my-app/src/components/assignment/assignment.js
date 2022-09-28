@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-const { SerialPort } = require('serialport')
+const { SerialPort, ReadlineParser } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage');
@@ -130,8 +130,8 @@ const Assignment = () => {
                     if (item.canalesDMX.length && item.canalesDMX.length) {
                         await item.canalesDMX.map(async (i, k) => {
                             totalItems = totalItems + 1;
-                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000\\r`;
-                            console.log('enviando...', codeToSend);
+                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                            //console.log('enviando...', codeToSend);
                             const resp = await new Promise(async function (resolve, reject) {
                                 const subresp = await executecCMD(codeToSend, port);
                                 resolve(subresp);
@@ -146,11 +146,11 @@ const Assignment = () => {
 
         if (respGroupOne) {
             if (totalItems === totalSuccess) {
-                //port.close();
+                port.close();
                 return true;
             } else {
-                alert('Error al enviar datos');
-                //port.close();
+                //alert('Error al enviar datos');
+                port.close();
                 return false;
             }
         }
@@ -158,19 +158,39 @@ const Assignment = () => {
 
     const executecCMD = async (code, port) => {
 
-        const resp = await new Promise(function (resolve, reject) {
+        const resp = await new Promise(async function (resolve, reject) {
+            console.log('sending...', code)
+            await port.write(code);
+            console.log('retorno...', '\r\n')
+            await port.write('\r\n');
+            console.log('fin');
+            resolve(false);
+
+            /*
+            await port.write(code);
+            const parser = await port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+            await parser.on('data', function(data) {
+                console.log('data_info', data);
+            });
+            resolve(false);*/
+            /*
             port.write(code, function (err) {
                 if (err) {
                     return console.log('Error on write: ', err.message)
                 }
                 resolve(true);
             });
+            const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+            parser.on('data', function(data) {
+                console.log('data_info', data);
+            });
+
             port.on('error', function (err) {
                 console.log(err);
                 resolve(false);
                 //grabar error en el log///
                 //console.log('Error general: ', err.message)
-            });
+            });*/
         });
 
         return resp;
