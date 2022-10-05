@@ -9,6 +9,7 @@ const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
+let port;
 const Assignment = () => {
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
@@ -108,95 +109,39 @@ const Assignment = () => {
         } else alert('Selecciona posiciones de equipos');
     }
 
-    const sendCommands = async () => {
+    const sendCommands = () => {
 
-        const port = new SerialPort({
-            path: 'COM1',
-            baudRate: 9600,
-            databits: 8,
-            parity: 'even',
-            stopbits: 1,
-            flowControl: false,
-            //autoOpen: false
-        });
+        if (port?.port) {
+            const bothArrays = teamBlue.concat(teamRed);
 
-        let totalItems = 0, totalSuccess = 0;
-
-        const bothArrays = teamBlue.concat(teamRed);
-
-        const respGroupOne = await
-            new Promise(async function (resolve, reject) {
-                await bothArrays.map(async item => {
-                    if (item.canalesDMX.length && item.canalesDMX.length) {
-                        await item.canalesDMX.map(async (i, k) => {
-                            totalItems = totalItems + 1;
-                            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                            //console.log('enviando...', codeToSend);
-                            const resp = await new Promise(async function (resolve, reject) {
-                                const subresp = await executecCMD(codeToSend, port);
-                                resolve(subresp);
-                            })
-                            if (resp) totalSuccess = totalSuccess + 1;
-
-                            resolve(true);
-                        });
-                    }
-                })
-            });
-
-        if (respGroupOne) {
-            if (totalItems === totalSuccess) {
-                port.close();
-                return true;
-            } else {
-                //alert('Error al enviar datos');
-                port.close();
-                return false;
-            }
+            bothArrays.map(item => {
+                if (item.canalesDMX.length) {
+                    item.canalesDMX.map((i, k) => {
+                        const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
+                        executecCMD(codeToSend, port);
+                    });
+                }
+            })
+        }else {
+            alert('No se ha podido conectar con el puerto COM1');
         }
     };
 
-    const executecCMD = async (code, port) => {
-
-        const resp = await new Promise(async function (resolve, reject) {
-            console.log('sending...', code)
-            await port.write(code);
-            console.log('retorno...', '\r\n')
-            await port.write('\r\n');
-            console.log('fin');
-            resolve(false);
-
-            /*
-            await port.write(code);
-            const parser = await port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
-            await parser.on('data', function(data) {
-                console.log('data_info', data);
-            });
-            resolve(false);*/
-            /*
-            port.write(code, function (err) {
-                if (err) {
-                    return console.log('Error on write: ', err.message)
-                }
-                resolve(true);
-            });
-            const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
-            parser.on('data', function(data) {
-                console.log('data_info', data);
-            });
-
-            port.on('error', function (err) {
-                console.log(err);
-                resolve(false);
-                //grabar error en el log///
-                //console.log('Error general: ', err.message)
-            });*/
-        });
-
-        return resp;
+    const executecCMD = async (code) => {
+        port.write(`${code}\r`);
+        console.log(`${code}\r`);
+        return true;
     }
 
     useEffect(() => {
+        port = new SerialPort({
+            path: 'COM1',
+            baudRate: 115200,
+            databits: 8,
+            parity: 'none',
+            stopbits: 1,
+            flowControl: false
+        });
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {

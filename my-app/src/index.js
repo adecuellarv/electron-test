@@ -20,8 +20,8 @@ let screen1Window;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 500,
+    height: 500,
     //fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -29,12 +29,12 @@ const createWindow = () => {
       contextIsolation: false,
     },
   });
-  mainWindow.maximize();
+  //mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
