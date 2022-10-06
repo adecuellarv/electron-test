@@ -117,13 +117,15 @@ const Assignment = () => {
             bothArrays.map(item => {
                 if (item.canalesDMX.length) {
                     item.canalesDMX.map((i, k) => {
-                        const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000`;
-                        executecCMD(codeToSend, port);
+                        const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                        executecCMD(codeToSend);
                     });
                 }
             })
+            return true;
         }else {
             alert('No se ha podido conectar con el puerto COM1');
+            return false;
         }
     };
 

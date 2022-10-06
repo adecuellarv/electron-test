@@ -1,4 +1,6 @@
 const { app, BrowserWindow, ipcMain, screen } = require('electron');
+const Redirect = require('react-router-dom').Redirect;
+const BrowserRouter = require('react-router-dom').BrowserRouter;
 //const electronReload = require('electron-reload')
 const path = require('path');
 
@@ -20,7 +22,7 @@ let screen1Window;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 500,
+    width: 700,
     height: 500,
     //fullscreen: true,
     webPreferences: {
@@ -32,9 +34,9 @@ const createWindow = () => {
   //mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
-
+  
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {

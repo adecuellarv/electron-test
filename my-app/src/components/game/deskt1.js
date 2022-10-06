@@ -8,17 +8,45 @@ const logo = document.getElementById('logo');
 const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
+
+let port;
 const Desk1 = () => {
     const [turnOF, setTurnOF] = useState(1);
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
     const [itemsSelected, setItemsSelected] = useState([]);
+    const [render, setRender] = useState(false);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
 
-    const saveChoice = (team, row, column) => {
+    const saveChoice = (team, row, column, rowNum, columnNum) => {
+
+        const filaNum = rowNum + 1, position = columnNum + 1;
+        const canalesDMX = [];
+        if (filaNum < 8) {
+            let startIn;
+            if (team === 1) {
+                startIn = 1;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 1;
+                }
+            } else {
+                startIn = 162;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 162;
+                }
+            }
+
+            const topByPosition = position * 3 + startIn;
+            const startByPostion = topByPosition - 3;
+            for (let index = startByPostion; index < topByPosition; index++) {
+                const element = index;
+                canalesDMX.push(element);
+            }
+        }
+
         if (itemSelected?.name === `${row}${column}`) {
             setItemSelected({});
         } else
@@ -26,7 +54,8 @@ const Desk1 = () => {
                 team,
                 row,
                 column,
-                name: `${row}${column}`
+                name: `${row}${column}`,
+                canalesDMX
             })
     };
 
@@ -57,7 +86,8 @@ const Desk1 = () => {
     };
 
     const actionsSuccess = (teamGame, teamShutter, positionArray) => {
-        console.log('1.- enviar señal a jorge');
+        //console.log('1.- enviar señal a jorge');
+        sendCommands(itemSelected?.canalesDMX, 'success');
         if (teamGame === 1) {
             console.log('2.- enviar video1 a pantalla equipo azul');
             console.log('3.- actualizar pantalla de equipo azul');
@@ -81,7 +111,8 @@ const Desk1 = () => {
     };
 
     const actionsError = (teamGame, teamShutter) => {
-        console.log('1.- enviar señal a jorge');
+        //console.log('1.- enviar señal a jorge');
+        sendCommands(itemSelected?.canalesDMX, 'error');
         if (teamGame === 1) {
             console.log('2.- enviar video2 a pantalla equipo azul');
             console.log('3.- actualizar pantalla de equipo azul');
@@ -96,14 +127,16 @@ const Desk1 = () => {
             if (position === -1) {
                 const obj = {
                     teamShutter,
-                    name: itemSelected.name
+                    name: itemSelected.name,
+                    canalesDMX: itemSelected.canalesDMX
                 };
                 newArray.push(obj);
             }
         } else {
             const obj = {
                 teamShutter,
-                name: itemSelected.name
+                name: itemSelected.name,
+                canalesDMX: itemSelected.canalesDMX
             };
             newArray.push(obj);
         }
@@ -115,7 +148,8 @@ const Desk1 = () => {
     const getColorBtn = (team, row, column) => {
         const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
         const teamRed = JSON.parse(localStorage.getItem('teamRed'));
-        
+        const shootFailed_ = JSON.parse(localStorage.getItem('shootFailed'));
+        const shootFailed = shootFailed_ ? shootFailed_ : [];
         let teamCurrently = team === 1 ? 2 : 1;
         if (itemSelected?.team == teamCurrently && itemSelected?.name === `${row}${column}`) {
             return 'btn-onfucus';
@@ -125,7 +159,7 @@ const Desk1 = () => {
                 if (position !== -1 && teamRed[position]?.killed === 'true') {
                     return 'btn-red';
                 } else {
-                    const positionS = itemsSelected.findIndex(item => item.teamShutter === 2 && item.name === `${row}${column}`);
+                    const positionS = shootFailed.findIndex(item => item.teamShutter === 2 && item.name === `${row}${column}`);
                     if (positionS !== -1) {
                         return 'btn-white';
                     }
@@ -137,7 +171,7 @@ const Desk1 = () => {
                 if (position !== -1 && teamBlue[position]?.killed === 'true') {
                     return 'btn-red';
                 } else {
-                    const positionS = itemsSelected.findIndex(item => item.teamShutter === 1 && item.name === `${row}${column}`);
+                    const positionS = shootFailed.findIndex(item => item.teamShutter === 1 && item.name === `${row}${column}`);
                     if (positionS !== -1) {
                         return 'btn-white';
                     }
@@ -146,53 +180,55 @@ const Desk1 = () => {
         }
     };
 
-    const sendCommands = async (canalesDMX) => {
-        const port = new SerialPort({
-            path: 'COM1',
-            baudRate: 9600,
-            databits: 8,
-            parity: 'even',
-            stopbits: 1,
-            flowControl: false,
-            //autoOpen: false
-        });
+    const sendCommands = (canalesDMX, typeSend) => {
 
-        let totalItems = 0, totalSuccess = 0;
-        const respGroupOne = await canalesDMX.map(async (i, k) => {
-            totalItems = totalItems + 1;
-            const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '0' : '255'}:000\\r`;
-            console.log('enviando...', codeToSend);
-            const resp = await new Promise(async function (resolve, reject) {
-                const subresp = await executecCMD(codeToSend, port);
-                resolve(subresp);
-            })
-            if (resp) totalSuccess = totalSuccess + 1;
-
-            resolve(true);
-        }); 
+        if (port?.port) {
+            if (canalesDMX.length) {
+                canalesDMX.map((i, k) => {
+                    let codeToSend = '';
+                    if(typeSend === 'success'){
+                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                    }
+                    if(typeSend === 'error'){
+                        codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
+                    }
+                    executecCMD(codeToSend);
+                });
+            }
+        } else {
+            alert('No se ha podido conectar con el puerto COM1');
+        }
     };
 
-    const executecCMD = async (code, port) => {
-
-        const resp = await new Promise(function (resolve, reject) {
-            port.write(code, function (err) {
-                if (err) {
-                    return console.log('Error on write: ', err.message)
-                }
-                resolve(true);
-            });
-            port.on('error', function (err) {
-                console.log(err);
-                resolve(true);
-                //grabar error en el log///
-                //console.log('Error general: ', err.message)
-            });
-        });
-
-        return resp;
+    const executecCMD = async (code) => {
+        port.write(`${code}\r`);
+        console.log(`${code}\r`);
+        return true;
     }
 
     useEffect(() => {
+        if (itemsSelected.length) {
+            setRender(true);
+            setTimeout(() => {
+                localStorage.setItem("shootFailed", JSON.stringify(itemsSelected));
+                setRender(false);
+            }, 100);
+        }
+    }, [itemsSelected]);
+
+    useEffect(() => {
+        const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
+        setItemsSelected(shootFailed ? shootFailed : []);
+
+        port = new SerialPort({
+            path: 'COM1',
+            baudRate: 115200,
+            databits: 8,
+            parity: 'none',
+            stopbits: 1,
+            flowControl: false
+        });
+
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
@@ -301,8 +337,8 @@ const Desk1 = () => {
                                                     fontSize: sizeBtnPositions / 3
                                                 }}
                                                 key={k}
-                                                onClick={() => saveChoice(1, i, j)}
-                                                disabled={turnOF === 1 || getColorBtn(2, i, j) === 'btn-red' || getColorBtn(2, i, j) === 'btn-white' }
+                                                onClick={() => saveChoice(1, i, j, key, k)}
+                                                disabled={turnOF === 1 || getColorBtn(2, i, j) === 'btn-red' || getColorBtn(2, i, j) === 'btn-white'}
                                             >
                                                 {`${i}${j}`}
                                             </button>
@@ -358,9 +394,9 @@ const Desk1 = () => {
                                                     fontSize: sizeBtnPositions / 3
                                                 }}
                                                 key={k}
-                                                onClick={() => saveChoice(2, i, j)}
-                                                disabled={turnOF === 2 || getColorBtn(1, i, j) === 'btn-red' || getColorBtn(1, i, j) === 'btn-white' }
-                                                //disabled={turnOF === 2}
+                                                onClick={() => saveChoice(2, i, j, key, k)}
+                                                disabled={turnOF === 2 || getColorBtn(1, i, j) === 'btn-red' || getColorBtn(1, i, j) === 'btn-white'}
+                                            //disabled={turnOF === 2}
                                             >
                                                 {`${i}${j}`}
                                             </button>
