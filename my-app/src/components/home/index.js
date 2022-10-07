@@ -6,6 +6,7 @@ const { useState, useEffect } = require('react');
 let port;
 const Index = () => {
     const [page, setPage] = useState(1);
+    const [teamWinner, setTeamWinner] = useState('');
 
     useEffect(() => {
         port = new SerialPort({
@@ -16,7 +17,8 @@ const Index = () => {
             stopbits: 1,
             flowControl: false
         });
-    }, [])
+        localStorage.clear();
+    }, []);
 
     return (
         <>
@@ -35,6 +37,13 @@ const Index = () => {
                 <Desk1
                     port={port}
                     setPage={setPage}
+                    setTeamWinner={setTeamWinner}
+                />
+            }
+            {page === 4 &&
+                <Results
+                    setPage={setPage}
+                    teamWinner={teamWinner}
                 />
             }
         </>

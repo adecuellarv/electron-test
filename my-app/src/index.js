@@ -36,7 +36,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
   
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {

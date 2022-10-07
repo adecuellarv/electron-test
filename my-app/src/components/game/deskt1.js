@@ -9,13 +9,21 @@ const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
-const Desk1 = ({ port, setPage }) => {
+const seconds = 300; //5min
+
+const Desk1 = ({ port, setPage, setTeamWinner }) => {
+    const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
+    const teamRed = JSON.parse(localStorage.getItem('teamRed'));
+    
     const [turnOF, setTurnOF] = useState(1);
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
     const [itemsSelected, setItemsSelected] = useState([]);
     const [render, setRender] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(seconds);
+    const [successBlue, setSuccessBlue] = useState(0);
+    const [successRed, setSuccessRed] = useState(0);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
@@ -59,8 +67,6 @@ const Desk1 = ({ port, setPage }) => {
     };
 
     const send = () => {
-        const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
-        const teamRed = JSON.parse(localStorage.getItem('teamRed'));
         if (itemSelected?.name) {
             if (turnOF === 1) {
                 const position = teamRed.findIndex(item => item.name === itemSelected.name);
@@ -95,15 +101,15 @@ const Desk1 = ({ port, setPage }) => {
             console.log('3.- actualizar pantalla de equipo rojo');
         }
 
-        const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
-        const teamRed = JSON.parse(localStorage.getItem('teamRed'));
         if (teamShutter === 2) {
             teamRed[positionArray].killed = 'true';
             localStorage.setItem("teamRed", JSON.stringify(teamRed));
+            setSuccessBlue(successBlue + 1);
         }
         if (teamShutter === 1) {
             teamBlue[positionArray].killed = 'true';
             localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+            setSuccessRed(successRed + 1);
         }
 
         setItemSelected({});
@@ -144,11 +150,36 @@ const Desk1 = ({ port, setPage }) => {
         setItemSelected({});
     };
 
+    const sendCommands = (canalesDMX, typeSend) => {
+        if (port?.port) {
+            if (canalesDMX.length) {
+                canalesDMX.map((i, k) => {
+                    let codeToSend = '';
+                    if (typeSend === 'success') {
+                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                    }
+                    if (typeSend === 'error') {
+                        codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
+                    }
+                    executecCMD(codeToSend);
+                });
+            }
+        } else {
+            alert('No se ha podido conectar con el puerto COM1');
+        }
+    };
+
+    const executecCMD = async (code) => {
+        port.write(`${code}\r`);
+        console.log(`${code}\r`);
+        return true;
+    }
+
     const getColorBtn = (team, row, column) => {
-        const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
-        const teamRed = JSON.parse(localStorage.getItem('teamRed'));
         const shootFailed_ = JSON.parse(localStorage.getItem('shootFailed'));
+        console.log('shootFailed_', shootFailed_)
         const shootFailed = shootFailed_ ? shootFailed_ : [];
+        console.log('shootFailed', shootFailed)
         let teamCurrently = team === 1 ? 2 : 1;
         if (itemSelected?.team == teamCurrently && itemSelected?.name === `${row}${column}`) {
             return 'btn-onfucus';
@@ -179,31 +210,6 @@ const Desk1 = ({ port, setPage }) => {
         }
     };
 
-    const sendCommands = (canalesDMX, typeSend) => {
-        if (port?.port) {
-            if (canalesDMX.length) {
-                canalesDMX.map((i, k) => {
-                    let codeToSend = '';
-                    if (typeSend === 'success') {
-                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
-                    }
-                    if (typeSend === 'error') {
-                        codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
-                    }
-                    executecCMD(codeToSend);
-                });
-            }
-        } else {
-            alert('No se ha podido conectar con el puerto COM1');
-        }
-    };
-
-    const executecCMD = async (code) => {
-        port.write(`${code}\r`);
-        console.log(`${code}\r`);
-        return true;
-    }
-
     useEffect(() => {
         if (itemsSelected.length) {
             setRender(true);
@@ -213,6 +219,20 @@ const Desk1 = ({ port, setPage }) => {
             }, 100);
         }
     }, [itemsSelected]);
+
+    useEffect(() => {
+        if (successBlue >= teamRed.length) {
+            setTeamWinner('Azul');
+            setPage(4);
+        }
+    }, [successBlue]);
+
+    useEffect(() => {
+        if (successRed >= teamBlue.length) {
+            setTeamWinner('Rojo');
+            setPage(4);
+        }
+    }, [successRed]);
 
     useEffect(() => {
         const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
@@ -242,6 +262,16 @@ const Desk1 = ({ port, setPage }) => {
         handleResize();
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    useEffect(() => {
+        /*
+        const intervalId = setInterval(() => {
+            setTimeLeft((t) => t - 1);
+        }, 1000);
+        return () => clearInterval(intervalId);*/
+    }, []);
+
+    console.log('timeLeft', timeLeft)
 
     return (
         <div
