@@ -3,14 +3,13 @@ const ReactDOM = require('react-dom/client');
 const { SerialPort, ReadlineParser } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
-const bgimage = document.getElementById('bgimage');
+const bgimage = document.getElementById('bgimage_2');
 const logo = document.getElementById('logo');
 const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
-let port;
-const Assignment = () => {
+const Assignment = ({ port, setPage }) => {
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -101,7 +100,8 @@ const Assignment = () => {
                 localStorage.setItem("teamRed", JSON.stringify(teamRed));
                 const resp = await sendCommands();
                 if (resp) {
-                    window.location.href = "game-deskt1.html";
+                    //window.location.href = "game-deskt1.html";
+                    setPage(3);
                 }
             } else {
                 alert('El máximo de jugadores es 8');
@@ -123,7 +123,7 @@ const Assignment = () => {
                 }
             })
             return true;
-        }else {
+        } else {
             alert('No se ha podido conectar con el puerto COM1');
             return false;
         }
@@ -136,14 +136,6 @@ const Assignment = () => {
     }
 
     useEffect(() => {
-        port = new SerialPort({
-            path: 'COM1',
-            baudRate: 115200,
-            databits: 8,
-            parity: 'none',
-            stopbits: 1,
-            flowControl: false
-        });
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
@@ -236,7 +228,7 @@ const Assignment = () => {
                                                 //console.log('port', port)
                                                 return (
                                                     <button
-                                                        className={`buttons-lists machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                        className={`buttons-lists_asg machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
                                                         style={{
                                                             width: sizeBtnPositions,
                                                             height: sizeBtnPositions,
@@ -272,7 +264,7 @@ const Assignment = () => {
                                         <div key={key}>
                                             {listNumbers.map((j, k) =>
                                                 <button
-                                                    className={`buttons-lists machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                    className={`buttons-lists_asg machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
                                                     style={{
                                                         width: sizeBtnPositions,
                                                         height: sizeBtnPositions,

@@ -31,7 +31,7 @@ const createWindow = () => {
       contextIsolation: false,
     },
   });
-  //mainWindow.maximize();
+  mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
   

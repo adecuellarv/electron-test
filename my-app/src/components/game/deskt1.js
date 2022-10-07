@@ -3,14 +3,13 @@ const ReactDOM = require('react-dom/client');
 const { SerialPort } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
-const bgimage = document.getElementById('bgimage');
+const bgimage = document.getElementById('bgimage_2');
 const logo = document.getElementById('logo');
 const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
-let port;
-const Desk1 = () => {
+const Desk1 = ({ port, setPage }) => {
     const [turnOF, setTurnOF] = useState(1);
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -181,15 +180,14 @@ const Desk1 = () => {
     };
 
     const sendCommands = (canalesDMX, typeSend) => {
-
         if (port?.port) {
             if (canalesDMX.length) {
                 canalesDMX.map((i, k) => {
                     let codeToSend = '';
-                    if(typeSend === 'success'){
+                    if (typeSend === 'success') {
                         codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
                     }
-                    if(typeSend === 'error'){
+                    if (typeSend === 'error') {
                         codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
                     }
                     executecCMD(codeToSend);
@@ -219,16 +217,6 @@ const Desk1 = () => {
     useEffect(() => {
         const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
         setItemsSelected(shootFailed ? shootFailed : []);
-
-        port = new SerialPort({
-            path: 'COM1',
-            baudRate: 115200,
-            databits: 8,
-            parity: 'none',
-            stopbits: 1,
-            flowControl: false
-        });
-
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {

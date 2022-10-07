@@ -1,14 +1,10 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-//const { exec } = require('child_process');
 const bgimage = document.getElementById('bgimage');
 const boxcenter = document.getElementById('boxcenter');
 const buttonstart = document.getElementById('buttonstart');
-const Home = () => {
-    const test = () => {
-        //exec('start chrome');
-        //alert('amonos');
-    };
+
+const Home = ({ setPage }) => {
     return (
         <div className="home-container"
             style={{
@@ -45,21 +41,16 @@ const Home = () => {
                         bottom: '-20%'
                     }}
                 >
-                    <a href="assignment.html">
-                        <img src={buttonstart?.src}
-                            style={{
-                                width: '100%'
-                            }}
-                        />
-                    </a>
+
+                    <img src={buttonstart?.src}
+                        style={{
+                            width: '100%'
+                        }}
+                        onClick={() => setPage(2)}
+                    />
+
                 </div>
             </div>
         </div>
     )
 };
-
-
-if (document.getElementById('home')) {
-    const root = ReactDOM.createRoot(document.getElementById('home'));
-    root.render(<Home />);
-}
