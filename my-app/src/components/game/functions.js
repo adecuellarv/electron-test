@@ -1,4 +1,4 @@
-const listLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+const listLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 const listNumbers = [1, 2, 3, 4, 5, 6, 7];
 
 const arrayOptions = () => {

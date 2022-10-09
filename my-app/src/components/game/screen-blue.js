@@ -3,18 +3,25 @@ const ReactDOM = require('react-dom/client');
 const { SerialPort } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
 
-const bgimage = document.getElementById('bgimage_2');
+const bgimage = document.getElementById('bgimage');
 const logo = document.getElementById('logo');
 const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
-const saveimage = document.getElementById('saveimage');
+const barras1 = document.getElementById('barras1');
+const barras2 = document.getElementById('barras2');
+const barras3 = document.getElementById('barras3');
+const circles1 = document.getElementById('circles');
+const circles2 = document.getElementById('circles2');
+
+const video1 = document.getElementById('video1');
+const video2 = document.getElementById('video2');
 
 const seconds = 300; //5min
 
-const Desk1 = ({ port, setPage, setTeamWinner }) => {
+const ScreenBlue = ({ port, setPage, setTeamWinner }) => {
     const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
     const teamRed = JSON.parse(localStorage.getItem('teamRed'));
-    
+
     const [turnOF, setTurnOF] = useState(1);
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -26,7 +33,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     const [successRed, setSuccessRed] = useState(0);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
-    const refBtn = useRef(null);
+    const refBoxParentLeft = useRef(null);
 
     const saveChoice = (team, row, column, rowNum, columnNum) => {
 
@@ -176,6 +183,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     }
 
     const getColorBtn = (team, row, column) => {
+        /*
         const shootFailed_ = JSON.parse(localStorage.getItem('shootFailed'));
         console.log('shootFailed_', shootFailed_)
         const shootFailed = shootFailed_ ? shootFailed_ : [];
@@ -207,9 +215,9 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                     }
                 }
             }
-        }
+        }*/
     };
-
+    /*
     useEffect(() => {
         if (itemsSelected.length) {
             setRender(true);
@@ -232,7 +240,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             setTeamWinner('Rojo');
             setPage(4);
         }
-    }, [successRed]);
+    }, [successRed]);*/
 
     useEffect(() => {
         const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
@@ -240,16 +248,15 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
-                const size = (widthLeft - 140) / 7;
+                const size = (widthLeft - 140) / 8;
                 setSizeBtnPositions(size - 2);
             }
             const heightLogo = refLogo?.current.offsetHeight;
-            const heightBtn = refBtn?.current.offsetHeight;
             const heightBoxes = refBoxLeft?.current.offsetHeight;
             if (heightBoxes && heightLogo) {
                 const heightWindow = window?.innerHeight;
                 if (heightWindow) {
-                    const div = heightWindow - (heightBoxes + heightLogo + heightBtn);
+                    const div = heightWindow - (heightBoxes + heightLogo);
                     if (div > 0) {
                         setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
                     }
@@ -271,7 +278,6 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         return () => clearInterval(intervalId);*/
     }, []);
 
-    console.log('timeLeft', timeLeft)
 
     return (
         <div
@@ -318,51 +324,76 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                                 width: '100%',
                                 //height: 'calc(100vh - 170px)',
                             }}
+                            ref={refBoxParentLeft}
                         >
                             <div className="div-array" ref={refBoxLeft}>
                                 <div className="row">
                                     <div className="col-sm-6">
-                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
-                                    </div>
-                                    <div
-                                        className="col-sm-6"
-                                        style={{ textAlign: 'right', marginBottom: 10 }}
-                                    >
-                                        <button
-                                            className="machineFont"
-                                            disabled={turnOF === 1}
-                                            onClick={send}
-                                            style={{
-                                                marginRight: 15,
-                                                border: 0,
-                                                padding: '5px 25px',
-                                                fontSize: 22
-                                            }}
-                                        >Enviar</button>
+                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
                                     </div>
                                 </div>
-                                {listLetters.map((i, key) =>
-                                    <div key={key}>
+                                <div className="row">
+                                    <div className="col-sm-1"
+                                        style={{
+                                            marginTop: sizeBtnPositions
+                                        }}
+                                    >
+                                        {listLetters.map((i, key) =>
+                                            <div
+                                                key={key}
+                                                style={{
+                                                    paddingRight: 10,
+                                                    width: sizeBtnPositions,
+                                                    height: sizeBtnPositions + 7,
+                                                }}
+                                            >
+                                                <label
+                                                    style={{
+
+
+                                                        textAlign: 'center',
+                                                        color: '#fff'
+                                                    }}
+                                                >{i}</label>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="col-sm-11">
+
                                         {listNumbers.map((j, k) =>
-                                            <button
-                                                className={
-                                                    `buttons-lists machineFont  
-                                                    ${getColorBtn(2, i, j)}
-                                                `}
+                                            <label
+                                                key={k}
+                                                className="machineFont"
                                                 style={{
                                                     width: sizeBtnPositions,
                                                     height: sizeBtnPositions,
-                                                    fontSize: sizeBtnPositions / 3
+                                                    textAlign: 'center',
+                                                    color: '#fff'
                                                 }}
-                                                key={k}
-                                                onClick={() => saveChoice(1, i, j, key, k)}
-                                                disabled={turnOF === 1 || getColorBtn(2, i, j) === 'btn-red' || getColorBtn(2, i, j) === 'btn-white'}
-                                            >
-                                                {`${i}${j}`}
-                                            </button>
+                                            >{j}</label>
+                                        )}
+
+                                        {listLetters.map((i, key) =>
+                                            <div key={key}>
+                                                {listNumbers.map((j, k) =>
+                                                    <div
+                                                        className={
+                                                            `box-lists machineFont  
+                                                    ${getColorBtn(2, i, j)}
+                                                `}
+                                                        style={{
+                                                            width: sizeBtnPositions,
+                                                            height: sizeBtnPositions,
+                                                        }}
+                                                        key={k}
+
+                                                    />
+                                                )}
+                                            </div>
                                         )}
                                     </div>
-                                )}
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -374,65 +405,69 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                                 backgroundSize: 'contain',
                                 backgroundRepeat: 'no-repeat',
                                 position: 'relative',
-                                width: '100%',
+                                //width: '100%',
+                                width: refBoxParentLeft?.current?.offsetWidth + 62,
+                                height: refBoxParentLeft?.current?.offsetWidth + 62,
+                                padding: 75,
                                 //height: 'calc(100vh - 170px)',
                             }}
                         >
-                            <div className="div-array">
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
-                                    </div>
-                                    <div
-                                        className="col-sm-6"
-                                        style={{ textAlign: 'right', marginBottom: 10 }}
-                                    >
-                                        <button
-                                            className="machineFont"
-                                            disabled={turnOF === 2}
-                                            onClick={send}
-                                            style={{
-                                                marginRight: 15,
-                                                border: 0,
-                                                padding: '5px 25px',
-                                                fontSize: 22
-                                            }}
-                                        >Enviar</button>
-                                    </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <img
+                                        src={barras3?.src}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
                                 </div>
-                                {listLetters.map((i, key) =>
-                                    <div key={key}>
-                                        {listNumbers.map((j, k) =>
-                                            <button
-                                                className={
-                                                    `buttons-lists machineFont ${getColorBtn(1, i, j)}`}
-                                                style={{
-                                                    width: sizeBtnPositions,
-                                                    height: sizeBtnPositions,
-                                                    fontSize: sizeBtnPositions / 3
-                                                }}
-                                                key={k}
-                                                onClick={() => saveChoice(2, i, j, key, k)}
-                                                disabled={turnOF === 2 || getColorBtn(1, i, j) === 'btn-red' || getColorBtn(1, i, j) === 'btn-white'}
-                                            //disabled={turnOF === 2}
-                                            >
-                                                {`${i}${j}`}
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
+                                <div className="col-sm-6">
+                                    <img
+                                        src={circles1?.src}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-sm-12">
+                                    <video
+                                        controls={false}
+                                        autoPlay={true}
+                                        loop={true}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <source src={video1?.src} type="video/webm" />
+                                        Your browser does not support HTML video.
+                                    </video>
+                                </div>
+                                <div className="col-sm-4">
+                                    <img
+                                        src={barras1?.src}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <img
+                                        src={barras2?.src}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-sm-4">
+                                    <img
+                                        src={circles2?.src}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div
-                        className="col-sm-12"
-                        style={{
-                            textAlign: 'center',
-                            marginTop: 20
-                        }}
-                        ref={refBtn}
-                    >
-
                     </div>
                 </div>
             </div>
@@ -440,7 +475,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     )
 };
 
-if (document.getElementById('game-deskt1')) {
-    const root = ReactDOM.createRoot(document.getElementById('game-deskt1'));
-    root.render(<Desk1 />);
+if (document.getElementById('screen-blue')) {
+    const root = ReactDOM.createRoot(document.getElementById('screen-blue'));
+    root.render(<ScreenBlue />);
 }

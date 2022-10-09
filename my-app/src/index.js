@@ -45,6 +45,8 @@ const createSecondWindow = () => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   })
 
+  /*
+  Detecta pantalla 2
   if (externalDisplay) {
     screen1Window = new BrowserWindow({
       x: externalDisplay.bounds.x + 50,
@@ -59,12 +61,14 @@ const createSecondWindow = () => {
     //screen1Window.loadURL('https://github.com')
     screen1Window.loadFile(path.join(__dirname, 'video1.html'));
   }
-  /*
+
+  */
+  
   // Create the browser window.
   screen1Window = new BrowserWindow({
     width: 800,
     height: 700,
-    title: "Video 1",
+    title: "Pantalla equipo azul",
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -73,10 +77,10 @@ const createSecondWindow = () => {
   });
 
   // and load the index.html of the app.
-  screen1Window.loadFile(path.join(__dirname, 'video1.html'));
+  screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  //screen1Window.webContents.openDevTools();*/
+  screen1Window.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

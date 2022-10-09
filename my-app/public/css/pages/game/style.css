@@ -33,3 +33,9 @@
 .btn-white{
   background: #ffffff;
 }
+
+.box-lists{
+  display: inline-block;
+  background: transparent;
+  border: 2px solid #1ceee5;
+}
