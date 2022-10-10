@@ -1,6 +1,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-const { SerialPort } = require('serialport')
+const { SerialPort } = require('serialport');
+const { ipcRenderer } = require('electron');
 const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage_2');
@@ -14,7 +15,8 @@ const seconds = 300; //5min
 const Desk1 = ({ port, setPage, setTeamWinner }) => {
     const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
     const teamRed = JSON.parse(localStorage.getItem('teamRed'));
-    
+    const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
+
     const [turnOF, setTurnOF] = useState(1);
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -95,7 +97,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         sendCommands(itemSelected?.canalesDMX, 'success');
         if (teamGame === 1) {
             console.log('2.- enviar video1 a pantalla equipo azul');
-            console.log('3.- actualizar pantalla de equipo azul');
+            //console.log('3.- actualizar pantalla de equipo azul');
         } else {
             console.log('2.- enviar video1 a pantalla equipo rojo');
             console.log('3.- actualizar pantalla de equipo rojo');
@@ -120,7 +122,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         sendCommands(itemSelected?.canalesDMX, 'error');
         if (teamGame === 1) {
             console.log('2.- enviar video2 a pantalla equipo azul');
-            console.log('3.- actualizar pantalla de equipo azul');
+            //console.log('3.- actualizar pantalla de equipo azul');
         } else {
             console.log('2.- enviar video2 a pantalla equipo rojo');
             console.log('3.- actualizar pantalla de equipo rojo');
@@ -177,9 +179,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
 
     const getColorBtn = (team, row, column) => {
         const shootFailed_ = JSON.parse(localStorage.getItem('shootFailed'));
-        console.log('shootFailed_', shootFailed_)
         const shootFailed = shootFailed_ ? shootFailed_ : [];
-        console.log('shootFailed', shootFailed)
         let teamCurrently = team === 1 ? 2 : 1;
         if (itemSelected?.team == teamCurrently && itemSelected?.name === `${row}${column}`) {
             return 'btn-onfucus';
@@ -210,11 +210,30 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         }
     };
 
+    const sendFaileds = (items) => {
+        if (items && items.length) {
+            const newFormShoot = [];
+            items.map(i => {
+                if (i.teamShutter === 2) {
+                    const obj = {
+                        name: i.name,
+                        failed: 'true'
+                    }
+
+                    newFormShoot.push(obj);
+                }
+            });
+            if (newFormShoot.length)
+                ipcRenderer.send('screen1:teamRedFailed', newFormShoot);
+        }
+    };
+
     useEffect(() => {
         if (itemsSelected.length) {
             setRender(true);
             setTimeout(() => {
                 localStorage.setItem("shootFailed", JSON.stringify(itemsSelected));
+                sendFaileds(itemsSelected);
                 setRender(false);
             }, 100);
         }
@@ -233,6 +252,16 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             setPage(4);
         }
     }, [successRed]);
+
+    useEffect(() => {
+        //console.log('teamBlue', teamBlue);
+    }, [teamBlue]);
+
+    useEffect(() => {
+        if (teamRed.length) {
+            ipcRenderer.send('screen1:teamRed', teamRed);
+        }
+    }, [teamRed]);
 
     useEffect(() => {
         const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
@@ -271,7 +300,6 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         return () => clearInterval(intervalId);*/
     }, []);
 
-    console.log('timeLeft', timeLeft)
 
     return (
         <div

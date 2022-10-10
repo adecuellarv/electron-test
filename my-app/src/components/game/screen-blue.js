@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
-const { SerialPort } = require('serialport')
+const { ipcRenderer } = require('electron');
 const { useState, useRef, useEffect } = require('react');
 
 const bgimage = document.getElementById('bgimage');
@@ -18,233 +18,43 @@ const video2 = document.getElementById('video2');
 
 const seconds = 300; //5min
 
-const ScreenBlue = ({ port, setPage, setTeamWinner }) => {
-    const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
-    const teamRed = JSON.parse(localStorage.getItem('teamRed'));
+const ScreenBlue = () => {
 
-    const [turnOF, setTurnOF] = useState(1);
-    const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
-    const [itemsSelected, setItemsSelected] = useState([]);
-    const [render, setRender] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(seconds);
-    const [successBlue, setSuccessBlue] = useState(0);
-    const [successRed, setSuccessRed] = useState(0);
+    const [itemsKilled, setItemsKilled] = useState([]);
+    const [itemsFailed, setItemsFailed] = useState([]);
+    const [videoToShow, setVideoToShow] = useState(video1?.src);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBoxParentLeft = useRef(null);
 
-    const saveChoice = (team, row, column, rowNum, columnNum) => {
-
-        const filaNum = rowNum + 1, position = columnNum + 1;
-        const canalesDMX = [];
-        if (filaNum < 8) {
-            let startIn;
-            if (team === 1) {
-                startIn = 1;
-                if (filaNum > 1) {
-                    startIn = (filaNum - 1) * 21 + 1;
-                }
-            } else {
-                startIn = 162;
-                if (filaNum > 1) {
-                    startIn = (filaNum - 1) * 21 + 162;
-                }
-            }
-
-            const topByPosition = position * 3 + startIn;
-            const startByPostion = topByPosition - 3;
-            for (let index = startByPostion; index < topByPosition; index++) {
-                const element = index;
-                canalesDMX.push(element);
-            }
-        }
-
-        if (itemSelected?.name === `${row}${column}`) {
-            setItemSelected({});
-        } else
-            setItemSelected({
-                team,
-                row,
-                column,
-                name: `${row}${column}`,
-                canalesDMX
-            })
-    };
-
-    const send = () => {
-        if (itemSelected?.name) {
-            if (turnOF === 1) {
-                const position = teamRed.findIndex(item => item.name === itemSelected.name);
-                if (position !== -1) {
-                    actionsSuccess(1, 2, position);
-                } else {
-                    actionsError(1, 2);
-                }
-                setTurnOF(2);
-            } else {
-                const position = teamBlue.findIndex(item => item.name === itemSelected.name);
-                if (position !== -1) {
-                    actionsSuccess(2, 1, position);
-                } else {
-                    actionsError(2, 1);
-                }
-                setTurnOF(1);
-            }
-        } else {
-            alert('Selecciona una posición');
-        }
-    };
-
-    const actionsSuccess = (teamGame, teamShutter, positionArray) => {
-        //console.log('1.- enviar señal a jorge');
-        sendCommands(itemSelected?.canalesDMX, 'success');
-        if (teamGame === 1) {
-            console.log('2.- enviar video1 a pantalla equipo azul');
-            console.log('3.- actualizar pantalla de equipo azul');
-        } else {
-            console.log('2.- enviar video1 a pantalla equipo rojo');
-            console.log('3.- actualizar pantalla de equipo rojo');
-        }
-
-        if (teamShutter === 2) {
-            teamRed[positionArray].killed = 'true';
-            localStorage.setItem("teamRed", JSON.stringify(teamRed));
-            setSuccessBlue(successBlue + 1);
-        }
-        if (teamShutter === 1) {
-            teamBlue[positionArray].killed = 'true';
-            localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
-            setSuccessRed(successRed + 1);
-        }
-
-        setItemSelected({});
-    };
-
-    const actionsError = (teamGame, teamShutter) => {
-        //console.log('1.- enviar señal a jorge');
-        sendCommands(itemSelected?.canalesDMX, 'error');
-        if (teamGame === 1) {
-            console.log('2.- enviar video2 a pantalla equipo azul');
-            console.log('3.- actualizar pantalla de equipo azul');
-        } else {
-            console.log('2.- enviar video2 a pantalla equipo rojo');
-            console.log('3.- actualizar pantalla de equipo rojo');
-        }
-
-        const newArray = itemsSelected;
-        if (newArray.length) {
-            const position = itemsSelected.findIndex(item => item.teamShutter === teamShutter && item.name === itemSelected.name);
-            if (position === -1) {
-                const obj = {
-                    teamShutter,
-                    name: itemSelected.name,
-                    canalesDMX: itemSelected.canalesDMX
-                };
-                newArray.push(obj);
-            }
-        } else {
-            const obj = {
-                teamShutter,
-                name: itemSelected.name,
-                canalesDMX: itemSelected.canalesDMX
-            };
-            newArray.push(obj);
-        }
-
-        setItemsSelected([...newArray]);
-        setItemSelected({});
-    };
-
-    const sendCommands = (canalesDMX, typeSend) => {
-        if (!port?.port) {
-            if (canalesDMX.length) {
-                canalesDMX.map((i, k) => {
-                    let codeToSend = '';
-                    if (typeSend === 'success') {
-                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 0 ? '255' : '0'}:000`;
-                    }
-                    if (typeSend === 'error') {
-                        codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
-                    }
-                    executecCMD(codeToSend);
-                });
-            }
-        } else {
-            alert('No se ha podido conectar con el puerto COM1');
-        }
-    };
-
-    const executecCMD = async (code) => {
-        port.write(`${code}\r`);
-        console.log(`${code}\r`);
-        return true;
-    }
-
     const getColorBtn = (team, row, column) => {
-        /*
-        const shootFailed_ = JSON.parse(localStorage.getItem('shootFailed'));
-        console.log('shootFailed_', shootFailed_)
-        const shootFailed = shootFailed_ ? shootFailed_ : [];
-        console.log('shootFailed', shootFailed)
-        let teamCurrently = team === 1 ? 2 : 1;
-        if (itemSelected?.team == teamCurrently && itemSelected?.name === `${row}${column}`) {
-            return 'btn-onfucus';
-        } else {
-            if (team === 1) {
-                const position = teamRed.findIndex(item => item.name === `${row}${column}`);
-                if (position !== -1 && teamRed[position]?.killed === 'true') {
-                    return 'btn-red';
-                } else {
-                    const positionS = shootFailed.findIndex(item => item.teamShutter === 2 && item.name === `${row}${column}`);
-                    if (positionS !== -1) {
-                        return 'btn-white';
-                    }
-                }
+        if(itemsKilled.length){
+            const position = itemsKilled.findIndex(item => item.name === `${row}${column}`);
+            if (position !== -1){
+                return 'point-red';
             }
-
-            if (team === 2) {
-                const position = teamBlue.findIndex(item => item.name === `${row}${column}`);
-                if (position !== -1 && teamBlue[position]?.killed === 'true') {
-                    return 'btn-red';
-                } else {
-                    const positionS = shootFailed.findIndex(item => item.teamShutter === 1 && item.name === `${row}${column}`);
-                    if (positionS !== -1) {
-                        return 'btn-white';
-                    }
-                }
+        }
+        if(itemsFailed.length){
+            const position = itemsFailed.findIndex(item => item.name === `${row}${column}`);
+            if (position !== -1){
+                return 'point-white';
             }
-        }*/
+        }
     };
-    /*
-    useEffect(() => {
-        if (itemsSelected.length) {
-            setRender(true);
-            setTimeout(() => {
-                localStorage.setItem("shootFailed", JSON.stringify(itemsSelected));
-                setRender(false);
-            }, 100);
-        }
-    }, [itemsSelected]);
+
+    ipcRenderer.on('screen1:teamRed', (e, teamRed) => {
+        const killeds = teamRed.filter(i => i.killed === 'true');
+        setItemsKilled(killeds);
+    });
+
+    ipcRenderer.on('screen1:teamRedFailed', (e, teamRedFailed) => {
+        const faileds = teamRedFailed.filter(i => i.failed === 'true');
+        setItemsFailed(faileds);
+    });
 
     useEffect(() => {
-        if (successBlue >= teamRed.length) {
-            setTeamWinner('Azul');
-            setPage(4);
-        }
-    }, [successBlue]);
-
-    useEffect(() => {
-        if (successRed >= teamBlue.length) {
-            setTeamWinner('Rojo');
-            setPage(4);
-        }
-    }, [successRed]);*/
-
-    useEffect(() => {
-        const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
-        setItemsSelected(shootFailed ? shootFailed : []);
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
@@ -378,16 +188,21 @@ const ScreenBlue = ({ port, setPage, setTeamWinner }) => {
                                                 {listNumbers.map((j, k) =>
                                                     <div
                                                         className={
-                                                            `box-lists machineFont  
-                                                    ${getColorBtn(2, i, j)}
-                                                `}
+                                                            `box-lists machineFont`}
                                                         style={{
                                                             width: sizeBtnPositions,
                                                             height: sizeBtnPositions,
                                                         }}
                                                         key={k}
 
-                                                    />
+                                                    >
+                                                        <div
+                                                            className={getColorBtn(2, i, j)}
+                                                            style={{
+                                                                marginTop: sizeBtnPositions - 38
+                                                            }}
+                                                        />
+                                                    </div>
                                                 )}
                                             </div>
                                         )}
@@ -438,7 +253,7 @@ const ScreenBlue = ({ port, setPage, setTeamWinner }) => {
                                             width: '100%'
                                         }}
                                     >
-                                        <source src={video1?.src} type="video/webm" />
+                                        <source src={videoToShow} type="video/webm" />
                                         Your browser does not support HTML video.
                                     </video>
                                 </div>

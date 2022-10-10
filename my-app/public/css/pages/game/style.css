@@ -39,3 +39,19 @@
   background: transparent;
   border: 2px solid #1ceee5;
 }
+
+.point-red{
+  background: red;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+}
+
+.point-white{
+  background: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+}

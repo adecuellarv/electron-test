@@ -75,12 +75,12 @@ const createSecondWindow = () => {
       contextIsolation: false,
     },
   });
-
+  screen1Window.maximize();
   // and load the index.html of the app.
   screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  screen1Window.webContents.openDevTools();
+  //screen1Window.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -107,10 +107,14 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.on('screen1:status', (e, statusScreen) => {
-  screen1Window.webContents.send('screen1:status', statusScreen);
+ipcMain.on('screen1:teamRed', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:teamRed', statusScreen);
   //screen1Window.close();
-  //console.log('-status-', statusScreen);
+})
+
+ipcMain.on('screen1:teamRedFailed', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:teamRedFailed', statusScreen);
+  //screen1Window.close();
 })
 
 // In this file you can include the rest of your app's specific main process
