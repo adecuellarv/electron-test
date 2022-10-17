@@ -4,7 +4,7 @@ const bgimage = document.getElementById('bgimage');
 const boxcenter = document.getElementById('boxcenter');
 const buttonstart = document.getElementById('buttonstart');
 
-const Home = ({ setPage }) => {
+const Home = ({ startGame }) => {
     return (
         <div className="home-container"
             style={{
@@ -46,7 +46,7 @@ const Home = ({ setPage }) => {
                         style={{
                             width: '100%'
                         }}
-                        onClick={() => setPage(2)}
+                        onClick={startGame}
                     />
 
                 </div>

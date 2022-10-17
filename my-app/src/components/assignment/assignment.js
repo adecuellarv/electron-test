@@ -14,9 +14,19 @@ const Assignment = ({ port, setPage }) => {
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
+    const [boatNumberBlue, setBoatNumberBlue] = useState(1);
+    const [boatNumberRed, setBoatNumberRed] = useState(1);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
+
+    const saveByBoatBlue = () => { 
+        setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
+    };
+
+    const saveByBoatRed = () => {
+        setBoatNumberRed(parseInt(boatNumberRed) + 1);
+    };
 
     const saveChoice = (team, row, column, rowNum, columnNum) => {
         const filaNum = rowNum + 1, position = columnNum + 1;
@@ -44,7 +54,7 @@ const Assignment = ({ port, setPage }) => {
         }
 
         if (team === 1) {
-            const newArray = teamBlue;
+            let newArray = teamBlue;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
 
             if (position === -1) {
@@ -52,15 +62,23 @@ const Assignment = ({ port, setPage }) => {
                     row,
                     column,
                     name: `${row}${column}`,
-                    canalesDMX
+                    canalesDMX,
+                    boatNumber: boatNumberBlue
                 }
                 newArray.push(obj);
-            } else
-                newArray.splice(position, 1)
+            } else {
+                const boatNumber = newArray[position].boatNumber;
+                const filtered = newArray.filter(function(i, index, arr){ 
+                    return i.boatNumber !== boatNumber;
+                });
+                
+                newArray = filtered;
+            }
+            
 
             setTeamBlue([...newArray]);
         } else {
-            const newArray = teamRed;
+            let newArray = teamRed;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
 
             if (position === -1) {
@@ -68,11 +86,18 @@ const Assignment = ({ port, setPage }) => {
                     row,
                     column,
                     name: `${row}${column}`,
-                    canalesDMX
+                    canalesDMX,
+                    boatNumber: boatNumberRed
                 }
                 newArray.push(obj);
-            } else
-                newArray.splice(position, 1)
+            } else {
+                const boatNumber = newArray[position].boatNumber;
+                const filtered = newArray.filter(function(i, index, arr){ 
+                    return i.boatNumber !== boatNumber;
+                });
+                
+                newArray = filtered;
+            }
 
             setTeamRed([...newArray]);
         }
@@ -111,7 +136,7 @@ const Assignment = ({ port, setPage }) => {
 
     const sendCommands = () => {
 
-        if (!port?.port) {
+        if (port?.port) {
             const bothArrays = teamBlue.concat(teamRed);
 
             bothArrays.map(item => {
@@ -218,7 +243,26 @@ const Assignment = ({ port, setPage }) => {
                             >
 
                                 <div className="div-array" ref={refBoxLeft}>
-                                    <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                    <div className="row">
+                                        <div className="col-sm-4">
+                                            <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                        </div>
+                                        <div
+                                            className="col-sm-8"
+                                            style={{ textAlign: 'right', marginBottom: 10 }}
+                                        >
+                                            <button
+                                                className="machineFont"
+                                                onClick={saveByBoatBlue}
+                                                style={{
+                                                    marginRight: 15,
+                                                    border: 0,
+                                                    padding: '5px 25px',
+                                                    fontSize: 22
+                                                }}
+                                            >Guardar barco</button>
+                                        </div>
+                                    </div>
                                     {listLetters.map((i, key) =>
                                         <div key={key}>
                                             {listNumbers.map((j, k) => {
@@ -259,7 +303,26 @@ const Assignment = ({ port, setPage }) => {
                                 }}
                             >
                                 <div className="div-array">
-                                    <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                    <div className="row">
+                                        <div className="col-sm-4">
+                                            <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                        </div>
+                                        <div
+                                            className="col-sm-8"
+                                            style={{ textAlign: 'right', marginBottom: 10 }}
+                                        >
+                                            <button
+                                                className="machineFont"
+                                                onClick={saveByBoatRed}
+                                                style={{
+                                                    marginRight: 15,
+                                                    border: 0,
+                                                    padding: '5px 25px',
+                                                    fontSize: 22
+                                                }}
+                                            >Guardar barco</button>
+                                        </div>
+                                    </div>
                                     {listLetters.map((i, key) =>
                                         <div key={key}>
                                             {listNumbers.map((j, k) =>

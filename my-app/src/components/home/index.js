@@ -20,11 +20,63 @@ const Index = () => {
         localStorage.clear();
     }, []);
 
+    const startGame = () => {
+        listLetters.map((i, rowNum) => {
+            listNumbers.map((j, columnNum) => {
+                const filaNum = rowNum + 1, position = columnNum + 1;
+
+                //const canalesDMX = [];
+                //console.log('filaNum', filaNum, 'position', position)
+                if (filaNum >= 1 && filaNum <= 6) {
+
+                    let startIn = 1;
+                    if (filaNum > 1) {
+                        startIn = (filaNum - 1) * 21 + 1;
+                    }
+
+                    const topByPosition = position * 3 + startIn;
+                    const startByPostion = topByPosition - 3;
+                    for (let index = startByPostion; index < topByPosition; index++) {
+                        const element = index;
+                        //console.log('code-team-1', element)
+                        //canalesDMX.push(element);
+                        //const codeToSend = `A${element.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                        //executecCMD(codeToSend);
+                    }
+                } 
+                
+                if (filaNum >= 2) {
+                    let startIn = 162;
+                    if (filaNum > 1) {
+                        startIn = (filaNum - 1) * 21 + 162;
+                    }
+
+                    const topByPosition = position * 3 + startIn;
+                    const startByPostion = topByPosition - 3;
+                    for (let index = startByPostion; index < topByPosition; index++) {
+                        const element = index;
+                        //console.log('code-team-2', element)
+                        //const codeToSend = `A${element.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                        //executecCMD(codeToSend);
+                        //canalesDMX.push(element);
+                    }
+                }
+                //console.log('position', i + j);
+            });
+        })
+    };
+
+    const executecCMD = async (code) => {
+        port.write(`${code}\r`);
+        console.log(`${code}\r`);
+        return true;
+    }
+
     return (
         <>
             {page === 1 &&
                 <Home
-                    setPage={setPage}
+                    startGame={startGame}
                 />
             }
             {page === 2 &&
