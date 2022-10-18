@@ -96,7 +96,15 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         //console.log('1.- enviar señal a jorge');
         sendCommands(itemSelected?.canalesDMX, 'success');
         if (teamGame === 1) {
-            console.log('2.- enviar video1 a pantalla equipo azul');
+            const boatNumber = teamRed[positionArray].boatNumber;
+            const totalItems = teamRed.filter(i => i.boatNumber === boatNumber);
+            const obj = {
+                totalItems: totalItems?.length,
+                boatNumber,
+                generalInfo: itemSelected
+            };
+            ipcRenderer.send('screen1:success', obj);
+            //console.log('2.- enviar video1 a pantalla equipo azul');
             //console.log('3.- actualizar pantalla de equipo azul');
         } else {
             console.log('2.- enviar video1 a pantalla equipo rojo');
@@ -121,7 +129,8 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         //console.log('1.- enviar señal a jorge');
         sendCommands(itemSelected?.canalesDMX, 'error');
         if (teamGame === 1) {
-            console.log('2.- enviar video2 a pantalla equipo azul');
+            ipcRenderer.send('screen1:error', 1);
+            //console.log('2.- enviar video2 a pantalla equipo azul');
             //console.log('3.- actualizar pantalla de equipo azul');
         } else {
             console.log('2.- enviar video2 a pantalla equipo rojo');
@@ -153,7 +162,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     };
 
     const sendCommands = (canalesDMX, typeSend) => {
-        if (port?.port) {
+        if (!port?.port) {
             if (canalesDMX.length) {
                 canalesDMX.map((i, k) => {
                     let codeToSend = '';

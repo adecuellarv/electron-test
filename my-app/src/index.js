@@ -34,7 +34,7 @@ const createWindow = () => {
   mainWindow.maximize();
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
-  
+
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
@@ -46,12 +46,12 @@ const createSecondWindow = () => {
   })
 
   /*
-  Detecta pantalla 2
+  //Detecta pantalla 2
   if (externalDisplay) {
     screen1Window = new BrowserWindow({
       x: externalDisplay.bounds.x + 50,
       y: externalDisplay.bounds.y + 50,
-      title: "Video 1",
+      title: "Pantalla equipo azul",
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,
@@ -59,10 +59,13 @@ const createSecondWindow = () => {
       },
     })
     //screen1Window.loadURL('https://github.com')
-    screen1Window.loadFile(path.join(__dirname, 'video1.html'));
-  }
+    screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
-  */
+    // Open the DevTools.
+    screen1Window.webContents.openDevTools();
+  }
+*/
+
   
   // Create the browser window.
   screen1Window = new BrowserWindow({
@@ -80,7 +83,7 @@ const createSecondWindow = () => {
   screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  //screen1Window.webContents.openDevTools();
+  screen1Window.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -117,5 +120,14 @@ ipcMain.on('screen1:teamRedFailed', (e, statusScreen) => {
   //screen1Window.close();
 })
 
+ipcMain.on('screen1:error', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:error', statusScreen);
+  //screen1Window.close();
+})
+
+ipcMain.on('screen1:success', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:success', statusScreen);
+  //screen1Window.close();
+})
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

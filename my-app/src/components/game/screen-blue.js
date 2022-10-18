@@ -13,33 +13,87 @@ const barras3 = document.getElementById('barras3');
 const circles1 = document.getElementById('circles');
 const circles2 = document.getElementById('circles2');
 
-const video1 = document.getElementById('video1');
-const video2 = document.getElementById('video2');
+const mainvideo = document.getElementById('mainvideo');
+
+const small_error = document.getElementById('small_error');
+const small_success1 = document.getElementById('small_success1');
+
+const medium_error = document.getElementById('medium_error');
+const medium_success1 = document.getElementById('medium_success1');
+const medium_success2 = document.getElementById('medium_success2');
+
+const large_error = document.getElementById('large_error');
+const large_success1 = document.getElementById('large_success1');
+const large_success2 = document.getElementById('large_success2');
+const large_success3 = document.getElementById('large_success3');
+
 
 const seconds = 300; //5min
-
 const ScreenBlue = () => {
-
+    const videoRef = useRef(null);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
     const [itemsKilled, setItemsKilled] = useState([]);
     const [itemsFailed, setItemsFailed] = useState([]);
-    const [videoToShow, setVideoToShow] = useState(video1?.src);
+    const [videoToShow, setVideoToShow] = useState(mainvideo?.getAttribute('src'));
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBoxParentLeft = useRef(null);
 
     const getColorBtn = (team, row, column) => {
-        if(itemsKilled.length){
+        if (itemsKilled.length) {
             const position = itemsKilled.findIndex(item => item.name === `${row}${column}`);
-            if (position !== -1){
+            if (position !== -1) {
                 return 'point-red';
             }
         }
-        if(itemsFailed.length){
+        if (itemsFailed.length) {
             const position = itemsFailed.findIndex(item => item.name === `${row}${column}`);
-            if (position !== -1){
+            if (position !== -1) {
                 return 'point-white';
+            }
+        }
+    };
+
+    const getVideoSuccess = (info) => {
+
+        const { totalItems, boatNumber, generalInfo } = info;
+
+        if (itemsKilled.length) { debugger
+            const listElementsByBoat = itemsKilled.filter(i => i.boatNumber === boatNumber && i.killed === "true");
+            const restKillers = totalItems - listElementsByBoat.length;
+
+            switch (totalItems) {
+                case 1:
+                    return small_success1.getAttribute('src');
+                case 2:
+                    if (restKillers === 2) {
+                        return medium_success2.getAttribute('src');
+                    } else if (restKillers === 1) {
+                        return medium_success1.getAttribute('src');
+                    }
+                case 3:
+                    if (restKillers === 3) {
+                        return large_success3.getAttribute('src');
+                    } else if (restKillers === 2) {
+                        return large_success2.getAttribute('src');
+                    } else if (restKillers === 1) {
+                        return large_success1.getAttribute('src');
+                    }
+                default:
+                    break;
+            }
+
+        } else {
+            switch (totalItems) {
+                case 1:
+                    return small_success1.getAttribute('src');
+                case 2:
+                    return medium_success1.getAttribute('src');
+                case 3:
+                    return large_success1.getAttribute('src');
+                default:
+                    break;
             }
         }
     };
@@ -53,6 +107,29 @@ const ScreenBlue = () => {
         const faileds = teamRedFailed.filter(i => i.failed === 'true');
         setItemsFailed(faileds);
     });
+
+    ipcRenderer.on('screen1:error', (e, status) => {
+        setVideoToShow(large_error?.getAttribute('src'));
+        videoRef.current?.load();
+        setTimeout(() => {
+            setVideoToShow(mainvideo?.getAttribute('src'));
+            videoRef.current?.load();
+        }, 5000);
+    });
+
+    ipcRenderer.on('screen1:success', (e, info) => {
+        console.log('entro-success');
+        console.log(getVideoSuccess(info));
+        const videoSrc = getVideoSuccess(info);
+
+        setVideoToShow(videoSrc);
+        videoRef.current?.load();
+        setTimeout(() => {
+            setVideoToShow(mainvideo?.getAttribute('src'));
+            videoRef.current?.load();
+        }, 5000);
+    });
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -79,6 +156,7 @@ const ScreenBlue = () => {
         handleResize();
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
 
     useEffect(() => {
         /*
@@ -252,9 +330,9 @@ const ScreenBlue = () => {
                                         style={{
                                             width: '100%'
                                         }}
+                                        ref={videoRef}
                                     >
-                                        <source src={videoToShow} type="video/webm" />
-                                        Your browser does not support HTML video.
+                                        <source src={videoToShow} />
                                     </video>
                                 </div>
                                 <div className="col-sm-4">
