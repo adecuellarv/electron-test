@@ -10,7 +10,7 @@ const Home = ({ startGame }) => {
             style={{
                 backgroundImage: `linear-gradient(45deg,rgba(0, 0, 0, 0.30),rgba(0, 0, 0, 0.30) ), url(${bgimage?.src})`,
                 backgroundPosition: '50% 50%',
-                backgroundSize: 'contain',
+                backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 position: 'relative'
             }}

@@ -7,6 +7,7 @@ let port;
 const Index = () => {
     const [page, setPage] = useState(3);
     const [teamWinner, setTeamWinner] = useState('');
+    const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         port = new SerialPort({
@@ -117,6 +118,17 @@ const Index = () => {
                 <Results
                     setPage={setPage}
                     teamWinner={teamWinner}
+                />
+            }
+            {page !== 1 &&
+                <LateralMenu
+                    setShowMenu={setShowMenu}
+                />
+            }
+            {showMenu &&
+                <Menu
+                    setShowMenu={setShowMenu}
+                    setPage={setPage}
                 />
             }
         </>

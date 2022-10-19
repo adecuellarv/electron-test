@@ -19,13 +19,18 @@ const Assignment = ({ port, setPage }) => {
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
+    const refContentMain = useRef(null);
 
-    const saveByBoatBlue = () => { 
-        setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
+    const saveByBoatBlue = () => {
+        if (teamBlue.length) {
+            setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
+        } else alert('Selecciona posiciones para el barco');
     };
 
     const saveByBoatRed = () => {
-        setBoatNumberRed(parseInt(boatNumberRed) + 1);
+        if (teamRed.length) {
+            setBoatNumberRed(parseInt(boatNumberRed) + 1);
+        } else alert('Selecciona posiciones para el barco');
     };
 
     const saveChoice = (team, row, column, rowNum, columnNum) => {
@@ -68,13 +73,13 @@ const Assignment = ({ port, setPage }) => {
                 newArray.push(obj);
             } else {
                 const boatNumber = newArray[position].boatNumber;
-                const filtered = newArray.filter(function(i, index, arr){ 
+                const filtered = newArray.filter(function (i, index, arr) {
                     return i.boatNumber !== boatNumber;
                 });
-                
+
                 newArray = filtered;
             }
-            
+
 
             setTeamBlue([...newArray]);
         } else {
@@ -92,10 +97,10 @@ const Assignment = ({ port, setPage }) => {
                 newArray.push(obj);
             } else {
                 const boatNumber = newArray[position].boatNumber;
-                const filtered = newArray.filter(function(i, index, arr){ 
+                const filtered = newArray.filter(function (i, index, arr) {
                     return i.boatNumber !== boatNumber;
                 });
-                
+
                 newArray = filtered;
             }
 
@@ -160,7 +165,21 @@ const Assignment = ({ port, setPage }) => {
         return true;
     }
 
+    const checkLocalStorage = () => {
+        const teamBlueLocalStorage = JSON.parse(localStorage.getItem('teamBlue'));
+        const teamRedLocalStorage = JSON.parse(localStorage.getItem('teamRed')); 
+
+        if(teamBlueLocalStorage && teamBlueLocalStorage.length){
+            setTeamBlue(teamBlueLocalStorage);
+        }
+
+        if(teamRedLocalStorage && teamRedLocalStorage.length){
+            setTeamRed(teamRedLocalStorage);
+        }
+    };
+
     useEffect(() => {
+        checkLocalStorage();
         const handleResize = () => {
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
@@ -181,13 +200,11 @@ const Assignment = ({ port, setPage }) => {
             }
 
         };
-        localStorage.clear();
+        //localStorage.clear();
         window.addEventListener("resize", handleResize);
         handleResize();
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
-
 
     return (
         <div
@@ -199,10 +216,13 @@ const Assignment = ({ port, setPage }) => {
                 position: 'relative',
                 width: '100%',
                 height: '100vh',
+                //height: refContentMain?.current?.clientHeight
             }}
         >
             <div
+                ref={refContentMain}
                 style={{
+                    transform: 'scale(.84)'
                     //top: '50%',
                     //transform: 'translateY(-50%)',
                     //height: 'calc(100vh - 100px)'
@@ -210,7 +230,7 @@ const Assignment = ({ port, setPage }) => {
             >
                 <div className="container"
                     style={{
-                        paddingTop: paddingTopContent
+                        //paddingTop: paddingTopContent
                     }}
                 >
                     <div className="row">
