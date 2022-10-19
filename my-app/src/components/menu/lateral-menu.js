@@ -8,7 +8,7 @@ const btn_menu = document.getElementById('menu');
 //const btn_back = document.getElementById('btn_back');
 //const bginstructions = document.getElementById('bginstructions');
 
-const LateralMenu = ({ setShowMenu }) => { console.log('-', btn_menu?.src)
+const LateralMenu = ({ setShowMenu }) => { 
     return (
         <div
             style={{

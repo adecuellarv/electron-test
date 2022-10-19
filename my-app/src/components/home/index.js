@@ -5,7 +5,7 @@ const { useState, useEffect } = require('react');
 
 let port;
 const Index = () => {
-    const [page, setPage] = useState(3);
+    const [page, setPage] = useState(1);
     const [teamWinner, setTeamWinner] = useState('');
     const [showMenu, setShowMenu] = useState(false);
 
@@ -18,10 +18,10 @@ const Index = () => {
             stopbits: 1,
             flowControl: false
         });
-        //localStorage.clear();
     }, []);
 
     const startGame = async () => {
+        localStorage.clear();
         const totalLoadersBlue = await boardBlue(true);
         if (totalLoadersBlue === 49) {
             const totalLoadersRed = await boardRed(true);
@@ -48,7 +48,7 @@ const Index = () => {
                         const element = index;
                         const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
                         countCode++;
-                        console.log('codes-team1', codeToSend);
+                        //console.log('codes-team1', codeToSend);
                         //executecCMD(codeToSend);
                     }
                 }
@@ -77,7 +77,7 @@ const Index = () => {
                         const element = index;
                         const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
                         countCode++;
-                        console.log('codes-team2', codeToSend);
+                        //console.log('codes-team2', codeToSend);
                         //executecCMD(codeToSend);
                     }
                 }

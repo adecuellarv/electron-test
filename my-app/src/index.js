@@ -36,7 +36,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
@@ -80,10 +80,10 @@ const createSecondWindow = () => {
   });
   screen1Window.maximize();
   // and load the index.html of the app.
-  //screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
+  screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  //screen1Window.webContents.openDevTools();
+  screen1Window.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

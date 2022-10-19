@@ -29,6 +29,7 @@ const large_success3 = document.getElementById('large_success3');
 
 
 const seconds = 300; //5min
+//let success = false, error = false;
 const ScreenBlue = () => {
     const videoRef = useRef(null);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -57,44 +58,33 @@ const ScreenBlue = () => {
 
     const getVideoSuccess = (info) => {
 
-        const { totalItems, boatNumber, generalInfo } = info;
+        const { totalItems, teamRed, boatNumber } = info;
 
-        if (itemsKilled.length) { debugger
-            const listElementsByBoat = itemsKilled.filter(i => i.boatNumber === boatNumber && i.killed === "true");
+        if (teamRed.length) {
+            const listElementsByBoat = teamRed.filter(i => i.boatNumber === boatNumber && i.killed === "true");
             const restKillers = totalItems - listElementsByBoat.length;
-
+            //console.log('totalItems', totalItems, 'restKillers', restKillers, 'listElementsByBoat', listElementsByBoat)
             switch (totalItems) {
                 case 1:
                     return small_success1.getAttribute('src');
                 case 2:
-                    if (restKillers === 2) {
+                    if (restKillers === 0) {
                         return medium_success2.getAttribute('src');
                     } else if (restKillers === 1) {
                         return medium_success1.getAttribute('src');
                     }
                 case 3:
-                    if (restKillers === 3) {
+                    if (restKillers === 0) {
                         return large_success3.getAttribute('src');
-                    } else if (restKillers === 2) {
-                        return large_success2.getAttribute('src');
                     } else if (restKillers === 1) {
+                        return large_success2.getAttribute('src');
+                    } else if (restKillers === 2) {
                         return large_success1.getAttribute('src');
                     }
                 default:
                     break;
             }
 
-        } else {
-            switch (totalItems) {
-                case 1:
-                    return small_success1.getAttribute('src');
-                case 2:
-                    return medium_success1.getAttribute('src');
-                case 3:
-                    return large_success1.getAttribute('src');
-                default:
-                    break;
-            }
         }
     };
 
@@ -180,184 +170,190 @@ const ScreenBlue = () => {
             }}
         >
             <div
-                className="container"
                 style={{
-                    paddingTop: paddingTopContent
+                    transform: 'scale(.84)'
                 }}
             >
-                <div className="row">
-                    <div
-                        className="col-sm-12"
-                        style={{
-                            textAlign: 'center',
-                            //marginTop: 30,
-                        }}
-                        ref={refLogo}
-                    >
-                        <img
-                            src={logo?.src}
-                            style={{
-                                width: '20%',
-                            }}
-                        />
-                    </div>
-                    <div className="col-sm-6" style={{ marginTop: -30 }}>
+                <div
+                    className="container"
+                    style={{
+                        //paddingTop: paddingTopContent
+                    }}
+                >
+                    <div className="row">
                         <div
+                            className="col-sm-12"
                             style={{
-                                backgroundImage: `url(${boxleft?.src})`,
-                                backgroundPosition: '50% 50%',
-                                backgroundSize: 'contain',
-                                backgroundRepeat: 'no-repeat',
-                                position: 'relative',
-                                width: '100%',
-                                //height: 'calc(100vh - 170px)',
+                                textAlign: 'center',
+                                //marginTop: 30,
                             }}
-                            ref={refBoxParentLeft}
+                            ref={refLogo}
                         >
-                            <div className="div-array" ref={refBoxLeft}>
-                                <div className="row">
-                                    <div className="col-sm-6">
-                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                            <img
+                                src={logo?.src}
+                                style={{
+                                    width: '20%',
+                                }}
+                            />
+                        </div>
+                        <div className="col-sm-6" style={{ marginTop: -30 }}>
+                            <div
+                                style={{
+                                    backgroundImage: `url(${boxleft?.src})`,
+                                    backgroundPosition: '50% 50%',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    position: 'relative',
+                                    width: '100%',
+                                    //height: 'calc(100vh - 170px)',
+                                }}
+                                ref={refBoxParentLeft}
+                            >
+                                <div className="div-array" ref={refBoxLeft}>
+                                    <div className="row">
+                                        <div className="col-sm-6">
+                                            <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-sm-1"
-                                        style={{
-                                            marginTop: sizeBtnPositions
-                                        }}
-                                    >
-                                        {listLetters.map((i, key) =>
-                                            <div
-                                                key={key}
-                                                style={{
-                                                    paddingRight: 10,
-                                                    width: sizeBtnPositions,
-                                                    height: sizeBtnPositions + 7,
-                                                }}
-                                            >
-                                                <label
+                                    <div className="row">
+                                        <div className="col-sm-1"
+                                            style={{
+                                                marginTop: sizeBtnPositions
+                                            }}
+                                        >
+                                            {listLetters.map((i, key) =>
+                                                <div
+                                                    key={key}
                                                     style={{
+                                                        paddingRight: 10,
+                                                        width: sizeBtnPositions,
+                                                        height: sizeBtnPositions + 7,
+                                                    }}
+                                                >
+                                                    <label
+                                                        style={{
 
 
+                                                            textAlign: 'center',
+                                                            color: '#fff'
+                                                        }}
+                                                    >{i}</label>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="col-sm-11">
+
+                                            {listNumbers.map((j, k) =>
+                                                <label
+                                                    key={k}
+                                                    className="machineFont"
+                                                    style={{
+                                                        width: sizeBtnPositions,
+                                                        height: sizeBtnPositions,
                                                         textAlign: 'center',
                                                         color: '#fff'
                                                     }}
-                                                >{i}</label>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="col-sm-11">
+                                                >{j}</label>
+                                            )}
 
-                                        {listNumbers.map((j, k) =>
-                                            <label
-                                                key={k}
-                                                className="machineFont"
-                                                style={{
-                                                    width: sizeBtnPositions,
-                                                    height: sizeBtnPositions,
-                                                    textAlign: 'center',
-                                                    color: '#fff'
-                                                }}
-                                            >{j}</label>
-                                        )}
-
-                                        {listLetters.map((i, key) =>
-                                            <div key={key}>
-                                                {listNumbers.map((j, k) =>
-                                                    <div
-                                                        className={
-                                                            `box-lists machineFont`}
-                                                        style={{
-                                                            width: sizeBtnPositions,
-                                                            height: sizeBtnPositions,
-                                                        }}
-                                                        key={k}
-
-                                                    >
+                                            {listLetters.map((i, key) =>
+                                                <div key={key}>
+                                                    {listNumbers.map((j, k) =>
                                                         <div
-                                                            className={getColorBtn(2, i, j)}
+                                                            className={
+                                                                `box-lists machineFont`}
                                                             style={{
-                                                                marginTop: sizeBtnPositions - 38
+                                                                width: sizeBtnPositions,
+                                                                height: sizeBtnPositions,
                                                             }}
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                                                            key={k}
 
+                                                        >
+                                                            <div
+                                                                className={getColorBtn(2, i, j)}
+                                                                style={{
+                                                                    marginTop: sizeBtnPositions - 38
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-sm-6" style={{ marginTop: -30 }}>
-                        <div
-                            style={{
-                                backgroundImage: `url(${boxright?.src})`,
-                                backgroundPosition: '50% 50%',
-                                backgroundSize: 'contain',
-                                backgroundRepeat: 'no-repeat',
-                                position: 'relative',
-                                //width: '100%',
-                                width: refBoxParentLeft?.current?.offsetWidth + 62,
-                                height: refBoxParentLeft?.current?.offsetWidth + 62,
-                                padding: 75,
-                                //height: 'calc(100vh - 170px)',
-                            }}
-                        >
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <img
-                                        src={barras3?.src}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-sm-6">
-                                    <img
-                                        src={circles1?.src}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-sm-12">
-                                    <video
-                                        controls={false}
-                                        autoPlay={true}
-                                        loop={true}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                        ref={videoRef}
-                                    >
-                                        <source src={videoToShow} />
-                                    </video>
-                                </div>
-                                <div className="col-sm-4">
-                                    <img
-                                        src={barras1?.src}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-sm-4">
-                                    <img
-                                        src={barras2?.src}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-sm-4">
-                                    <img
-                                        src={circles2?.src}
-                                        style={{
-                                            width: '100%'
-                                        }}
-                                    />
+                        <div className="col-sm-6" style={{ marginTop: -30 }}>
+                            <div
+                                style={{
+                                    backgroundImage: `url(${boxright?.src})`,
+                                    backgroundPosition: '50% 50%',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    position: 'relative',
+                                    //width: '100%',
+                                    width: refBoxParentLeft?.current?.offsetWidth + 62,
+                                    height: refBoxParentLeft?.current?.offsetWidth + 62,
+                                    padding: 75,
+                                    //height: 'calc(100vh - 170px)',
+                                }}
+                            >
+                                <div className="row">
+                                    <div className="col-sm-6">
+                                        <img
+                                            src={barras3?.src}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <img
+                                            src={circles1?.src}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col-sm-12">
+                                        <video
+                                            controls={false}
+                                            autoPlay={true}
+                                            loop={true}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                            ref={videoRef}
+                                        >
+                                            <source src={videoToShow} />
+                                        </video>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <img
+                                            src={barras1?.src}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <img
+                                            src={barras2?.src}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <img
+                                            src={circles2?.src}
+                                            style={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

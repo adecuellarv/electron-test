@@ -9,6 +9,7 @@ const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
+let countSelectedRed = 1, countSelectedBlue = 1;
 const Assignment = ({ port, setPage }) => {
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
@@ -24,12 +25,14 @@ const Assignment = ({ port, setPage }) => {
     const saveByBoatBlue = () => {
         if (teamBlue.length) {
             setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
+            countSelectedBlue = 1;
         } else alert('Selecciona posiciones para el barco');
     };
 
     const saveByBoatRed = () => {
         if (teamRed.length) {
             setBoatNumberRed(parseInt(boatNumberRed) + 1);
+            countSelectedRed = 1;
         } else alert('Selecciona posiciones para el barco');
     };
 
@@ -80,8 +83,12 @@ const Assignment = ({ port, setPage }) => {
                 newArray = filtered;
             }
 
+            if (countSelectedBlue <= 3) {
+                setTeamBlue([...newArray]);
+                //countSelectedBlue++;
+            } else alert('El máximo de integrantes por barco es de 3')
 
-            setTeamBlue([...newArray]);
+
         } else {
             let newArray = teamRed;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
@@ -103,8 +110,11 @@ const Assignment = ({ port, setPage }) => {
 
                 newArray = filtered;
             }
+            if (countSelectedRed <= 3) {
+                setTeamRed([...newArray]);
+                //countSelectedRed++;
+            } else alert('El máximo de integrantes por barco es de 3')
 
-            setTeamRed([...newArray]);
         }
     };
 
@@ -167,13 +177,13 @@ const Assignment = ({ port, setPage }) => {
 
     const checkLocalStorage = () => {
         const teamBlueLocalStorage = JSON.parse(localStorage.getItem('teamBlue'));
-        const teamRedLocalStorage = JSON.parse(localStorage.getItem('teamRed')); 
+        const teamRedLocalStorage = JSON.parse(localStorage.getItem('teamRed'));
 
-        if(teamBlueLocalStorage && teamBlueLocalStorage.length){
+        if (teamBlueLocalStorage && teamBlueLocalStorage.length) {
             setTeamBlue(teamBlueLocalStorage);
         }
 
-        if(teamRedLocalStorage && teamRedLocalStorage.length){
+        if (teamRedLocalStorage && teamRedLocalStorage.length) {
             setTeamRed(teamRedLocalStorage);
         }
     };

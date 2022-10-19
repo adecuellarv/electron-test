@@ -12,6 +12,11 @@ const bginstructions = document.getElementById('bginstructions');
 
 const Menu = ({ setShowMenu, setPage }) => {
     const [menuType, setMenuType] = useState(1);
+    
+    const changePage = (number) => {
+        setShowMenu(false);
+        setPage(number);
+    };
     return (
         <div className="background-menu"
             style={{
@@ -68,18 +73,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 marginTop: 10,
                                 cursor: 'pointer'
                             }}
-                            onClick={() => setPage(1)}
-                        >
-                            <label className="machineFont">INICIO</label>
-                        </div>
-                        <div
-                            style={{
-                                border: '2px solid #000',
-                                padding: 10,
-                                marginTop: 10,
-                                cursor: 'pointer'
-                            }}
-                            onClick={() => setPage(2)}
+                            onClick={() => changePage(2)}
                         >
                             <label className="machineFont">ASIGNAR COORDENADAS</label>
                         </div>
@@ -90,7 +84,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 marginTop: 10,
                                 cursor: 'pointer'
                             }}
-                            onClick={() => setPage(3)}
+                            onClick={() => changePage(3)}
                         >
                             <label className="machineFont">JUEGO</label>
                         </div>
@@ -116,8 +110,18 @@ const Menu = ({ setShowMenu, setPage }) => {
                         >
                             <label className="machineFont">CONFIGURACIÓN</label>
                         </div>
+                        <div
+                            style={{
+                                border: '2px solid #000',
+                                padding: 10,
+                                marginTop: 10,
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => changePage(1)}
+                        >
+                            <label className="machineFont">REINICIAR JUEGO</label>
+                        </div>
                     </div>
-
                 </div>
             }
             {menuType === 2 &&

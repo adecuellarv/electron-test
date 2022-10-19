@@ -96,14 +96,6 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         //console.log('1.- enviar señal a jorge');
         sendCommands(itemSelected?.canalesDMX, 'success');
         if (teamGame === 1) {
-            const boatNumber = teamRed[positionArray].boatNumber;
-            const totalItems = teamRed.filter(i => i.boatNumber === boatNumber);
-            const obj = {
-                totalItems: totalItems?.length,
-                boatNumber,
-                generalInfo: itemSelected
-            };
-            ipcRenderer.send('screen1:success', obj);
             //console.log('2.- enviar video1 a pantalla equipo azul');
             //console.log('3.- actualizar pantalla de equipo azul');
         } else {
@@ -115,6 +107,15 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             teamRed[positionArray].killed = 'true';
             localStorage.setItem("teamRed", JSON.stringify(teamRed));
             setSuccessBlue(successBlue + 1);
+
+            //succes pantalla
+            const boatNumber = teamRed[positionArray].boatNumber;
+            const totalItems = teamRed.filter(i => i.boatNumber === boatNumber);
+            ipcRenderer.send('screen1:success', {
+                totalItems: totalItems.length,
+                boatNumber,
+                teamRed
+            });
         }
         if (teamShutter === 1) {
             teamBlue[positionArray].killed = 'true';

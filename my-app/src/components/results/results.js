@@ -1,5 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom/client');
+const { ipcRenderer } = require('electron');
 const bg_barco = document.getElementById('bg_barco');
 const logo = document.getElementById('logo');
 const btn_start_again = document.getElementById('btn_start_again');
@@ -9,6 +10,9 @@ const Results = ({ setPage, teamWinner }) => {
     
     const start = () => {
         localStorage.clear();
+        ipcRenderer.send('screen1:teamRedFailed', []);
+        ipcRenderer.send('screen1:teamRed', []);
+
         setPage(1);
     };
 
