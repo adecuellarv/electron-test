@@ -49,7 +49,7 @@ const Index = () => {
                         const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
                         countCode++;
                         //console.log('codes-team1', codeToSend);
-                        //executecCMD(codeToSend);
+                        executecCMD(codeToSend);
                     }
                 }
                 totalElements++;
@@ -78,7 +78,7 @@ const Index = () => {
                         const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
                         countCode++;
                         //console.log('codes-team2', codeToSend);
-                        //executecCMD(codeToSend);
+                        executecCMD(codeToSend);
                     }
                 }
 
@@ -89,8 +89,10 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        port.write(`${code}\r`);
-        console.log(`${code}\r`);
+        if (port?.port) {
+            port.write(`${code}\r`);
+            console.log(`${code}\r`);
+        }
         return true;
     }
 
