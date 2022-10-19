@@ -1,6 +1,7 @@
 const { useState } = require('react');
 const React = require('react');
 const ReactDOM = require('react-dom/client');
+const { ipcRenderer } = require('electron');
 const bgimage = document.getElementById('bgimage_2');
 const bgmenu = document.getElementById('bgmenu');
 const btn_menu = document.getElementById('menu');
@@ -12,11 +13,18 @@ const bginstructions = document.getElementById('bginstructions');
 
 const Menu = ({ setShowMenu, setPage }) => {
     const [menuType, setMenuType] = useState(1);
-    
+    const [time, setTime] = useState(480);
+
     const changePage = (number) => {
         setShowMenu(false);
         setPage(number);
     };
+
+    const sendTime = () => {
+        const value = time * 60;
+
+        ipcRenderer.send('screen1:time', value);
+    }
     return (
         <div className="background-menu"
             style={{
@@ -163,7 +171,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                         <h1 className="machineFont">CONFIGURACIÓN DE PANTALLA</h1>
 
                         <div>
-                            <h4>MÉTODO 1</h4>
+                            <h4 className="machineFont">MÉTODO 1</h4>
                         </div>
                         <p className="machineFont">
                             1.- Para alinear las pantallas en su lugar, encender los proyectores.
@@ -175,7 +183,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                             1.- Abrir nuevamente la aplicación (una vez ya encendidos los proyectores se alinearán automaticamente)
                         </p>
                         <div>
-                            <h4>MÉTODO 2</h4>
+                            <h4 className="machineFont">MÉTODO 2</h4>
                         </div>
                         <p className="machineFont">
                             1.- Arrastrar la pantalla del equipo azul desde la pantalla panel de control hasta el proyector 1 y soltar.
@@ -224,6 +232,9 @@ const Menu = ({ setShowMenu, setPage }) => {
                         }}
                     >
                         <h1 className="machineFont">CONFIGURACIÓN</h1>
+                        <div>
+                            <h4 className="machineFont">ALÍNEAR PANTALLAS</h4>
+                        </div>
                         <div
                             style={{
                                 border: '2px solid #000',
@@ -231,10 +242,28 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 marginTop: 10,
                                 cursor: 'pointer'
                             }}
-                            //onClick={() => setPage(1)}
+                        //onClick={() => setPage(1)}
                         >
                             <label className="machineFont">ENVIAR PANTALLAS A PROYECTORES</label>
                         </div>
+                        {false &&
+                            <div>
+                                <div style={{ paddingTop: 30 }}>
+                                    <h4 className="machineFont">TIEMPO DE JUEGO</h4>
+                                </div>
+                                <div>
+                                    <input
+                                        class="form-control"
+                                        onChange={(e) => setTime(e.target.value)}
+                                    />
+                                    <button
+                                        class="btn btn-dark"
+                                        onClick={sendTime}
+                                        style={{ float: 'right' }}
+                                    >Guardar tiempo</button>
+                                </div>
+                            </div>
+                        }
                     </div>
 
                 </div>

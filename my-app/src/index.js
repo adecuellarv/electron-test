@@ -4,9 +4,6 @@ const BrowserRouter = require('react-router-dom').BrowserRouter;
 //const electronReload = require('electron-reload')
 const path = require('path');
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// eslint-disable-next-line global-require
-
 if (process.env.NODE_ENV !== "production") {
   require('electron-reload')(__dirname, {
     //electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
@@ -18,7 +15,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow;
-let screen1Window;
+let screen1Window, screen2Window;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -66,7 +63,7 @@ const createSecondWindow = () => {
   }
 */
 
-  
+
   // Create the browser window.
   screen1Window = new BrowserWindow({
     width: 800,
@@ -83,18 +80,39 @@ const createSecondWindow = () => {
   screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  screen1Window.webContents.openDevTools();
+  //screen1Window.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+const createThreeWindow = () => {
+  const displays = screen.getAllDisplays()
+  const externalDisplay = displays.find((display) => {
+    return display.bounds.x !== 0 || display.bounds.y !== 0
+  })
+
+  // Create the browser window.
+  screen2Window = new BrowserWindow({
+    width: 800,
+    height: 700,
+    title: "Pantalla equipo rojo",
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+  screen2Window.maximize();
+  // and load the index.html of the app.
+  screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
+
+  // Open the DevTools.
+  //screen2Window.webContents.openDevTools();
+};
+
 app.on('ready', createWindow);
 app.on('ready', createSecondWindow);
+app.on('ready', createThreeWindow);
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
@@ -107,6 +125,7 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
     createSecondWindow();
+    createThreeWindow();
   }
 });
 
@@ -129,5 +148,34 @@ ipcMain.on('screen1:success', (e, statusScreen) => {
   screen1Window.webContents.send('screen1:success', statusScreen);
   //screen1Window.close();
 })
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+
+ipcMain.on('screen1:time', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:time', statusScreen);
+  //screen1Window.close();
+})
+
+//////////////////////////////77
+ipcMain.on('screen2:teamRed', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:teamRed', statusScreen);
+  //screen2Window.close();
+})
+
+ipcMain.on('screen2:teamRedFailed', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:teamRedFailed', statusScreen);
+  //screen2Window.close();
+})
+
+ipcMain.on('screen2:error', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:error', statusScreen);
+  //screen2Window.close();
+})
+
+ipcMain.on('screen2:success', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:success', statusScreen);
+  //screen2Window.close();
+})
+
+ipcMain.on('screen2:time', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:time', statusScreen);
+  //screen2Window.close();
+})

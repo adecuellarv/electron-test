@@ -99,8 +99,8 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             //console.log('2.- enviar video1 a pantalla equipo azul');
             //console.log('3.- actualizar pantalla de equipo azul');
         } else {
-            console.log('2.- enviar video1 a pantalla equipo rojo');
-            console.log('3.- actualizar pantalla de equipo rojo');
+            //console.log('2.- enviar video1 a pantalla equipo rojo');
+            //console.log('3.- actualizar pantalla de equipo rojo');
         }
 
         if (teamShutter === 2) {
@@ -121,6 +121,15 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             teamBlue[positionArray].killed = 'true';
             localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
             setSuccessRed(successRed + 1);
+
+            //succes pantalla
+            const boatNumber = teamBlue[positionArray].boatNumber;
+            const totalItems = teamBlue.filter(i => i.boatNumber === boatNumber);
+            ipcRenderer.send('screen2:success', {
+                totalItems: totalItems.length,
+                boatNumber,
+                teamBlue
+            });
         }
 
         setItemSelected({});
@@ -134,8 +143,9 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             //console.log('2.- enviar video2 a pantalla equipo azul');
             //console.log('3.- actualizar pantalla de equipo azul');
         } else {
-            console.log('2.- enviar video2 a pantalla equipo rojo');
-            console.log('3.- actualizar pantalla de equipo rojo');
+            ipcRenderer.send('screen2:error', 1);
+            //console.log('2.- enviar video2 a pantalla equipo rojo');
+            //console.log('3.- actualizar pantalla de equipo rojo');
         }
 
         const newArray = itemsSelected;
@@ -222,19 +232,32 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
 
     const sendFaileds = (items) => {
         if (items && items.length) {
-            const newFormShoot = [];
+            const newFormShootBlue = [], newFormShootRed = [];
             items.map(i => {
+
                 if (i.teamShutter === 2) {
                     const obj = {
                         name: i.name,
                         failed: 'true'
                     }
 
-                    newFormShoot.push(obj);
+                    newFormShootBlue.push(obj);
                 }
+
+                if (i.teamShutter === 1) {
+                    const obj = {
+                        name: i.name,
+                        failed: 'true'
+                    }
+
+                    newFormShootRed.push(obj);
+                }
+
             });
-            if (newFormShoot.length)
-                ipcRenderer.send('screen1:teamRedFailed', newFormShoot);
+            if (newFormShootBlue.length)
+                ipcRenderer.send('screen1:teamRedFailed', newFormShootBlue);
+            if (newFormShootRed.length)
+                ipcRenderer.send('screen2:teamRedFailed', newFormShootRed);
         }
     };
 
@@ -264,7 +287,9 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     }, [successRed]);
 
     useEffect(() => {
-        //console.log('teamBlue', teamBlue);
+        if (teamBlue.length) {
+            ipcRenderer.send('screen2:teamRed', teamBlue);
+        }
     }, [teamBlue]);
 
     useEffect(() => {

@@ -31,10 +31,10 @@ const large_success3 = document.getElementById('large_success3');
 let delayResend = 480, seconds; //5min
 //let success = false, error = false;
 
-ipcRenderer.on('screen1:time', (e, time) => {
+ipcRenderer.on('screen2:time', (e, time) => {
     //delayResend = time;
 });
-const ScreenBlue = () => {
+const ScreenRed = () => {
     const videoRef = useRef(null);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
@@ -66,10 +66,10 @@ const ScreenBlue = () => {
 
     const getVideoSuccess = (info) => {
 
-        const { totalItems, teamRed, boatNumber } = info;
+        const { totalItems, teamBlue, boatNumber } = info;
 
-        if (teamRed.length) {
-            const listElementsByBoat = teamRed.filter(i => i.boatNumber === boatNumber && i.killed === "true");
+        if (teamBlue.length) {
+            const listElementsByBoat = teamBlue.filter(i => i.boatNumber === boatNumber && i.killed === "true");
             const restKillers = totalItems - listElementsByBoat.length;
             //console.log('totalItems', totalItems, 'restKillers', restKillers, 'listElementsByBoat', listElementsByBoat)
             switch (totalItems) {
@@ -96,17 +96,17 @@ const ScreenBlue = () => {
         }
     };
 
-    ipcRenderer.on('screen1:teamRed', (e, teamRed) => {
+    ipcRenderer.on('screen2:teamRed', (e, teamRed) => {
         const killeds = teamRed.filter(i => i.killed === 'true');
         setItemsKilled(killeds);
     });
 
-    ipcRenderer.on('screen1:teamRedFailed', (e, teamRedFailed) => {
+    ipcRenderer.on('screen2:teamRedFailed', (e, teamRedFailed) => {
         const faileds = teamRedFailed.filter(i => i.failed === 'true');
         setItemsFailed(faileds);
     });
 
-    ipcRenderer.on('screen1:error', (e, status) => {
+    ipcRenderer.on('screen2:error', (e, status) => {
         setVideoToShow(large_error?.getAttribute('src'));
         videoRef.current?.load();
         setTimeout(() => {
@@ -115,8 +115,8 @@ const ScreenBlue = () => {
         }, 5000);
     });
 
-    ipcRenderer.on('screen1:success', (e, info) => {
-        console.log('entro-success');
+    ipcRenderer.on('screen2:success', (e, info) => {
+        //console.log('entro-success');
         console.log(getVideoSuccess(info));
         const videoSrc = getVideoSuccess(info);
 
@@ -234,7 +234,7 @@ const ScreenBlue = () => {
                                 <div className="div-array" ref={refBoxLeft}>
                                     <div className="row">
                                         <div className="col-sm-6">
-                                            <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                            <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -419,7 +419,7 @@ const ScreenBlue = () => {
     )
 };
 
-if (document.getElementById('screen-blue')) {
-    const root = ReactDOM.createRoot(document.getElementById('screen-blue'));
-    root.render(<ScreenBlue />);
+if (document.getElementById('screen-red')) {
+    const root = ReactDOM.createRoot(document.getElementById('screen-red'));
+    root.render(<ScreenRed />);
 }
