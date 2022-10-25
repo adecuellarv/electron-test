@@ -275,6 +275,8 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     useEffect(() => {
         if (successBlue >= teamRed.length) {
             setTeamWinner('Azul');
+            ipcRenderer.send('screen1:winner', 'Azul');
+            ipcRenderer.send('screen2:winner', 'Azul');
             setPage(4);
         }
     }, [successBlue]);
@@ -282,6 +284,8 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     useEffect(() => {
         if (successRed >= teamBlue.length) {
             setTeamWinner('Rojo');
+            ipcRenderer.send('screen1:winner', 'Rojo');
+            ipcRenderer.send('screen2:winner', 'Rojo');
             setPage(4);
         }
     }, [successRed]);

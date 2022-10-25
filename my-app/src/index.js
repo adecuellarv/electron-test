@@ -33,7 +33,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
@@ -61,7 +61,7 @@ const createSecondWindow = () => {
 
     // Open the DevTools.
     //screen1Window.webContents.openDevTools();
-  }else{
+  } else {
     screen1Window = new BrowserWindow({
       width: 800,
       height: 700,
@@ -74,40 +74,17 @@ const createSecondWindow = () => {
     });
     screen1Window.maximize();
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
+    //screen1Window.webContents.openDevTools();
   }
 };
 
 const createThreeWindow = () => {
-  /*
+
   const displays = screen.getAllDisplays()
   const externalDisplay = displays.find((display) => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   })
 
-  // Create the browser window.
-  screen2Window = new BrowserWindow({
-    width: 800,
-    height: 700,
-    title: "Pantalla equipo rojo",
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-  screen2Window.maximize();
-  // and load the index.html of the app.
-  screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
-
-  // Open the DevTools.
-  //screen2Window.webContents.openDevTools();*/
-  const displays = screen.getAllDisplays()
-  const externalDisplay = displays.find((display) => {
-    console.log('display', display)
-    return display.bounds.x >= 0 || display.bounds.y >= 0
-  })
-
-  /*
   //Detecta pantalla 2
   if (externalDisplay) {
     screen2Window = new BrowserWindow({
@@ -121,12 +98,23 @@ const createThreeWindow = () => {
         contextIsolation: false,
       },
     })
-    //screen1Window.loadURL('https://github.com')
     screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
-
-    // Open the DevTools.
     //screen2Window.webContents.openDevTools();
-  }*/
+  } else {
+    screen2Window = new BrowserWindow({
+      width: 800,
+      height: 700,
+      title: "Pantalla equipo rojo",
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
+    screen2Window.maximize();
+    screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
+    //screen2Window.webContents.openDevTools();
+  }
 };
 
 app.on('ready', createWindow);
@@ -152,7 +140,7 @@ app.on('activate', () => {
 
 ipcMain.on('main:createscreens', (e, statusScreen) => {
   if (!screen1Window) {
-    //createSecondWindow();
+    createSecondWindow();
   }
   if (!screen2Window) {
     createThreeWindow();
@@ -184,6 +172,10 @@ ipcMain.on('screen1:time', (e, statusScreen) => {
   //screen1Window.close();
 })
 
+ipcMain.on('screen1:winner', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:winner', statusScreen);
+})
+
 //////////////////////////////
 ipcMain.on('screen2:teamRed', (e, statusScreen) => {
   screen2Window.webContents.send('screen2:teamRed', statusScreen);
@@ -208,4 +200,8 @@ ipcMain.on('screen2:success', (e, statusScreen) => {
 ipcMain.on('screen2:time', (e, statusScreen) => {
   screen2Window.webContents.send('screen2:time', statusScreen);
   //screen2Window.close();
+})
+
+ipcMain.on('screen2:winner', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:winner', statusScreen);
 })

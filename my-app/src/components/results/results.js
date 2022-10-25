@@ -12,9 +12,10 @@ const Results = ({ setPage, teamWinner }) => {
         localStorage.clear();
         ipcRenderer.send('screen1:teamRedFailed', []);
         ipcRenderer.send('screen1:teamRed', []);
+        ipcRenderer.send('screen1:winner', '');
         ipcRenderer.send('screen2:teamRedFailed', []);
         ipcRenderer.send('screen2:teamRed', []);
-
+        ipcRenderer.send('screen2:winner', '');
         setPage(1);
     };
 

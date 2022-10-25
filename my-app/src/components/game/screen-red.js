@@ -37,6 +37,7 @@ const TimerComponent = ({ delayResend }) => {
     useEffect(() => {
         if (seconds === 0) {
             clearInterval(timer);
+            setTextFinish('Tiempo finalizado');
         }
         if (change) {
             //seconds = delayResend;
@@ -104,6 +105,8 @@ const ScreenRed = () => {
     const [itemsFailed, setItemsFailed] = useState([]);
     const [videoToShow, setVideoToShow] = useState(mainvideo?.getAttribute('src'));
     const [delayResend, setDelayResend] = useState(480);
+    const [textFinish, setTextFinish] = useState('');
+    const [isWinner, setIsWinner] = useState(false);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBoxParentLeft = useRef(null);
@@ -194,6 +197,15 @@ const ScreenRed = () => {
         });
     }, []);
 
+    useEffect(() => {
+        ipcRenderer.on('screen2:winner', (e, text) => {
+            if (text === 'Rojo') {
+                setIsWinner(true);
+            }
+            setTextFinish(`EQUIPO ${text} VENCEDOR`);
+        });
+    }, []);
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -245,6 +257,30 @@ const ScreenRed = () => {
                         //paddingTop: paddingTopContent
                     }}
                 >
+                    {textFinish &&
+                        <div
+                            style={{
+                                position: 'absolute',
+                                height: 100,
+                                top: '35%',
+                                transform: 'translateY(-35%)',
+                                zIndex: 11,
+                                width: '60%',
+                                left: '20%',
+                                textAlign: 'center'
+                            }}
+                        >
+                            <h1
+                                className="machineFont"
+                                style={{
+                                    color: isWinner ? '#10b706' : '#d91703',
+                                    textTransform: 'uppercase',
+                                    fontSize: 100,
+                                    textShadow: '4px 4px #adabab' 
+                                }}
+                            >{textFinish}</h1>
+                        </div>
+                    }
                     <div className="row">
                         <div
                             className="col-sm-12"
@@ -407,6 +443,7 @@ const ScreenRed = () => {
                                                 </video>
                                                 <TimerComponent
                                                     delayResend={delayResend}
+                                                    setTextFinish={setTextFinish}
                                                 />
                                             </div>
                                         </div>
