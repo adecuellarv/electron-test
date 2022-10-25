@@ -46,8 +46,8 @@ const createSecondWindow = () => {
   //Detecta pantalla 2
   if (externalDisplay) {
     screen1Window = new BrowserWindow({
-      x: externalDisplay.bounds.x + 50,
-      y: externalDisplay.bounds.y + 50,
+      x: externalDisplay.bounds.x,
+      y: externalDisplay.bounds.y,
       title: "Pantalla equipo azul",
       fullscreen: true,
       webPreferences: {
@@ -61,27 +61,20 @@ const createSecondWindow = () => {
 
     // Open the DevTools.
     //screen1Window.webContents.openDevTools();
+  }else{
+    screen1Window = new BrowserWindow({
+      width: 800,
+      height: 700,
+      title: "Pantalla equipo azul",
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
+    screen1Window.maximize();
+    screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
   }
-
-
-  /*
-  // Create the browser window.
-  screen1Window = new BrowserWindow({
-    width: 800,
-    height: 700,
-    title: "Pantalla equipo azul",
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-  screen1Window.maximize();
-  // and load the index.html of the app.
-  screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
-
-  // Open the DevTools.
-  screen1Window.webContents.openDevTools();*/
 };
 
 const createThreeWindow = () => {
@@ -110,10 +103,11 @@ const createThreeWindow = () => {
   //screen2Window.webContents.openDevTools();*/
   const displays = screen.getAllDisplays()
   const externalDisplay = displays.find((display) => {
-    return display.bounds.x !== 0 || display.bounds.y !== 0
+    console.log('display', display)
+    return display.bounds.x >= 0 || display.bounds.y >= 0
   })
 
-
+  /*
   //Detecta pantalla 2
   if (externalDisplay) {
     screen2Window = new BrowserWindow({
@@ -132,7 +126,7 @@ const createThreeWindow = () => {
 
     // Open the DevTools.
     //screen2Window.webContents.openDevTools();
-  }
+  }*/
 };
 
 app.on('ready', createWindow);
@@ -158,7 +152,7 @@ app.on('activate', () => {
 
 ipcMain.on('main:createscreens', (e, statusScreen) => {
   if (!screen1Window) {
-    createSecondWindow();
+    //createSecondWindow();
   }
   if (!screen2Window) {
     createThreeWindow();

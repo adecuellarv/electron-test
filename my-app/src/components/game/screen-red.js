@@ -28,12 +28,74 @@ const large_success2 = document.getElementById('large_success2');
 const large_success3 = document.getElementById('large_success3');
 
 
-let delayResend = 480, seconds; //5min
-//let success = false, error = false;
+let timer, firstDelay;
+const TimerComponent = ({ delayResend }) => {
+    const [seconds, setSeconds] = useState(delayResend);
+    //const [firstDelay, setFirstDelay] = useState();
+    const [change, setChange] = useState(false);
 
-ipcRenderer.on('screen2:time', (e, time) => {
-    //delayResend = time;
-});
+    useEffect(() => {
+        if (seconds === 0) {
+            clearInterval(timer);
+        }
+        if (change) {
+            //seconds = delayResend;
+            clearInterval(timer);
+            //console.log('se supone que se cancelatodo')
+            setSeconds(delayResend + 1);
+            timer = setInterval(() => {
+                setSeconds(seconds - 1);
+            }, 1000);
+        }
+        if (seconds !== 0 && !change) {
+            timer = setInterval(() => {
+                setSeconds(seconds - 1);
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+
+
+    }, [change, seconds]);
+
+    useEffect(() => {
+        if (firstDelay !== delayResend) {
+            setChange(true);
+            setTimeout(() => {
+                setChange(false);
+            }, 400);
+        }
+    }, [delayResend]);
+
+    useEffect(() => {
+        firstDelay = delayResend;
+    }, []);
+
+    return (
+        <>
+            {seconds <= 20 &&
+                < div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        textAlign: 'center',
+                        width: '100%',
+                        top: 130,
+                        color: '#fff'
+                    }}
+                >
+                    <h1
+                        className='machineFont'
+                        style={{ fontSize: 60 }}
+                    >{Math.floor(seconds % 60)} SEG</h1>
+                </div>
+            }
+        </>
+    );
+};
 const ScreenRed = () => {
     const videoRef = useRef(null);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -41,10 +103,7 @@ const ScreenRed = () => {
     const [itemsKilled, setItemsKilled] = useState([]);
     const [itemsFailed, setItemsFailed] = useState([]);
     const [videoToShow, setVideoToShow] = useState(mainvideo?.getAttribute('src'));
-    const [seconds, setSeconds] = useState(delayResend);
-    //const [delay, setDelay] = useState(+delayResend);
-    //const minutes = Math.floor(delay / 60);
-    //const seconds = Math.floor(delay % 60);
+    const [delayResend, setDelayResend] = useState(480);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBoxParentLeft = useRef(null);
@@ -96,37 +155,44 @@ const ScreenRed = () => {
         }
     };
 
-    ipcRenderer.on('screen2:teamRed', (e, teamRed) => {
-        const killeds = teamRed.filter(i => i.killed === 'true');
-        setItemsKilled(killeds);
-    });
+    useEffect(() => {
+        ipcRenderer.on('screen2:teamRed', (e, teamRed) => {
+            const killeds = teamRed.filter(i => i.killed === 'true');
+            setItemsKilled(killeds);
+        });
+    }, []);
 
-    ipcRenderer.on('screen2:teamRedFailed', (e, teamRedFailed) => {
-        const faileds = teamRedFailed.filter(i => i.failed === 'true');
-        setItemsFailed(faileds);
-    });
+    useEffect(() => {
+        ipcRenderer.on('screen2:teamRedFailed', (e, teamRedFailed) => {
+            const faileds = teamRedFailed.filter(i => i.failed === 'true');
+            setItemsFailed(faileds);
+        });
+    }, []);
 
-    ipcRenderer.on('screen2:error', (e, status) => {
-        setVideoToShow(large_error?.getAttribute('src'));
-        videoRef.current?.load();
-        setTimeout(() => {
-            setVideoToShow(mainvideo?.getAttribute('src'));
-            videoRef.current?.load();
-        }, 5000);
-    });
+    useEffect(() => {
+        ipcRenderer.on('screen2:error', (e, status) => {
+            setVideoToShow(large_error?.getAttribute('src'));
+            setTimeout(() => {
+                setVideoToShow(mainvideo?.getAttribute('src'));
+            }, 5000);
+        });
+    }, []);
 
-    ipcRenderer.on('screen2:success', (e, info) => {
-        //console.log('entro-success');
-        console.log(getVideoSuccess(info));
-        const videoSrc = getVideoSuccess(info);
+    useEffect(() => {
+        ipcRenderer.on('screen2:success', (e, info) => {
+            const videoSrc = getVideoSuccess(info);
+            setVideoToShow(videoSrc);
+            setTimeout(() => {
+                setVideoToShow(mainvideo?.getAttribute('src'));
+            }, 5000);
+        });
+    }, []);
 
-        setVideoToShow(videoSrc);
-        videoRef.current?.load();
-        setTimeout(() => {
-            setVideoToShow(mainvideo?.getAttribute('src'));
-            videoRef.current?.load();
-        }, 5000);
-    });
+    useEffect(() => {
+        ipcRenderer.on('screen2:time', (e, time) => {
+            setDelayResend(time);
+        });
+    }, []);
 
 
     useEffect(() => {
@@ -154,29 +220,6 @@ const ScreenRed = () => {
         handleResize();
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
-    /*
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTimeLeft((t) => t - 1);
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, []);*/
-    
-    useEffect(() => {
-
-        const timer = setInterval(() => {
-            setSeconds(seconds - 1);
-        }, 1000);
-
-        if (seconds === 0) {
-            clearInterval(timer);
-        }
-
-        return () => {
-            clearInterval(timer);
-        };
-    });
 
 
     return (
@@ -358,27 +401,13 @@ const ScreenRed = () => {
                                                         width: '100%'
                                                     }}
                                                     ref={videoRef}
+                                                    key={videoToShow}
                                                 >
                                                     <source src={videoToShow} />
                                                 </video>
-                                                {seconds <= 20 &&
-                                                    < div
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            left: 0,
-                                                            textAlign: 'center',
-                                                            width: '100%',
-                                                            top: 130,
-                                                            color: '#fff'
-                                                        }}
-                                                    >
-                                                        <h1
-                                                            className='machineFont'
-                                                            style={{ fontSize: 60 }}
-                                                        >{Math.floor(seconds % 60)} SEG</h1>
-                                                    </div>
-                                                }
+                                                <TimerComponent
+                                                    delayResend={delayResend}
+                                                />
                                             </div>
                                         </div>
                                         <div className="col-sm-4">
