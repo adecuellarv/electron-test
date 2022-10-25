@@ -33,7 +33,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
@@ -42,13 +42,14 @@ const createSecondWindow = () => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
   })
 
-  /*
+
   //Detecta pantalla 2
   if (externalDisplay) {
     screen1Window = new BrowserWindow({
       x: externalDisplay.bounds.x + 50,
       y: externalDisplay.bounds.y + 50,
       title: "Pantalla equipo azul",
+      fullscreen: true,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,
@@ -59,11 +60,11 @@ const createSecondWindow = () => {
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
     // Open the DevTools.
-    screen1Window.webContents.openDevTools();
+    //screen1Window.webContents.openDevTools();
   }
-*/
 
 
+  /*
   // Create the browser window.
   screen1Window = new BrowserWindow({
     width: 800,
@@ -80,10 +81,11 @@ const createSecondWindow = () => {
   screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
 
   // Open the DevTools.
-  //screen1Window.webContents.openDevTools();
+  screen1Window.webContents.openDevTools();*/
 };
 
 const createThreeWindow = () => {
+  /*
   const displays = screen.getAllDisplays()
   const externalDisplay = displays.find((display) => {
     return display.bounds.x !== 0 || display.bounds.y !== 0
@@ -105,12 +107,37 @@ const createThreeWindow = () => {
   screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
 
   // Open the DevTools.
-  //screen2Window.webContents.openDevTools();
+  //screen2Window.webContents.openDevTools();*/
+  const displays = screen.getAllDisplays()
+  const externalDisplay = displays.find((display) => {
+    return display.bounds.x !== 0 || display.bounds.y !== 0
+  })
+
+
+  //Detecta pantalla 2
+  if (externalDisplay) {
+    screen2Window = new BrowserWindow({
+      x: externalDisplay.bounds.x + 50,
+      y: externalDisplay.bounds.y + 50,
+      title: "Pantalla equipo rojo",
+      fullscreen: true,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    })
+    //screen1Window.loadURL('https://github.com')
+    screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
+
+    // Open the DevTools.
+    //screen2Window.webContents.openDevTools();
+  }
 };
 
 app.on('ready', createWindow);
-app.on('ready', createSecondWindow);
-app.on('ready', createThreeWindow);
+//app.on('ready', createSecondWindow);
+//app.on('ready', createThreeWindow);
 
 
 app.on('window-all-closed', () => {
@@ -123,11 +150,20 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-    createSecondWindow();
+    //createWindow();
+    //createSecondWindow();
     createThreeWindow();
   }
 });
+
+ipcMain.on('main:createscreens', (e, statusScreen) => {
+  if (!screen1Window) {
+    createSecondWindow();
+  }
+  if (!screen2Window) {
+    createThreeWindow();
+  }
+})
 
 ipcMain.on('screen1:teamRed', (e, statusScreen) => {
   screen1Window.webContents.send('screen1:teamRed', statusScreen);
@@ -154,7 +190,7 @@ ipcMain.on('screen1:time', (e, statusScreen) => {
   //screen1Window.close();
 })
 
-//////////////////////////////77
+//////////////////////////////
 ipcMain.on('screen2:teamRed', (e, statusScreen) => {
   screen2Window.webContents.send('screen2:teamRed', statusScreen);
   //screen2Window.close();

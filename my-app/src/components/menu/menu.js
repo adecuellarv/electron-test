@@ -25,6 +25,11 @@ const Menu = ({ setShowMenu, setPage }) => {
 
         ipcRenderer.send('screen1:time', value);
     }
+
+    const sendScreens = () => {
+        ipcRenderer.send('main:createscreens', true);
+    };
+
     return (
         <div className="background-menu"
             style={{
@@ -242,25 +247,34 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 marginTop: 10,
                                 cursor: 'pointer'
                             }}
-                        //onClick={() => setPage(1)}
+                            onClick={sendScreens}
                         >
                             <label className="machineFont">ENVIAR PANTALLAS A PROYECTORES</label>
                         </div>
-                        {false &&
+                        {true &&
                             <div>
                                 <div style={{ paddingTop: 30 }}>
-                                    <h4 className="machineFont">TIEMPO DE JUEGO</h4>
+                                    <h4 className="machineFont">MINUTOS DEL JUEGO</h4>
                                 </div>
-                                <div>
-                                    <input
-                                        class="form-control"
-                                        onChange={(e) => setTime(e.target.value)}
-                                    />
-                                    <button
-                                        class="btn btn-dark"
-                                        onClick={sendTime}
-                                        style={{ float: 'right' }}
-                                    >Guardar tiempo</button>
+                                <div className="row">
+                                    <div className="col-6">
+                                        <input
+                                            className="form-control"
+                                            onChange={(e) => setTime(e.target.value)}
+                                            placeholder="8"
+                                            type={"number"}
+                                            min="1" 
+                                            pattern="^[0-9]+"
+                                            //value="8"
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <button
+                                            class="btn btn-dark"
+                                            onClick={sendTime}
+                                            //style={{ float: 'right' }}
+                                        >Guardar tiempo</button>
+                                    </div>
                                 </div>
                             </div>
                         }

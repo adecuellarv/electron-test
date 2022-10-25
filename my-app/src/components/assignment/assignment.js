@@ -151,7 +151,7 @@ const Assignment = ({ port, setPage }) => {
 
     const sendCommands = () => {
 
-        if (port?.port) {
+        if (!port?.port) {
             const bothArrays = teamBlue.concat(teamRed);
 
             bothArrays.map(item => {

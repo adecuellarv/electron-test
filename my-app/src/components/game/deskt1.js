@@ -173,7 +173,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
     };
 
     const sendCommands = (canalesDMX, typeSend) => {
-        if (port?.port) {
+        if (!port?.port) {
             if (canalesDMX.length) {
                 canalesDMX.map((i, k) => {
                     let codeToSend = '';
