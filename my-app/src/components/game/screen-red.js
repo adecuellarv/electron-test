@@ -37,7 +37,7 @@ const TimerComponent = ({ delayResend }) => {
     useEffect(() => {
         if (seconds === 0) {
             clearInterval(timer);
-            setTextFinish('Tiempo finalizado');
+            //setTextFinish('Tiempo finalizado');
         }
         if (change) {
             //seconds = delayResend;
@@ -59,12 +59,12 @@ const TimerComponent = ({ delayResend }) => {
         };
 
 
-    }, [change, seconds]);
+    }, [change, seconds]); //console.log('video', videoToShow)
 
     useEffect(() => {
         if (firstDelay !== delayResend) {
             setChange(true);
-            setTimeout(() => {
+            setTimeout(() => { 
                 setChange(false);
             }, 400);
         }
@@ -109,7 +109,7 @@ const ScreenRed = () => {
     const [isWinner, setIsWinner] = useState(false);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
-    const refBoxParentLeft = useRef(null);
+    const refBoxParentLeft = useRef(null); console.log('video-rojo', videoToShow)
 
     const getColorBtn = (team, row, column) => {
         if (itemsKilled.length) {

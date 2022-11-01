@@ -36,7 +36,7 @@ const TimerComponent = ({ delayResend }) => {
     useEffect(() => {
         if (seconds === 0) {
             clearInterval(timer);
-            setTextFinish('Tiempo finalizado');
+            //setTextFinish('Tiempo finalizado');
         }
         if (change) {
             //seconds = delayResend;
@@ -204,7 +204,7 @@ const ScreenBlue = () => {
             }
             setTextFinish(`EQUIPO ${text} VENCEDOR`);
         });
-    }, []);
+    }, []); console.log('video-azul', videoToShow)
 
     useEffect(() => {
         const handleResize = () => {

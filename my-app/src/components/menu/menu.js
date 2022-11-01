@@ -24,6 +24,7 @@ const Menu = ({ setShowMenu, setPage }) => {
         const value = time * 60;
 
         ipcRenderer.send('screen1:time', value);
+        ipcRenderer.send('screen2:time', value);
     }
 
     const sendScreens = () => {

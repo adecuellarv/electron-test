@@ -39,7 +39,10 @@ const createWindow = () => {
 const createSecondWindow = () => {
   const displays = screen.getAllDisplays()
   const externalDisplay = displays.find((display) => {
-    return display.bounds.x !== 0 || display.bounds.y !== 0
+    if(display?.bounds?.x < 0){
+      return true;
+    }else return false;
+    //return display.bounds.x !== 0 || display.bounds.y !== 0
   })
 
 
@@ -80,11 +83,16 @@ const createSecondWindow = () => {
 
 const createThreeWindow = () => {
 
-  const displays = screen.getAllDisplays()
+  const displays = screen.getAllDisplays();
+  console.log('display_info', displays);
   const externalDisplay = displays.find((display) => {
-    return display.bounds.x !== 0 || display.bounds.y !== 0
+    //let screenDetected = false;
+    if(display?.bounds?.x > 0){
+      return true;
+    }else return false;
+    //return display.bounds.x !== 0 || display.bounds.y !== 0
   })
-
+  
   //Detecta pantalla 2
   if (externalDisplay) {
     screen2Window = new BrowserWindow({

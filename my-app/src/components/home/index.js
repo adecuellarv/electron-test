@@ -10,6 +10,7 @@ const Index = () => {
     const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
+        /*
         port = new SerialPort({
             path: 'COM1',
             baudRate: 115200,
@@ -17,7 +18,7 @@ const Index = () => {
             parity: 'none',
             stopbits: 1,
             flowControl: false
-        });
+        });*/
     }, []);
 
     const startGame = async () => {
@@ -89,7 +90,7 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        if (port?.port) {
+        if (!port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }
