@@ -16,8 +16,17 @@ const Results = ({ setPage, teamWinner }) => {
         ipcRenderer.send('screen2:teamRedFailed', []);
         ipcRenderer.send('screen2:teamRed', []);
         ipcRenderer.send('screen2:winner', '');
+        cleanBoard();
         setPage(1);
     };
+
+    const cleanBoard = async () => {
+        const code = 'C';
+        if (!port?.port) {
+            port.write(`${code}\r`);
+            console.log(`${code}\r`);
+        }
+    }
 
     return (
         <div className="home-container"
