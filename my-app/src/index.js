@@ -84,7 +84,6 @@ const createSecondWindow = () => {
 const createThreeWindow = () => {
 
   const displays = screen.getAllDisplays();
-  console.log('display_info', displays);
   const externalDisplay = displays.find((display) => {
     //let screenDetected = false;
     if(display?.bounds?.x > 0){

@@ -9,6 +9,10 @@ const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
 
+const acorazado = document.getElementById('acorazado');
+const fragata = document.getElementById('fragata');
+const portaviones = document.getElementById('portaviones');
+
 let countSelectedRed = 1, countSelectedBlue = 1;
 const Assignment = ({ port, setPage }) => {
     const [teamBlue, setTeamBlue] = useState([]);
@@ -17,10 +21,35 @@ const Assignment = ({ port, setPage }) => {
     const [paddingTopContent, setPaddingTopContent] = useState(0);
     const [boatNumberBlue, setBoatNumberBlue] = useState(1);
     const [boatNumberRed, setBoatNumberRed] = useState(1);
+    const [turnChose, setTurnChose] = useState(1);
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
     const refContentMain = useRef(null);
+
+    const chooseByBoat = (lengthBoat) => {
+        if (turnChose === 1) {
+            if (teamBlue.length) {
+                const lenghtByBoatNumber = teamBlue.filter(i => i.boatNumber === boatNumberBlue);
+                if (lengthBoat === lenghtByBoatNumber.length) {
+                    setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
+                    countSelectedBlue = 1;
+                } else {
+                    alert('Los participantes para este barco debe ser ' + lengthBoat);
+                }
+            } else alert('Selecciona posiciones para el barco');
+        } else {
+            if (teamRed.length) {
+                const lenghtByBoatNumber = teamRed.filter(i => i.boatNumber === boatNumberRed);
+                if (lengthBoat === lenghtByBoatNumber.length) {
+                    setBoatNumberRed(parseInt(boatNumberRed) + 1);
+                    countSelectedBlue = 1;
+                } else {
+                    alert('Los participantes para este barco debe ser ' + lengthBoat);
+                }
+            } else alert('Selecciona posiciones para el barco');
+        }
+    };
 
     const saveByBoatBlue = () => {
         if (teamBlue.length) {
@@ -272,52 +301,89 @@ const Assignment = ({ port, setPage }) => {
                                 }}
                             >
 
-                                <div className="div-array" ref={refBoxLeft}>
-                                    <div className="row">
-                                        <div className="col-sm-4">
-                                            <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                {turnChose === 1 ?
+                                    <div className="div-array" ref={refBoxLeft}>
+                                        <div className="row">
+                                            <div className="col-sm-6">
+                                                <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                            </div>
+                                            <div
+                                                className="col-sm-8"
+                                                style={{ textAlign: 'right', marginBottom: 10 }}
+                                            >
+
+                                            </div>
                                         </div>
-                                        <div
-                                            className="col-sm-8"
-                                            style={{ textAlign: 'right', marginBottom: 10 }}
-                                        >
-                                            <button
-                                                className="machineFont"
-                                                onClick={saveByBoatBlue}
+                                        {listLetters.map((i, key) =>
+                                            <div key={key}>
+                                                {listNumbers.map((j, k) => {
+                                                    //port = port + 3;
+                                                    //count = count + 1;
+
+                                                    //console.log('port', port)
+                                                    return (
+                                                        <button
+                                                            className={`buttons-lists_asg machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                            style={{
+                                                                width: sizeBtnPositions,
+                                                                height: sizeBtnPositions,
+                                                                fontSize: sizeBtnPositions / 3
+                                                            }}
+                                                            key={k}
+                                                            onClick={() => saveChoice(1, i, j, key, k)}
+                                                        >
+                                                            {`${i}${j}`}
+                                                        </button>
+                                                    )
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                    :
+                                    <div className="div-array" ref={refBoxLeft}>
+                                        <div style={{ textAlign: 'center' }}>
+                                            <img
+                                                src={portaviones?.src}
                                                 style={{
-                                                    marginRight: 15,
-                                                    border: 0,
-                                                    padding: '5px 25px',
-                                                    fontSize: 22
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block'
                                                 }}
-                                            >Guardar barco</button>
+                                                onClick={() => chooseByBoat(3)}
+                                            />
+                                            <img
+                                                src={acorazado?.src}
+                                                style={{
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block',
+                                                    paddingTop: 30
+                                                }}
+                                                onClick={() => chooseByBoat(2)}
+                                            />
+                                            <img
+                                                src={fragata?.src}
+                                                style={{
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block',
+                                                    paddingTop: 30
+                                                }}
+                                                onClick={() => chooseByBoat(1)}
+                                            />
+
+                                            <img
+                                                onClick={() => setTurnChose(1)}
+                                                src={saveimage?.src}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    paddingTop: 30,
+                                                    width: 130
+                                                }}
+                                            />
                                         </div>
                                     </div>
-                                    {listLetters.map((i, key) =>
-                                        <div key={key}>
-                                            {listNumbers.map((j, k) => {
-                                                //port = port + 3;
-                                                //count = count + 1;
-
-                                                //console.log('port', port)
-                                                return (
-                                                    <button
-                                                        className={`buttons-lists_asg machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
-                                                        style={{
-                                                            width: sizeBtnPositions,
-                                                            height: sizeBtnPositions,
-                                                            fontSize: sizeBtnPositions / 3
-                                                        }}
-                                                        key={k}
-                                                        onClick={() => saveChoice(1, i, j, key, k)}
-                                                    >
-                                                        {`${i}${j}`}
-                                                    </button>
-                                                )
-                                            })}
-                                        </div>
-                                    )}
-                                </div>
+                                }
                             </div>
                         </div>
                         <div className="col-sm-6" style={{ marginTop: -30 }}>
@@ -332,46 +398,92 @@ const Assignment = ({ port, setPage }) => {
                                     //height: 'calc(100vh - 170px)',
                                 }}
                             >
-                                <div className="div-array">
-                                    <div className="row">
-                                        <div className="col-sm-4">
-                                            <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                {turnChose === 2 ?
+                                    <div className="div-array">
+                                        <div className="row">
+                                            <div className="col-sm-4">
+                                                <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                            </div>
+                                            <div
+                                                className="col-sm-8"
+                                                style={{ textAlign: 'right', marginBottom: 10 }}
+                                            >
+                                                <button
+                                                    className="machineFont"
+                                                    onClick={saveByBoatRed}
+                                                    style={{
+                                                        marginRight: 15,
+                                                        border: 0,
+                                                        padding: '5px 25px',
+                                                        fontSize: 22
+                                                    }}
+                                                >Guardar barco</button>
+                                            </div>
                                         </div>
-                                        <div
-                                            className="col-sm-8"
-                                            style={{ textAlign: 'right', marginBottom: 10 }}
-                                        >
-                                            <button
-                                                className="machineFont"
-                                                onClick={saveByBoatRed}
+                                        {listLetters.map((i, key) =>
+                                            <div key={key}>
+                                                {listNumbers.map((j, k) =>
+                                                    <button
+                                                        className={`buttons-lists_asg machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                        style={{
+                                                            width: sizeBtnPositions,
+                                                            height: sizeBtnPositions,
+                                                            fontSize: sizeBtnPositions / 3
+                                                        }}
+                                                        key={k}
+                                                        onClick={() => saveChoice(2, i, j, key, k)}
+                                                    >
+                                                        {`${i}${j}`}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                    :
+                                    <div className="div-array" ref={refBoxLeft}>
+                                        <div style={{ textAlign: 'center' }}>
+                                            <img
+                                                src={portaviones?.src}
                                                 style={{
-                                                    marginRight: 15,
-                                                    border: 0,
-                                                    padding: '5px 25px',
-                                                    fontSize: 22
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block'
                                                 }}
-                                            >Guardar barco</button>
+                                                onClick={() => chooseByBoat(3)}
+                                            />
+                                            <img
+                                                src={acorazado?.src}
+                                                style={{
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block',
+                                                    paddingTop: 30
+                                                }}
+                                                onClick={() => chooseByBoat(2)}
+                                            />
+                                            <img
+                                                src={fragata?.src}
+                                                style={{
+                                                    width: '68%',
+                                                    margin: '0 auto',
+                                                    display: 'block',
+                                                    paddingTop: 30
+                                                }}
+                                                onClick={() => chooseByBoat(1)}
+                                            />
+
+                                            <img
+                                                onClick={() => setTurnChose(2)}
+                                                src={saveimage?.src}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    paddingTop: 30,
+                                                    width: 130
+                                                }}
+                                            />
                                         </div>
                                     </div>
-                                    {listLetters.map((i, key) =>
-                                        <div key={key}>
-                                            {listNumbers.map((j, k) =>
-                                                <button
-                                                    className={`buttons-lists_asg machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
-                                                    style={{
-                                                        width: sizeBtnPositions,
-                                                        height: sizeBtnPositions,
-                                                        fontSize: sizeBtnPositions / 3
-                                                    }}
-                                                    key={k}
-                                                    onClick={() => saveChoice(2, i, j, key, k)}
-                                                >
-                                                    {`${i}${j}`}
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
+                                }
                             </div>
                         </div>
                         <div
