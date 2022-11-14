@@ -89,7 +89,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                             }}
                             onClick={() => changePage(2)}
                         >
-                            <label className="machineFont">ASIGNAR COORDENADAS</label>
+                            <label className="machineFont">INSTRUCCIONES</label>
                         </div>
                         <div
                             style={{
@@ -99,6 +99,28 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 cursor: 'pointer'
                             }}
                             onClick={() => changePage(3)}
+                        >
+                            <label className="machineFont">MONEDA AL AIRE</label>
+                        </div>
+                        <div
+                            style={{
+                                border: '2px solid #000',
+                                padding: 10,
+                                marginTop: 10,
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => changePage(4)}
+                        >
+                            <label className="machineFont">ASIGNAR COORDENADAS</label>
+                        </div>
+                        <div
+                            style={{
+                                border: '2px solid #000',
+                                padding: 10,
+                                marginTop: 10,
+                                cursor: 'pointer'
+                            }}
+                            onClick={() => changePage(5)}
                         >
                             <label className="machineFont">JUEGO</label>
                         </div>

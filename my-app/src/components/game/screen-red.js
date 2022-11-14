@@ -64,7 +64,7 @@ const TimerComponent = ({ delayResend }) => {
     useEffect(() => {
         if (firstDelay !== delayResend) {
             setChange(true);
-            setTimeout(() => { 
+            setTimeout(() => {
                 setChange(false);
             }, 400);
         }
@@ -107,9 +107,12 @@ const ScreenRed = () => {
     const [delayResend, setDelayResend] = useState(480);
     const [textFinish, setTextFinish] = useState('');
     const [isWinner, setIsWinner] = useState(false);
+    const [starRamdom, setStarRamdom] = useState(false);
+    const [startGame, setStartGame] = useState(false);
+    const [firstTeam, setFirstTeam] = useState('');
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
-    const refBoxParentLeft = useRef(null); console.log('video-rojo', videoToShow)
+    const refBoxParentLeft = useRef(null);
 
     const getColorBtn = (team, row, column) => {
         if (itemsKilled.length) {
@@ -206,26 +209,44 @@ const ScreenRed = () => {
         });
     }, []);
 
+    useEffect(() => {
+        ipcRenderer.on('screen2:startRamdomTeam', (e, startRamdomTeam) => {
+            setStarRamdom(startRamdomTeam);
+        });
+    }, []);
+
+    useEffect(() => {
+        ipcRenderer.on('screen2:startGame', (e, startGame) => {
+            setStartGame(startGame);
+        });
+    }, []);
+
+    useEffect(() => {
+        ipcRenderer.on('screen2:winRamdomTeam', (e, winRamdomTeam) => {
+            setFirstTeam(winRamdomTeam);
+        });
+    }, []);
 
     useEffect(() => {
         const handleResize = () => {
-            const widthLeft = refBoxLeft?.current?.offsetWidth;
-            if (widthLeft) {
-                const size = (widthLeft - 140) / 8;
-                setSizeBtnPositions(size - 2);
-            }
-            const heightLogo = refLogo?.current.offsetHeight;
-            const heightBoxes = refBoxLeft?.current.offsetHeight;
-            if (heightBoxes && heightLogo) {
-                const heightWindow = window?.innerHeight;
-                if (heightWindow) {
-                    const div = heightWindow - (heightBoxes + heightLogo);
-                    if (div > 0) {
-                        setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
+            if (startGame) {
+                const widthLeft = refBoxLeft?.current?.offsetWidth;
+                if (widthLeft) {
+                    const size = (widthLeft - 140) / 8;
+                    setSizeBtnPositions(size - 2);
+                }
+                const heightLogo = refLogo?.current.offsetHeight;
+                const heightBoxes = refBoxLeft?.current.offsetHeight;
+                if (heightBoxes && heightLogo) {
+                    const heightWindow = window?.innerHeight;
+                    if (heightWindow) {
+                        const div = heightWindow - (heightBoxes + heightLogo);
+                        if (div > 0) {
+                            setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
+                        }
                     }
                 }
             }
-
         };
 
         window.addEventListener("resize", handleResize);
@@ -235,253 +256,265 @@ const ScreenRed = () => {
 
 
     return (
-        <div
-            style={{
-                backgroundImage: `url(${bgimage?.src})`,
-                backgroundPosition: '100% 100%',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                position: 'relative',
-                width: '100%',
-                height: '100vh',
-            }}
-        >
-            <div
-                style={{
-                    transform: 'scale(.84)'
-                }}
-            >
+        <>
+            {startGame &&
                 <div
-                    className="container"
                     style={{
-                        //paddingTop: paddingTopContent
+                        backgroundImage: `url(${bgimage?.src})`,
+                        backgroundPosition: '100% 100%',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                        width: '100%',
+                        height: '100vh',
                     }}
                 >
-                    {textFinish &&
+                    <div
+                        style={{
+                            transform: 'scale(.84)'
+                        }}
+                    >
                         <div
+                            className="container"
                             style={{
-                                position: 'absolute',
-                                height: 100,
-                                top: '35%',
-                                transform: 'translateY(-35%)',
-                                zIndex: 11,
-                                width: '60%',
-                                left: '20%',
-                                textAlign: 'center'
+                                //paddingTop: paddingTopContent
                             }}
                         >
-                            <h1
-                                className="machineFont"
-                                style={{
-                                    color: isWinner ? '#10b706' : '#d91703',
-                                    textTransform: 'uppercase',
-                                    fontSize: 100,
-                                    textShadow: '4px 4px #adabab' 
-                                }}
-                            >{textFinish}</h1>
-                        </div>
-                    }
-                    <div className="row">
-                        <div
-                            className="col-sm-12"
-                            style={{
-                                textAlign: 'center',
-                                //marginTop: 30,
-                            }}
-                            ref={refLogo}
-                        >
-                            <img
-                                src={logo?.src}
-                                style={{
-                                    width: '20%',
-                                }}
-                            />
-                        </div>
-                        <div className="col-sm-6" style={{ marginTop: -30 }}>
-                            <div
-                                style={{
-                                    backgroundImage: `url(${boxleft?.src})`,
-                                    backgroundPosition: '50% 50%',
-                                    backgroundSize: 'contain',
-                                    backgroundRepeat: 'no-repeat',
-                                    position: 'relative',
-                                    width: '100%',
-                                    //height: 'calc(100vh - 170px)',
-                                }}
-                                ref={refBoxParentLeft}
-                            >
-                                <div className="div-array" ref={refBoxLeft}>
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-sm-1"
-                                            style={{
-                                                marginTop: sizeBtnPositions
-                                            }}
-                                        >
-                                            {listLetters.map((i, key) =>
-                                                <div
-                                                    key={key}
+                            {textFinish &&
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        height: 100,
+                                        top: '35%',
+                                        transform: 'translateY(-35%)',
+                                        zIndex: 11,
+                                        width: '60%',
+                                        left: '20%',
+                                        textAlign: 'center'
+                                    }}
+                                >
+                                    <h1
+                                        className="machineFont"
+                                        style={{
+                                            color: isWinner ? '#10b706' : '#d91703',
+                                            textTransform: 'uppercase',
+                                            fontSize: 100,
+                                            textShadow: '4px 4px #adabab'
+                                        }}
+                                    >{textFinish}</h1>
+                                </div>
+                            }
+                            <div className="row">
+                                <div
+                                    className="col-sm-12"
+                                    style={{
+                                        textAlign: 'center',
+                                        //marginTop: 30,
+                                    }}
+                                    ref={refLogo}
+                                >
+                                    <img
+                                        src={logo?.src}
+                                        style={{
+                                            width: '20%',
+                                        }}
+                                    />
+                                </div>
+                                <div className="col-sm-6" style={{ marginTop: -30 }}>
+                                    <div
+                                        style={{
+                                            backgroundImage: `url(${boxleft?.src})`,
+                                            backgroundPosition: '50% 50%',
+                                            backgroundSize: 'contain',
+                                            backgroundRepeat: 'no-repeat',
+                                            position: 'relative',
+                                            width: '100%',
+                                            //height: 'calc(100vh - 170px)',
+                                        }}
+                                        ref={refBoxParentLeft}
+                                    >
+                                        <div className="div-array" ref={refBoxLeft}>
+                                            <div className="row">
+                                                <div className="col-sm-6">
+                                                    <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-sm-1"
                                                     style={{
-                                                        paddingRight: 10,
-                                                        width: sizeBtnPositions,
-                                                        height: sizeBtnPositions + 7,
+                                                        marginTop: sizeBtnPositions
                                                     }}
                                                 >
-                                                    <label
-                                                        style={{
-
-
-                                                            textAlign: 'center',
-                                                            color: '#fff'
-                                                        }}
-                                                    >{i}</label>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="col-sm-11">
-
-                                            {listNumbers.map((j, k) =>
-                                                <label
-                                                    key={k}
-                                                    className="machineFont"
-                                                    style={{
-                                                        width: sizeBtnPositions,
-                                                        height: sizeBtnPositions,
-                                                        textAlign: 'center',
-                                                        color: '#fff'
-                                                    }}
-                                                >{j}</label>
-                                            )}
-
-                                            {listLetters.map((i, key) =>
-                                                <div key={key}>
-                                                    {listNumbers.map((j, k) =>
+                                                    {listLetters.map((i, key) =>
                                                         <div
-                                                            className={
-                                                                `box-lists machineFont`}
+                                                            key={key}
                                                             style={{
+                                                                paddingRight: 10,
                                                                 width: sizeBtnPositions,
-                                                                height: sizeBtnPositions,
+                                                                height: sizeBtnPositions + 7,
                                                             }}
-                                                            key={k}
-
                                                         >
-                                                            <div
-                                                                className={getColorBtn(2, i, j)}
+                                                            <label
                                                                 style={{
-                                                                    marginTop: sizeBtnPositions - 38
+
+
+                                                                    textAlign: 'center',
+                                                                    color: '#fff'
                                                                 }}
-                                                            />
+                                                            >{i}</label>
                                                         </div>
                                                     )}
                                                 </div>
-                                            )}
+                                                <div className="col-sm-11">
+
+                                                    {listNumbers.map((j, k) =>
+                                                        <label
+                                                            key={k}
+                                                            className="machineFont"
+                                                            style={{
+                                                                width: sizeBtnPositions,
+                                                                height: sizeBtnPositions,
+                                                                textAlign: 'center',
+                                                                color: '#fff'
+                                                            }}
+                                                        >{j}</label>
+                                                    )}
+
+                                                    {listLetters.map((i, key) =>
+                                                        <div key={key}>
+                                                            {listNumbers.map((j, k) =>
+                                                                <div
+                                                                    className={
+                                                                        `box-lists machineFont`}
+                                                                    style={{
+                                                                        width: sizeBtnPositions,
+                                                                        height: sizeBtnPositions,
+                                                                    }}
+                                                                    key={k}
+
+                                                                >
+                                                                    <div
+                                                                        className={getColorBtn(2, i, j)}
+                                                                        style={{
+                                                                            marginTop: sizeBtnPositions - 38
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
-
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-6" style={{ marginTop: -30 }}>
-                            <div
-                                style={{
-                                    backgroundImage: `url(${boxright?.src})`,
-                                    backgroundPosition: '50% 50%',
-                                    backgroundSize: 'contain',
-                                    backgroundRepeat: 'no-repeat',
-                                    position: 'relative',
-                                    width: '100%',
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        width: refBoxLeft?.current?.offsetWidth,
-                                        height: refBoxLeft?.current?.offsetHeight - 10,
-                                        paddingLeft: 20,
-                                        paddingRight: 20,
-                                        paddingTop: 70
-                                    }}
-                                >
-                                    <div className="row">
-                                        <div className="col-sm-6">
-                                            <img
-                                                src={barras3?.src}
-                                                style={{
-                                                    width: '100%'
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="col-sm-6">
-                                            <img
-                                                src={circles1?.src}
-                                                style={{
-                                                    width: '100%'
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="col-sm-12">
-                                            <div
-                                                style={{
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <video
-                                                    controls={false}
-                                                    autoPlay={true}
-                                                    loop={true}
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                    ref={videoRef}
-                                                    key={videoToShow}
-                                                >
-                                                    <source src={videoToShow} />
-                                                </video>
-                                                <TimerComponent
-                                                    delayResend={delayResend}
-                                                    setTextFinish={setTextFinish}
-                                                />
+                                <div className="col-sm-6" style={{ marginTop: -30 }}>
+                                    <div
+                                        style={{
+                                            backgroundImage: `url(${boxright?.src})`,
+                                            backgroundPosition: '50% 50%',
+                                            backgroundSize: 'contain',
+                                            backgroundRepeat: 'no-repeat',
+                                            position: 'relative',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                width: refBoxLeft?.current?.offsetWidth,
+                                                height: refBoxLeft?.current?.offsetHeight - 10,
+                                                paddingLeft: 20,
+                                                paddingRight: 20,
+                                                paddingTop: 70
+                                            }}
+                                        >
+                                            <div className="row">
+                                                <div className="col-sm-6">
+                                                    <img
+                                                        src={barras3?.src}
+                                                        style={{
+                                                            width: '100%'
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="col-sm-6">
+                                                    <img
+                                                        src={circles1?.src}
+                                                        style={{
+                                                            width: '100%'
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="col-sm-12">
+                                                    <div
+                                                        style={{
+                                                            position: 'relative'
+                                                        }}
+                                                    >
+                                                        <video
+                                                            controls={false}
+                                                            autoPlay={true}
+                                                            loop={true}
+                                                            style={{
+                                                                width: '100%'
+                                                            }}
+                                                            ref={videoRef}
+                                                            key={videoToShow}
+                                                        >
+                                                            <source src={videoToShow} />
+                                                        </video>
+                                                        <TimerComponent
+                                                            delayResend={delayResend}
+                                                            setTextFinish={setTextFinish}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src={barras1?.src}
+                                                        style={{
+                                                            width: '100%'
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src={barras2?.src}
+                                                        style={{
+                                                            width: '100%'
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src={circles2?.src}
+                                                        style={{
+                                                            width: '100%',
+                                                            marginTop: -30,
+                                                            position: 'relative',
+                                                            zIndex: 1
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="col-sm-4">
-                                            <img
-                                                src={barras1?.src}
-                                                style={{
-                                                    width: '100%'
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="col-sm-4">
-                                            <img
-                                                src={barras2?.src}
-                                                style={{
-                                                    width: '100%'
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="col-sm-4">
-                                            <img
-                                                src={circles2?.src}
-                                                style={{
-                                                    width: '100%',
-                                                    marginTop: -30,
-                                                    position: 'relative',
-                                                    zIndex: 1
-                                                }}
-                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div >
+                </div >
+            }
+            {!startGame &&
+                <RamdomTeamScreen
+                    starRamdom={starRamdom}
+                    startGame={startGame}
+                    firstTeam={firstTeam}
+                    setFirstTeam={setFirstTeam}
+                />
+            }
+        </>
     )
 };
 

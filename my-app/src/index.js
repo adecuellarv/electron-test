@@ -33,7 +33,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'pages/home.html'));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 const createSecondWindow = () => {
@@ -184,6 +184,17 @@ ipcMain.on('screen1:winner', (e, statusScreen) => {
   screen1Window.webContents.send('screen1:winner', statusScreen);
 })
 
+ipcMain.on('screen1:startRamdomTeam', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:startRamdomTeam', statusScreen);
+})
+
+ipcMain.on('screen1:winRamdomTeam', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:winRamdomTeam', statusScreen);
+})
+
+ipcMain.on('screen1:startGame', (e, statusScreen) => {
+  screen1Window.webContents.send('screen1:startGame', statusScreen);
+})
 //////////////////////////////
 ipcMain.on('screen2:teamRed', (e, statusScreen) => {
   screen2Window.webContents.send('screen2:teamRed', statusScreen);
@@ -212,4 +223,16 @@ ipcMain.on('screen2:time', (e, statusScreen) => {
 
 ipcMain.on('screen2:winner', (e, statusScreen) => {
   screen2Window.webContents.send('screen2:winner', statusScreen);
+})
+
+ipcMain.on('screen2:startRamdomTeam', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:startRamdomTeam', statusScreen);
+})
+
+ipcMain.on('screen2:winRamdomTeam', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:winRamdomTeam', statusScreen);
+})
+
+ipcMain.on('screen2:startGame', (e, statusScreen) => {
+  screen2Window.webContents.send('screen2:startGame', statusScreen);
 })
