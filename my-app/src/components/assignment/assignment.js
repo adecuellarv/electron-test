@@ -141,7 +141,7 @@ const Assignment = ({ port, setPage }) => {
                 const resp = await sendCommands();
                 if (resp) {
                     //window.location.href = "game-deskt1.html";
-                    setPage(3);
+                    setPage(5);
                 }
             } else {
                 alert('El máximo de jugadores es 8');

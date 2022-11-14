@@ -126,8 +126,8 @@ const createThreeWindow = () => {
 };
 
 app.on('ready', createWindow);
-//app.on('ready', createSecondWindow);
-//app.on('ready', createThreeWindow);
+app.on('ready', createSecondWindow);
+app.on('ready', createThreeWindow);
 
 
 app.on('window-all-closed', () => {

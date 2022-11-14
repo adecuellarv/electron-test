@@ -5,7 +5,7 @@ const { ipcRenderer } = require('electron');
 const bgimage = document.getElementById('bgimage_2');
 const logo = document.getElementById('logo');
 const bgpopup = document.getElementById('bgpopup');
-const buttonstart = document.getElementById('saveimage');
+const saveimage = document.getElementById('saveimage');
 const coingif = document.getElementById('coingif');
 
 const teams = [1, 2];
@@ -27,6 +27,7 @@ const RamdomTeam = ({ setPage }) => {
 
     const starGame = () => {
         setPage(4);
+        localStorage.setItem("startTeam", firstTeam === 'Azul' ? 1 : 2);
         ipcRenderer.send('screen1:startGame', true);
         ipcRenderer.send('screen2:startGame', true);
     }
@@ -150,7 +151,7 @@ const RamdomTeam = ({ setPage }) => {
                             ref={refBtn}
                         >
                             <img
-                                src={buttonstart?.src}
+                                src={saveimage?.src}
                                 onClick={() => starGame()}
                             ></img>
                         </div>

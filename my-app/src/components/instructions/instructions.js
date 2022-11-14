@@ -9,7 +9,7 @@ const bgpopup = document.getElementById('bgpopup');
 const acorazado = document.getElementById('acorazado');
 const fragata = document.getElementById('fragata');
 const portaviones = document.getElementById('portaviones');
-const buttonstart = document.getElementById('saveimage');
+const saveimage = document.getElementById('saveimage');
 
 const Instructions = ({ setPage }) => {
     const refBoxLeft = useRef(null);
@@ -138,7 +138,7 @@ const Instructions = ({ setPage }) => {
                             ref={refBtn}
                         >
                             <img
-                                src={buttonstart?.src}
+                                src={saveimage?.src}
                                 onClick={() => setPage(3)}
                             ></img>
                         </div>

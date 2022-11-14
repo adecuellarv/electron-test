@@ -13,11 +13,12 @@ const saveimage = document.getElementById('saveimage');
 const seconds = 300; //5min
 
 const Desk1 = ({ port, setPage, setTeamWinner }) => {
+    const startTeam = localStorage.getItem('startTeam');
     const teamBlue = JSON.parse(localStorage.getItem('teamBlue'));
     const teamRed = JSON.parse(localStorage.getItem('teamRed'));
     const shootFailed = JSON.parse(localStorage.getItem('shootFailed'));
 
-    const [turnOF, setTurnOF] = useState(1);
+    const [turnOF, setTurnOF] = useState(parseInt(startTeam));
     const [itemSelected, setItemSelected] = useState({});
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
     const [paddingTopContent, setPaddingTopContent] = useState(0);
@@ -277,7 +278,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             setTeamWinner('Azul');
             ipcRenderer.send('screen1:winner', 'Azul');
             ipcRenderer.send('screen2:winner', 'Azul');
-            setPage(4);
+            setPage(6);
         }
     }, [successBlue]);
 
@@ -286,7 +287,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
             setTeamWinner('Rojo');
             ipcRenderer.send('screen1:winner', 'Rojo');
             ipcRenderer.send('screen2:winner', 'Rojo');
-            setPage(4);
+            setPage(6);
         }
     }, [successRed]);
 
