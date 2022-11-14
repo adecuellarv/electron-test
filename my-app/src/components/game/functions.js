@@ -20,7 +20,7 @@ const arrayOptions = () => {
 const teams = [1, 2];
 let timer;
 const minTime = 40;
-const RamdomTeamScreen = ({ starRamdom, firstTeam }) => { 
+const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
     const [seconds, setSeconds] = useState(minTime);
     const [temporalTeamChose, setTemporalTeamChose] = useState('');
 

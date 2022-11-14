@@ -95,14 +95,9 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
 
     const actionsSuccess = (teamGame, teamShutter, positionArray) => {
         //console.log('1.- enviar señal a jorge');
-        sendCommands(itemSelected?.canalesDMX, 'success');
-        if (teamGame === 1) {
-            //console.log('2.- enviar video1 a pantalla equipo azul');
-            //console.log('3.- actualizar pantalla de equipo azul');
-        } else {
-            //console.log('2.- enviar video1 a pantalla equipo rojo');
-            //console.log('3.- actualizar pantalla de equipo rojo');
-        }
+        sendCommands(itemSelected?.canalesDMX, 'success', teamShutter, itemSelected?.row);
+        //console.log('2.- enviar video1 a pantalla equipo azul');
+        //console.log('3.- actualizar pantalla de equipo azul');
 
         if (teamShutter === 2) {
             teamRed[positionArray].killed = 'true';
@@ -117,6 +112,8 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 boatNumber,
                 teamRed
             });
+
+
         }
         if (teamShutter === 1) {
             teamBlue[positionArray].killed = 'true';
@@ -173,7 +170,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
         setItemSelected({});
     };
 
-    const sendCommands = (canalesDMX, typeSend) => {
+    const sendCommands = (canalesDMX, typeSend, teamShutter, row) => {
         if (!port?.port) {
             if (canalesDMX.length) {
                 canalesDMX.map((i, k) => {
@@ -186,6 +183,14 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                     }
                     executecCMD(codeToSend);
                 });
+            }
+            if(typeSend === 'success'){
+                const codeAir = getCodeAir(teamShutter, row);
+                executecCMD(`A${codeAir}@255:000`);
+
+                setTimeout(() => {
+                    executecCMD(`A${codeAir}@0:000`);
+                }, 2000);
             }
         } else {
             alert('No se ha podido conectar con el puerto COM1');
@@ -261,6 +266,51 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 ipcRenderer.send('screen2:teamRedFailed', newFormShootRed);
         }
     };
+
+    const getCodeAir = (teamKilled, row) => {
+        if (teamKilled === 1) {
+            switch (row) {
+                case 'A':
+                    return '148';
+                case 'B':
+                    return '149';
+                case 'C':
+                    return '150';
+                case 'D':
+                    return '151';
+                case 'E':
+                    return '152';
+                case 'F':
+                    return '153';
+                case 'G':
+                    return '154';
+    
+                default:
+                    break;
+            }
+        }
+        if (teamKilled === 2) {
+            switch (row) {
+                case 'A':
+                    return '155';
+                case 'B':
+                    return '156';
+                case 'C':
+                    return '157';
+                case 'D':
+                    return '158';
+                case 'E':
+                    return '159';
+                case 'F':
+                    return '160';
+                case 'G':
+                    return '161';
+                default:
+                    break;
+            }
+        }
+    };
+    
 
     useEffect(() => {
         if (itemsSelected.length) {
