@@ -90,3 +90,4 @@ out/
 
 #ignore file longers
 /public/images/*
+# /public/images/assignment/*

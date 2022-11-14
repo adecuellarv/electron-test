@@ -5,12 +5,11 @@ const { useState, useEffect } = require('react');
 
 let port;
 const Index = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(3);
     const [teamWinner, setTeamWinner] = useState('');
     const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
-        /*
         port = new SerialPort({
             path: 'COM1',
             baudRate: 115200,
@@ -18,7 +17,7 @@ const Index = () => {
             parity: 'none',
             stopbits: 1,
             flowControl: false
-        });*/
+        });
     }, []);
 
     const startGame = async () => {
@@ -105,19 +104,29 @@ const Index = () => {
                 />
             }
             {page === 2 &&
+                <Instructions
+                    setPage={setPage}
+                />
+            }
+            {page === 3 &&
+                <RamdomTeam
+                    setPage={setPage}
+                />
+            }
+            {page === 4 &&
                 <Assignment
                     port={port}
                     setPage={setPage}
                 />
             }
-            {page === 3 &&
+            {page === 5 &&
                 <Desk1
                     port={port}
                     setPage={setPage}
                     setTeamWinner={setTeamWinner}
                 />
             }
-            {page === 4 &&
+            {page === 6 &&
                 <Results
                     setPage={setPage}
                     teamWinner={teamWinner}
