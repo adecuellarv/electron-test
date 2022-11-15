@@ -89,7 +89,7 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        if (!port?.port) {
+        if (port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }

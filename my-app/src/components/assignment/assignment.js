@@ -180,7 +180,7 @@ const Assignment = ({ port, setPage }) => {
 
     const sendCommands = () => {
 
-        if (!port?.port) {
+        if (port?.port) {
             const bothArrays = teamBlue.concat(teamRed);
 
             bothArrays.map(item => {
@@ -401,23 +401,14 @@ const Assignment = ({ port, setPage }) => {
                                 {turnChose === 2 ?
                                     <div className="div-array">
                                         <div className="row">
-                                            <div className="col-sm-4">
+                                            <div className="col-sm-6">
                                                 <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
                                             </div>
                                             <div
                                                 className="col-sm-8"
                                                 style={{ textAlign: 'right', marginBottom: 10 }}
                                             >
-                                                <button
-                                                    className="machineFont"
-                                                    onClick={saveByBoatRed}
-                                                    style={{
-                                                        marginRight: 15,
-                                                        border: 0,
-                                                        padding: '5px 25px',
-                                                        fontSize: 22
-                                                    }}
-                                                >Guardar barco</button>
+      
                                             </div>
                                         </div>
                                         {listLetters.map((i, key) =>
