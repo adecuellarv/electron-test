@@ -5,7 +5,7 @@ const { useState, useEffect } = require('react');
 
 let port;
 const Index = () => {
-    const [page, setPage] = useState(2);
+    const [page, setPage] = useState(1);
     const [teamWinner, setTeamWinner] = useState('');
     const [showMenu, setShowMenu] = useState(false);
 
@@ -132,11 +132,11 @@ const Index = () => {
                     teamWinner={teamWinner}
                 />
             }
-            {page !== 1 &&
-                <LateralMenu
-                    setShowMenu={setShowMenu}
-                />
-            }
+
+            <LateralMenu
+                setShowMenu={setShowMenu}
+            />
+
             {showMenu &&
                 <Menu
                     setShowMenu={setShowMenu}

@@ -51,9 +51,9 @@ const Menu = ({ setShowMenu, setPage }) => {
                         backgroundPosition: '50% 50%',
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',
-                        width: '40%',
-                        margin: '0 auto',
-                        top: 100,
+                        width: 600,
+                        margin: '0px auto', 
+                        top: 30,
                         borderRadius: 50,
                         padding: 50
                         //clipPath: 'polygon(10% 5%, 84% 4%, 100% 20%, 100% 80%, 84% 95%, 18% 96%, 0% 80%, 0% 20%)'
@@ -286,16 +286,16 @@ const Menu = ({ setShowMenu, setPage }) => {
                                             onChange={(e) => setTime(e.target.value)}
                                             placeholder="8"
                                             type={"number"}
-                                            min="1" 
+                                            min="1"
                                             pattern="^[0-9]+"
-                                            //value="8"
+                                        //value="8"
                                         />
                                     </div>
                                     <div className="col-6">
                                         <button
                                             class="btn btn-dark"
                                             onClick={sendTime}
-                                            //style={{ float: 'right' }}
+                                        //style={{ float: 'right' }}
                                         >Guardar tiempo</button>
                                     </div>
                                 </div>

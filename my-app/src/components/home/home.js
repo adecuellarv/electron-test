@@ -3,6 +3,7 @@ const ReactDOM = require('react-dom/client');
 const bgimage = document.getElementById('bgimage');
 const boxcenter = document.getElementById('boxcenter');
 const buttonstart = document.getElementById('buttonstart');
+const mark_ = document.getElementById('mark_');
 
 const Home = ({ startGame }) => {
     return (
@@ -17,38 +18,50 @@ const Home = ({ startGame }) => {
         >
             <div
                 style={{
-                    backgroundImage: `url(${boxcenter?.src})`,
+                    width: '100%',
+                    height: '100%',
+                    backgroundImage: `url(${mark_?.src})`,
                     backgroundPosition: '50% 50%',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat',
                     position: 'relative',
-                    width: '50%',
-                    margin: '0 auto',
-                    height: '50%',
-                    top: '50%',
-                    transform: 'translateY(-50%)'
-                    //
-                    //height: 'calc(100vh - 100px)',
-                    //paddingTop: 100
                 }}
             >
                 <div
                     style={{
-                        position: 'absolute',
-                        width: '25%',
-                        left: '37.5%',
-                        //margin: '0 auto',
-                        bottom: '-20%'
+                        backgroundImage: `url(${boxcenter?.src})`,
+                        backgroundPosition: '50% 50%',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                        width: '50%',
+                        margin: '0 auto',
+                        height: '50%',
+                        top: '50%',
+                        transform: 'translateY(-50%)'
+                        //
+                        //height: 'calc(100vh - 100px)',
+                        //paddingTop: 100
                     }}
                 >
-
-                    <img src={buttonstart?.src}
+                    <div
                         style={{
-                            width: '100%'
+                            position: 'absolute',
+                            width: '25%',
+                            left: '37.5%',
+                            //margin: '0 auto',
+                            bottom: '-20%'
                         }}
-                        onClick={startGame}
-                    />
+                    >
 
+                        <img src={buttonstart?.src}
+                            style={{
+                                width: '100%'
+                            }}
+                            onClick={startGame}
+                        />
+
+                    </div>
                 </div>
             </div>
         </div>
