@@ -29,73 +29,98 @@ const Instructions = ({ setPage }) => {
         >
             <div
                 style={{
-                    transform: 'scale(.80)',
-                    position: 'relative',
-                    top: -20
+                    transform: 'scale(.90)',
                 }}
             >
-                <div
-                    className="container"
-                    style={{
-                        //paddingTop: paddingTopContent
-                    }}
-                >
-                    <div className="row">
-                        <div
-                            className="col-sm-12"
-                            style={{
-                                textAlign: 'center',
-                                //marginTop: 30,
-                            }}
-                            ref={refLogo}
-                        >
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div style={{ textAlign: 'center' }}>
                             <img
                                 src={logo?.src}
                                 style={{
-                                    width: '20%',
+                                    width: 200,
+                                    height: 50
                                 }}
                             />
                         </div>
-                        <div className='col-sm-12'>
+                    </div>
+                    <div className="col-sm-6">
+                        <div
+                            style={{
+                                backgroundImage: `url(${boxleft?.src})`,
+                                backgroundPosition: '50% 50%',
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                position: 'relative',
+                                width: '100%',
+                                height: 600
+                            }}
+                        >
+
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div
+                            style={{
+                                backgroundImage: `url(${boxright?.src})`,
+                                backgroundPosition: '50% 50%',
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                position: 'relative',
+                                width: '100%',
+                                height: 600
+                            }}
+                        >
+
+                        </div>
+                    </div>
+                    <div className='col-sm-12'>
+                        <div
+                            style={{
+                                //transform: 'scale(.98)',
+                            }}
+                        >
                             <div
                                 style={{
                                     backgroundImage: `url(${bgpopup?.src})`,
                                     backgroundPosition: '50% 50%',
                                     backgroundSize: 'contain',
                                     backgroundRepeat: 'no-repeat',
-                                    position: 'relative',
+                                    position: 'absolute',
                                     width: '100%',
-                                    height: '100vh',
-                                    //height: 'calc(100vh - 170px)',
+                                    height: 600,
+                                    //top: -600
+                                    top: 50
                                 }}
                             >
+
                                 <div className='row'>
                                     <div className="col-sm-6" style={{
-                                        paddingTop: 100,
-                                        paddingLeft: 120
+                                        paddingTop: 70,
+                                        paddingLeft: 200,
                                     }}>
                                         <h1 className="machineFont">Intrucciones</h1>
                                         <div>
-                                            <p className="machineFont" style={{ fontSize: 20 }}><strong>1.- </strong>
+                                            <p className="machineFont" style={{ fontSize: 18 }}><strong>1.- </strong>
                                                 Formar equipos Rojo y azul
                                             </p>
-                                            <p className="machineFont" style={{ fontSize: 20 }}><strong>2.- </strong>
+                                            <p className="machineFont" style={{ fontSize: 18 }}><strong>2.- </strong>
                                                 Formar embarcaciones de 3, 2 o 1 jugadores según la cantidad de participantes en cada equipo, empezar por las de 3 y 2 y al final si sobran jugadores individuales (máximo 8 jugadores por equipo).
                                             </p>
-                                            <p className="machineFont" style={{ fontSize: 20 }}><strong>3.- </strong>
+                                            <p className="machineFont" style={{ fontSize: 18 }}><strong>3.- </strong>
                                                 Elegir cada equipo o jugador sus coordenadas colocandose en el tablero real, si son embarcación deberán colocarse juntos para crear su tipo de barco ya sea en posición vertical u horizontal.
                                             </p>
-                                            <p className="machineFont" style={{ fontSize: 20 }}><strong>4.- </strong>
+                                            <p className="machineFont" style={{ fontSize: 18 }}><strong>4.- </strong>
                                                 Operador naval guardar las posiciones de cada equipo en el panel de control.
                                             </p>
-                                            <p className="machineFont" style={{ fontSize: 20 }}><strong>5.- </strong>
+                                            <p className="machineFont" style={{ fontSize: 18 }}><strong>5.- </strong>
                                                 Comienza la Batalla Naval.
                                             </p>
                                         </div>
                                     </div>
                                     <div className="col-sm-6" style={{
-
-                                        paddingTop: 140, //paddingRight: 90
+                                        paddingTop: 70,
+                                        paddingRight: 200,
                                         textAlign: 'center'
                                     }}>
                                         <img
@@ -128,25 +153,21 @@ const Instructions = ({ setPage }) => {
                                 </div>
                             </div>
                         </div>
-
-                        <div
-                            className="col-sm-12"
+                    </div>
+                    <div
+                        className="col-sm-12"
+                        style={{
+                            textAlign: 'center',
+                        }}
+                        ref={refBtn}
+                    >
+                        <img
+                            src={btnstart?.src}
                             style={{
-                                textAlign: 'center',
-                                marginTop: -40,
-                                position: 'relative',
-                                zIndex: 1
+                                width: 200
                             }}
-                            ref={refBtn}
-                        >
-                            <img
-                                src={btnstart?.src}
-                                style={{
-                                    width: 200
-                                }}
-                                onClick={() => setPage(3)}
-                            ></img>
-                        </div>
+                            onClick={() => setPage(3)}
+                        ></img>
                     </div>
                 </div>
             </div>
