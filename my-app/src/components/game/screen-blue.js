@@ -204,8 +204,13 @@ const ScreenBlue = () => {
         ipcRenderer.on('screen1:winner', (e, text) => {
             if (text === 'Azul') {
                 setIsWinner(true);
+            } else if (!text) setIsWinner(false);
+
+            if (text) {
+                setTextFinish(`EQUIPO ${text} VENCEDOR`);
+            } else {
+                setTextFinish('');
             }
-            setTextFinish(`EQUIPO ${text} VENCEDOR`);
         });
     }, []);
 
@@ -256,7 +261,7 @@ const ScreenBlue = () => {
 
     return (
         <>
-            {startGame &&
+            {startGame && !starRamdom ?
                 <div
                     style={{
                         backgroundImage: `url(${bgimage?.src})`,
@@ -504,13 +509,26 @@ const ScreenBlue = () => {
                         </div>
                     </div>
                 </div >
+                : starRamdom === true || firstTeam !== '' ?
+                    <RamdomTeamScreen
+                        starRamdom={starRamdom}
+                        startGame={startGame}
+                        firstTeam={firstTeam}
+                        setFirstTeam={setFirstTeam}
+                    />
+                    : null
             }
-            {!startGame &&
-                <RamdomTeamScreen
-                    starRamdom={starRamdom}
-                    startGame={startGame}
-                    firstTeam={firstTeam}
-                    setFirstTeam={setFirstTeam}
+            {!startGame && !starRamdom && !firstTeam &&
+                <div
+                    style={{
+                        backgroundImage: `url(${bgimage?.src})`,
+                        backgroundPosition: '100% 100%',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                        width: '100%',
+                        height: '100vh',
+                    }}
                 />
             }
         </>

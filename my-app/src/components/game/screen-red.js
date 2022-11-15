@@ -204,8 +204,13 @@ const ScreenRed = () => {
         ipcRenderer.on('screen2:winner', (e, text) => {
             if (text === 'Rojo') {
                 setIsWinner(true);
+            } else if (!text) setIsWinner(false);
+
+            if (text) {
+                setTextFinish(`EQUIPO ${text} VENCEDOR`);
+            } else {
+                setTextFinish('');
             }
-            setTextFinish(`EQUIPO ${text} VENCEDOR`);
         });
     }, []);
 
@@ -254,10 +259,9 @@ const ScreenRed = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-
     return (
         <>
-            {startGame &&
+            {startGame ?
                 <div
                     style={{
                         backgroundImage: `url(${bgimage?.src})`,
@@ -505,13 +509,27 @@ const ScreenRed = () => {
                         </div>
                     </div>
                 </div >
+
+                : starRamdom === true || firstTeam !== '' ?
+                    <RamdomTeamScreen
+                        starRamdom={starRamdom}
+                        startGame={startGame}
+                        firstTeam={firstTeam}
+                        setFirstTeam={setFirstTeam}
+                    />
+                    : null
             }
-            {!startGame &&
-                <RamdomTeamScreen
-                    starRamdom={starRamdom}
-                    startGame={startGame}
-                    firstTeam={firstTeam}
-                    setFirstTeam={setFirstTeam}
+            {!startGame && !starRamdom && !firstTeam &&
+                <div
+                    style={{
+                        backgroundImage: `url(${bgimage?.src})`,
+                        backgroundPosition: '100% 100%',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        position: 'relative',
+                        width: '100%',
+                        height: '100vh',
+                    }}
                 />
             }
         </>

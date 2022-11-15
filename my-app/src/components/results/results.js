@@ -13,9 +13,15 @@ const Results = ({ setPage, teamWinner }) => {
         ipcRenderer.send('screen1:teamRedFailed', []);
         ipcRenderer.send('screen1:teamRed', []);
         ipcRenderer.send('screen1:winner', '');
+        ipcRenderer.send('screen1:startRamdomTeam', false);
+        ipcRenderer.send('screen1:startGame', false);
+        ipcRenderer.send('screen1:winRamdomTeam', '');
         ipcRenderer.send('screen2:teamRedFailed', []);
         ipcRenderer.send('screen2:teamRed', []);
         ipcRenderer.send('screen2:winner', '');
+        ipcRenderer.send('screen2:startRamdomTeam', false);
+        ipcRenderer.send('screen2:startGame', false);
+        ipcRenderer.send('screen2:winRamdomTeam', '');
         cleanBoard();
         setPage(1);
     };
