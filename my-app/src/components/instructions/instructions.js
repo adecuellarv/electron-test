@@ -9,7 +9,7 @@ const bgpopup = document.getElementById('bgpopup');
 const acorazado = document.getElementById('acorazado');
 const fragata = document.getElementById('fragata');
 const portaviones = document.getElementById('portaviones');
-const saveimage = document.getElementById('saveimage');
+const btnstart = document.getElementById('btnstart');
 
 const Instructions = ({ setPage }) => {
     const refBoxLeft = useRef(null);
@@ -29,7 +29,9 @@ const Instructions = ({ setPage }) => {
         >
             <div
                 style={{
-                    transform: 'scale(.80)'
+                    transform: 'scale(.80)',
+                    position: 'relative',
+                    top: -20
                 }}
             >
                 <div
@@ -138,7 +140,10 @@ const Instructions = ({ setPage }) => {
                             ref={refBtn}
                         >
                             <img
-                                src={saveimage?.src}
+                                src={btnstart?.src}
+                                style={{
+                                    width: 200
+                                }}
                                 onClick={() => setPage(3)}
                             ></img>
                         </div>

@@ -5,7 +5,7 @@ const { useState, useEffect } = require('react');
 
 let port;
 const Index = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(2);
     const [teamWinner, setTeamWinner] = useState('');
     const [showMenu, setShowMenu] = useState(false);
 
@@ -89,7 +89,7 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        if (port?.port) {
+        if (!port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }
