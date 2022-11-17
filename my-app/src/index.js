@@ -61,7 +61,7 @@ const createSecondWindow = () => {
     })
     //screen1Window.loadURL('https://github.com')
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
-
+    localStorage.setItem("screen1", true);
     // Open the DevTools.
     //screen1Window.webContents.openDevTools();
   } else {
@@ -77,6 +77,7 @@ const createSecondWindow = () => {
     });
     screen1Window.maximize();
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
+    localStorage.setItem("screen1", true);
     //screen1Window.webContents.openDevTools();
   }
 };
@@ -106,6 +107,7 @@ const createThreeWindow = () => {
       },
     })
     screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
+    localStorage.setItem("screen2", true);
     //screen2Window.webContents.openDevTools();
   } else {
     screen2Window = new BrowserWindow({
@@ -120,6 +122,7 @@ const createThreeWindow = () => {
     });
     screen2Window.maximize();
     screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
+    localStorage.setItem("screen2", true);
     //screen2Window.webContents.openDevTools();
   }
 };

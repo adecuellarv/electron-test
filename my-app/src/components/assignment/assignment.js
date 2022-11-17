@@ -15,6 +15,8 @@ const portaviones = document.getElementById('portaviones');
 
 let countSelectedRed = 1, countSelectedBlue = 1;
 const Assignment = ({ port, setPage }) => {
+    const scree1Active = localStorage.getItem('screen1');
+    const scree2Active = localStorage.getItem('screen2');
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
@@ -162,20 +164,22 @@ const Assignment = ({ port, setPage }) => {
     }
 
     const start = async () => {
-        if (teamBlue.length && teamRed.length) {
-            if (teamBlue.length <= 8 && teamRed.length <= 8) {
-                //if (teamBlue.length === teamRed.length) {
-                localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
-                localStorage.setItem("teamRed", JSON.stringify(teamRed));
-                const resp = await sendCommands();
-                if (resp) {
-                    //window.location.href = "game-deskt1.html";
-                    setPage(5);
+        if (scree1Active && scree2Active) {
+            if (teamBlue.length && teamRed.length) {
+                if (teamBlue.length <= 8 && teamRed.length <= 8) {
+                    //if (teamBlue.length === teamRed.length) {
+                    localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+                    localStorage.setItem("teamRed", JSON.stringify(teamRed));
+                    const resp = await sendCommands();
+                    if (resp) {
+                        //window.location.href = "game-deskt1.html";
+                        setPage(5);
+                    }
+                } else {
+                    alert('El máximo de jugadores es 8');
                 }
-            } else {
-                alert('El máximo de jugadores es 8');
-            }
-        } else alert('Selecciona posiciones de equipos');
+            } else alert('Selecciona posiciones de equipos');
+        } else alert('No se han detectado pantallas conectadas');
     }
 
     const sendCommands = () => {
@@ -408,7 +412,7 @@ const Assignment = ({ port, setPage }) => {
                                                 className="col-sm-8"
                                                 style={{ textAlign: 'right', marginBottom: 10 }}
                                             >
-      
+
                                             </div>
                                         </div>
                                         {listLetters.map((i, key) =>
