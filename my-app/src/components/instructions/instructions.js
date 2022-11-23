@@ -120,32 +120,32 @@ const Instructions = ({ setPage }) => {
                                     </div>
                                     <div className="col-sm-6" style={{
                                         paddingTop: 70,
-                                        paddingRight: 200,
+                                        //paddingRight: 200,
                                         textAlign: 'center'
                                     }}>
                                         <img
                                             src={portaviones?.src}
                                             style={{
-                                                width: '60%',
+                                                width: 260,
                                                 margin: '0 auto',
-                                                display: 'inline-block'
+                                                display: 'block'
                                             }}
                                         />
                                         <img
                                             src={acorazado?.src}
                                             style={{
-                                                width: '60%',
+                                                width: 260,
                                                 margin: '0 auto',
-                                                display: 'inline-block',
+                                                display: 'block',
                                                 paddingTop: 30
                                             }}
                                         />
                                         <img
                                             src={fragata?.src}
                                             style={{
-                                                width: '60%',
+                                                width: 260,
                                                 margin: '0 auto',
-                                                display: 'inline-block',
+                                                display: 'block',
                                                 paddingTop: 30
                                             }}
                                         />

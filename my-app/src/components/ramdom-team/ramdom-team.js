@@ -7,6 +7,7 @@ const logo = document.getElementById('logo');
 const bgpopup = document.getElementById('bgpopup');
 const saveimage = document.getElementById('saveimage');
 const coingif = document.getElementById('coingif');
+const static_coin = document.getElementById('static_coin');
 
 const teams = [1, 2];
 let timer;
@@ -120,9 +121,10 @@ const RamdomTeam = ({ setPage }) => {
                                         <div>
                                             <div>
                                                 {!start ?
-                                                    <button
+                                                    <img
                                                         onClick={startRamdomChose}
-                                                    >Empezar volado</button>
+                                                        src={static_coin?.src}
+                                                    />
                                                     :
                                                     <img src={coingif?.src} />
                                                 }

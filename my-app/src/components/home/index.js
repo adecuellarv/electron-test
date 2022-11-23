@@ -24,11 +24,12 @@ const Index = () => {
     const startGame = async () => {
         executecCMD('C');
         localStorage.clear();
+        setPage(2);
         const totalLoadersBlue = await boardBlue(true);
         if (totalLoadersBlue === 49) {
-            
-            const totalLoadersRed = await boardRed(true);
-            if (totalLoadersRed) setPage(2);
+            await boardRed(true);
+            //const totalLoadersRed = await boardRed(true);
+            //if (totalLoadersRed) setPage(2);
         }
     };
 
@@ -101,7 +102,7 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        await wait(200)
+        await wait(100)
         if (!port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
