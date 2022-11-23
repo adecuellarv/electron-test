@@ -18,21 +18,53 @@ const Index = () => {
             stopbits: 1,
             flowControl: false
         });
+        
     }, []);
 
     const startGame = async () => {
+        executecCMD('C');
         localStorage.clear();
         const totalLoadersBlue = await boardBlue(true);
         if (totalLoadersBlue === 49) {
+            /*
             const totalLoadersRed = await boardRed(true);
-            if (totalLoadersRed) setPage(2);
+            if (totalLoadersRed) setPage(2);*/
         }
     };
 
     const boardBlue = async (on) => {
+        let rowNum = 0, columnNum = 0, totalElements = 0;
+        for (const lettle of listLetters) {
+            for (const number of listNumbers) {
+                const filaNum = rowNum + 1, position = columnNum + 1;
+                let countCode = 0;
+                if (filaNum >= 1 && filaNum <= 6) {
+                    let startIn = 1;
+                    if (filaNum > 1) {
+                        startIn = (filaNum - 1) * 21 + 1;
+                    }
+
+                    const topByPosition = position * 3 + startIn;
+                    const startByPostion = topByPosition - 3;
+                    for (let index = startByPostion; index < topByPosition; index++) {
+                        const element = index;
+                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
+                        countCode++;
+                        //console.log('codes-team1', codeToSend);
+                        //executecCMD(codeToSend);
+                        await executecCMD(codeToSend)
+                    }
+                }
+
+                columnNum++;
+            }
+            rowNum++;
+        }
+
+        /*
         let totalElements = 0;
-        listLetters.map((i, rowNum) => {
-            listNumbers.map((j, columnNum) => {
+        await listLetters.map(async (i, rowNum) => {
+            await listNumbers.map(async(j, columnNum) => {
                 const filaNum = rowNum + 1, position = columnNum + 1;
                 //console.log('name', `${i}${j}`)
                 let countCode = 0;
@@ -46,16 +78,16 @@ const Index = () => {
                     const startByPostion = topByPosition - 3;
                     for (let index = startByPostion; index < topByPosition; index++) {
                         const element = index;
-                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
+                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
+                        await executecCMD(codeToSend);
+                        console.log('-----', countCode);
                         countCode++;
-                        //console.log('codes-team1', codeToSend);
-                        executecCMD(codeToSend);
                     }
                 }
                 totalElements++;
             });
         })
-        return totalElements;
+        return totalElements;*/
     };
 
     const boardRed = async () => {
@@ -75,7 +107,7 @@ const Index = () => {
                     const startByPostion = topByPosition - 3;
                     for (let index = startByPostion; index < topByPosition; index++) {
                         const element = index;
-                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '0'}:000`;
+                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
                         countCode++;
                         //console.log('codes-team2', codeToSend);
                         executecCMD(codeToSend);
@@ -89,12 +121,15 @@ const Index = () => {
     };
 
     const executecCMD = async (code) => {
-        if (!port?.port) {
+        await wait(300)
+        if (port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }
         return true;
-    }
+    };
+
+    const wait = ms => new Promise((r, j) => setTimeout(r, ms))
 
     return (
         <>

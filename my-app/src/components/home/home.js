@@ -54,12 +54,12 @@ const Home = ({ startGame }) => {
                         }}
                     >
 
-                        <img src={buttonstart?.src}
-                            style={{
-                                width: '100%'
-                            }}
-                            onClick={startGame}
-                        />
+                            <img src={buttonstart?.src}
+                                style={{
+                                    width: '100%'
+                                }}
+                                onClick={startGame}
+                            />
 
                     </div>
                 </div>

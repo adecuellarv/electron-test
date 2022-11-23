@@ -170,6 +170,7 @@ const Assignment = ({ port, setPage }) => {
                     //if (teamBlue.length === teamRed.length) {
                     localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
                     localStorage.setItem("teamRed", JSON.stringify(teamRed));
+                    await executecCMD('C');
                     const resp = await sendCommands();
                     if (resp) {
                         //window.location.href = "game-deskt1.html";
@@ -190,7 +191,7 @@ const Assignment = ({ port, setPage }) => {
             bothArrays.map(item => {
                 if (item.canalesDMX.length) {
                     item.canalesDMX.map((i, k) => {
-                        const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '0'}:000`;
+                        const codeToSend = `A${i.toString().padStart(3, "0")}@${k === 2 ? '255' : '000'}:000`;
                         executecCMD(codeToSend);
                     });
                 }

@@ -176,7 +176,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 canalesDMX.map((i, k) => {
                     let codeToSend = '';
                     if (typeSend === 'success') {
-                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 0 ? '255' : '0'}:000`;
+                        codeToSend = `A${i.toString().padStart(3, "0")}@${k === 0 ? '255' : '000'}:000`;
                     }
                     if (typeSend === 'error') {
                         codeToSend = `A${i.toString().padStart(3, "0")}@255:000`;
@@ -189,7 +189,7 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 executecCMD(`A${codeAir}@255:000`);
 
                 setTimeout(() => {
-                    executecCMD(`A${codeAir}@0:000`);
+                    executecCMD(`A${codeAir}@000:000`);
                 }, 2000);
             }
         } else {
