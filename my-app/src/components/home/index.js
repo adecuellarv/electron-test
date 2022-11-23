@@ -26,103 +26,83 @@ const Index = () => {
         localStorage.clear();
         const totalLoadersBlue = await boardBlue(true);
         if (totalLoadersBlue === 49) {
-            /*
+            
             const totalLoadersRed = await boardRed(true);
-            if (totalLoadersRed) setPage(2);*/
+            if (totalLoadersRed) setPage(2);
         }
     };
 
-    const boardBlue = async (on) => {
-        let rowNum = 0, columnNum = 0, totalElements = 0;
-        for (const lettle of listLetters) {
-            for (const number of listNumbers) {
-                const filaNum = rowNum + 1, position = columnNum + 1;
-                let countCode = 0;
-                if (filaNum >= 1 && filaNum <= 6) {
-                    let startIn = 1;
-                    if (filaNum > 1) {
-                        startIn = (filaNum - 1) * 21 + 1;
-                    }
-
-                    const topByPosition = position * 3 + startIn;
-                    const startByPostion = topByPosition - 3;
-                    for (let index = startByPostion; index < topByPosition; index++) {
-                        const element = index;
-                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
-                        countCode++;
-                        //console.log('codes-team1', codeToSend);
-                        //executecCMD(codeToSend);
-                        await executecCMD(codeToSend)
-                    }
+    const getDMXCode = (team, row, column, rowNum, columnNum) => {
+        const filaNum = rowNum + 1, position = columnNum + 1;
+        const canalesDMX = [];
+        if (filaNum < 8) {
+            let startIn;
+            if (team === 1) {
+                startIn = 1;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 1;
                 }
+            } else {
+                startIn = 162;
+                if (filaNum > 1) {
+                    startIn = (filaNum - 1) * 21 + 162;
+                }
+            }
 
+            const topByPosition = position * 3 + startIn;
+            const startByPostion = topByPosition - 3;
+            for (let index = startByPostion; index < topByPosition; index++) {
+                const element = index;
+                canalesDMX.push(element);
+            }
+        }
+        //console.log(team, row, column, rowNum, columnNum, 'canales: ' + canalesDMX)
+        return canalesDMX;
+    }
+
+    const boardBlue = async (on) => {
+        let rowNum = 0, totalElements = 0;
+        for (const lettle of listLetters) {
+            let columnNum = 0;
+            for (const number of listNumbers) {
+                const dmxList = getDMXCode(1, lettle, number, rowNum, columnNum);
+                let countDmx = 0;
+                for(const dmx of dmxList){
+                    const codeToSend = `A${dmx.toString().padStart(3, "0")}@${countDmx === 1 ? '128' : '000'}:000`;
+                    await executecCMD(codeToSend);
+                    countDmx++;
+                }
                 columnNum++;
+                totalElements++;
             }
             rowNum++;
         }
-
-        /*
-        let totalElements = 0;
-        await listLetters.map(async (i, rowNum) => {
-            await listNumbers.map(async(j, columnNum) => {
-                const filaNum = rowNum + 1, position = columnNum + 1;
-                //console.log('name', `${i}${j}`)
-                let countCode = 0;
-                if (filaNum >= 1 && filaNum <= 6) {
-                    let startIn = 1;
-                    if (filaNum > 1) {
-                        startIn = (filaNum - 1) * 21 + 1;
-                    }
-
-                    const topByPosition = position * 3 + startIn;
-                    const startByPostion = topByPosition - 3;
-                    for (let index = startByPostion; index < topByPosition; index++) {
-                        const element = index;
-                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
-                        await executecCMD(codeToSend);
-                        console.log('-----', countCode);
-                        countCode++;
-                    }
-                }
-                totalElements++;
-            });
-        })
-        return totalElements;*/
+        return totalElements;
     };
 
     const boardRed = async () => {
-        let totalElements = 0;
-        listLetters.map((i, rowNum) => {
-            listNumbers.map((j, columnNum) => {
-                const filaNum = rowNum + 1, position = columnNum + 1;
-                //console.log('name', `${i}${j}`)
-                let countCode = 0;
-                if (filaNum >= 2 && filaNum <= 7) {
-                    let startIn = 162;
-                    if (filaNum > 1) {
-                        startIn = (filaNum - 1) * 21 + 162;
-                    }
-
-                    const topByPosition = position * 3 + startIn;
-                    const startByPostion = topByPosition - 3;
-                    for (let index = startByPostion; index < topByPosition; index++) {
-                        const element = index;
-                        const codeToSend = `A${element.toString().padStart(3, "0")}@${countCode === 1 ? '128' : '000'}:000`;
-                        countCode++;
-                        //console.log('codes-team2', codeToSend);
-                        executecCMD(codeToSend);
-                    }
+        let rowNum = 0, totalElements = 0;
+        for (const lettle of listLetters) {
+            let columnNum = 0;
+            for (const number of listNumbers) {
+                const dmxList = getDMXCode(2, lettle, number, rowNum, columnNum);
+                let countDmx = 0;
+                for(const dmx of dmxList){
+                    const codeToSend = `A${dmx.toString().padStart(3, "0")}@${countDmx === 1 ? '128' : '000'}:000`;
+                    await executecCMD(codeToSend);
+                    countDmx++;
                 }
-
+                columnNum++;
                 totalElements++;
-            });
-        })
+            }
+            rowNum++;
+        }
         return totalElements;
     };
 
     const executecCMD = async (code) => {
-        await wait(300)
-        if (port?.port) {
+        await wait(200)
+        if (!port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }
