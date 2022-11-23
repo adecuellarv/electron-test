@@ -15,8 +15,8 @@ const portaviones = document.getElementById('portaviones');
 
 let countSelectedRed = 1, countSelectedBlue = 1;
 const Assignment = ({ port, setPage }) => {
-    const scree1Active = localStorage.getItem('screen1');
-    const scree2Active = localStorage.getItem('screen2');
+    const scree1Active = true //localStorage.getItem('screen1');
+    const scree2Active = true //localStorage.getItem('screen2');
     const [teamBlue, setTeamBlue] = useState([]);
     const [teamRed, setTeamRed] = useState([]);
     const [sizeBtnPositions, setSizeBtnPositions] = useState(50);
