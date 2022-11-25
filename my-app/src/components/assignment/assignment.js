@@ -185,8 +185,8 @@ const Assignment = ({ port, setPage }) => {
 
     const sendCommands = () => {
 
-        if (!port?.port) {
-            const bothArrays = teamBlue.concat(teamRed);
+        if (port?.port) {
+            const bothArrays = teamBlue.concat(teamRed); 
 
             bothArrays.map(item => {
                 if (item.canalesDMX.length) {
