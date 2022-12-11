@@ -33,6 +33,7 @@ const Assignment = ({ port, setPage }) => {
 
     const validateBoatSize = (lengthBoat, teamArray, boatNumber) => {
         const lenghtByBoatNumber = teamArray.filter(i => i.boatNumber === boatNumber);
+        console.log('lenghtByBoatNumber', lenghtByBoatNumber)
         if (lengthBoat === lenghtByBoatNumber.length) {
             return true;
         } else {
@@ -197,25 +198,25 @@ const Assignment = ({ port, setPage }) => {
     }
 
     const saveSection = (team) => {
-        //console.log('team', team)
         if (team === 1) {
             if (teamBlue.length) {
-                const boatTemporalNumber =  boatNumberBlue - 1;
+                const boatTemporalNumber = boatNumberBlue - 1;
                 const validate = validateBoatSize(choseBoat, teamBlue, boatTemporalNumber);
-                if(validate){
+                console.log('ver', choseBoat, teamBlue, boatTemporalNumber)
+                if (validate) {
                     setTurnChose(2);
-                }else{
+                } else {
                     alert('Selecciona un tipo de barco');
                 }
             } else alert('Selecciona posiciones de equipo');
         }
         if (team === 2) {
             if (teamRed.length) {
-                const boatTemporalNumber =  boatNumberRed - 1;
+                const boatTemporalNumber = boatNumberRed - 1;
                 const validate = validateBoatSize(choseBoat, teamRed, boatTemporalNumber);
-                if(validate){
+                if (validate) {
                     start();
-                }else{
+                } else {
                     alert('Selecciona un tipo de barco');
                 }
             } else alert('Selecciona posiciones de equipo');
@@ -224,9 +225,25 @@ const Assignment = ({ port, setPage }) => {
 
     const cleanSection = (team) => {
         if (team === 1) {
-            setTeamBlue([]);
+            const teamB = localStorage.getItem('teamBlue');
+            countSelectedBlue = 1;
+            setBoatNumberBlue(1);
+            if (teamB && teamB.length) {
+                //localStorage.setItem("teamBlue", '');
+                localStorage.removeItem('teamBlue');
+                setTeamBlue([]);
+            } else
+                setTeamBlue([]);
         }
         if (team === 2) {
+            const teamR = localStorage.getItem('teamRed');
+            countSelectedRed = 1;
+            setBoatNumberRed(1);
+            if (teamR && teamR.length) {
+                //localStorage.setItem("teamRed", '');
+                localStorage.removeItem('teamRed');
+                setTeamRed([]);
+            }
             setTeamRed([]);
         }
     };
