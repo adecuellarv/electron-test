@@ -33,35 +33,45 @@ const Assignment = ({ port, setPage }) => {
 
     const validateBoatSize = (lengthBoat, teamArray, boatNumber) => {
         const lenghtByBoatNumber = teamArray.filter(i => i.boatNumber === boatNumber);
-        console.log('lenghtByBoatNumber', lenghtByBoatNumber)
+        //console.log('lenghtByBoatNumber', lenghtByBoatNumber)
         if (lengthBoat === lenghtByBoatNumber.length) {
             return true;
         } else {
             return false;
         }
     };
-
+    
     const chooseByBoat = (lengthBoat) => {
         setChoseBoat(lengthBoat)
         if (turnChose === 1) {
             if (teamBlue.length) {
-                const validate = validateBoatSize(lengthBoat, teamBlue, boatNumberBlue);
-                if (validate) {
+                const arrayToCheck = teamBlue.filter(i => i.boatNumber === '');
+                const newArrayConcat = [];
+                if (arrayToCheck.length && arrayToCheck.length === lengthBoat) {
+                    arrayToCheck.map(i => {
+                        const obj = i;
+                        obj.boatNumber = boatNumberBlue;
+                        newArrayConcat.push(obj);
+                    });
                     setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
                     countSelectedBlue = 1;
-                } else {
-                    alert('Los participantes para este barco debe ser ' + lengthBoat);
-                }
+                    alert('guardado');
+                } else alert('Los participantes para este barco debe ser ' + lengthBoat);
             } else alert('Selecciona posiciones para el barco');
         } else {
             if (teamRed.length) {
-                const validate = validateBoatSize(lengthBoat, teamRed, boatNumberRed);
-                if (validate) {
-                    setBoatNumberRed(parseInt(boatNumberRed) + 1);
-                    countSelectedBlue = 1;
-                } else {
-                    alert('Los participantes para este barco debe ser ' + lengthBoat);
-                }
+                const arrayToCheck = teamRed.filter(i => i.boatNumber === '');
+                const newArrayConcat = [];
+                if (arrayToCheck.length && arrayToCheck.length === lengthBoat) {
+                    arrayToCheck.map(i => {
+                        const obj = i;
+                        obj.boatNumber = boatNumberBlue;
+                        newArrayConcat.push(obj);
+                    });
+                    setBoatNumberRed(parseInt(boatNumberBlue) + 1);
+                    countSelectedRed = 1;
+                    alert('guardado');
+                } else alert('Los participantes para este barco debe ser ' + lengthBoat);
             } else alert('Selecciona posiciones para el barco');
         }
     };
@@ -109,24 +119,24 @@ const Assignment = ({ port, setPage }) => {
             let newArray = teamBlue;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
 
-            if (position === -1) {
-                const obj = {
-                    row,
-                    column,
-                    name: `${row}${column}`,
-                    canalesDMX,
-                    boatNumber: boatNumberBlue
-                }
-                newArray.push(obj);
-            } else {
-                const boatNumber = newArray[position].boatNumber;
-                const filtered = newArray.filter(function (i, index, arr) {
-                    return i.boatNumber !== boatNumber;
-                });
-
-                newArray = filtered;
+            //if (position === -1) {
+            const obj = {
+                row,
+                column,
+                name: `${row}${column}`,
+                canalesDMX,
+                boatNumber: ''
             }
-
+            newArray.push(obj);
+            /* } else {
+                 const boatNumber = newArray[position].boatNumber;
+                 const filtered = newArray.filter(function (i, index, arr) {
+                     return i.boatNumber !== boatNumber;
+                 });
+ 
+                 newArray = filtered;
+             }*/
+             
             if (countSelectedBlue <= 3) {
                 setTeamBlue([...newArray]);
                 //countSelectedBlue++;
@@ -137,23 +147,23 @@ const Assignment = ({ port, setPage }) => {
             let newArray = teamRed;
             const position = newArray.findIndex(item => item.name === `${row}${column}`);
 
-            if (position === -1) {
-                const obj = {
-                    row,
-                    column,
-                    name: `${row}${column}`,
-                    canalesDMX,
-                    boatNumber: boatNumberRed
-                }
-                newArray.push(obj);
-            } else {
+            //if (position === -1) {
+            const obj = {
+                row,
+                column,
+                name: `${row}${column}`,
+                canalesDMX,
+                boatNumber: ''
+            }
+            newArray.push(obj);
+            /*} else {
                 const boatNumber = newArray[position].boatNumber;
                 const filtered = newArray.filter(function (i, index, arr) {
                     return i.boatNumber !== boatNumber;
                 });
 
                 newArray = filtered;
-            }
+            }*/
             if (countSelectedRed <= 3) {
                 setTeamRed([...newArray]);
                 //countSelectedRed++;
@@ -200,24 +210,21 @@ const Assignment = ({ port, setPage }) => {
     const saveSection = (team) => {
         if (team === 1) {
             if (teamBlue.length) {
-                const boatTemporalNumber = boatNumberBlue - 1;
-                const validate = validateBoatSize(choseBoat, teamBlue, boatTemporalNumber);
-                console.log('ver', choseBoat, teamBlue, boatTemporalNumber)
-                if (validate) {
-                    setTurnChose(2);
-                } else {
+                const arrayToCheck = teamBlue.filter(i => i.boatNumber === '');
+                if(arrayToCheck.length){
                     alert('Selecciona un tipo de barco');
+                }else{
+                    setTurnChose(2);
                 }
             } else alert('Selecciona posiciones de equipo');
         }
         if (team === 2) {
             if (teamRed.length) {
-                const boatTemporalNumber = boatNumberRed - 1;
-                const validate = validateBoatSize(choseBoat, teamRed, boatTemporalNumber);
-                if (validate) {
-                    start();
-                } else {
+                const arrayToCheck = teamRed.filter(i => i.boatNumber === '');
+                if (arrayToCheck.length) {
                     alert('Selecciona un tipo de barco');
+                } else {
+                    start();
                 }
             } else alert('Selecciona posiciones de equipo');
         }
