@@ -27,7 +27,7 @@ const RamdomTeam = ({ setPage }) => {
     }
 
     const starGame = () => {
-        setPage(4);
+        setPage(5);
         localStorage.setItem("startTeam", firstTeam === 'Azul' ? 1 : 2);
         ipcRenderer.send('screen1:startGame', true);
         ipcRenderer.send('screen2:startGame', true);

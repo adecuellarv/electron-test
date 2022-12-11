@@ -164,29 +164,43 @@ const Assignment = ({ port, setPage }) => {
     }
 
     const start = async () => {
-        if (scree1Active && scree2Active) {
-            if (teamBlue.length && teamRed.length) {
-                if (teamBlue.length <= 8 && teamRed.length <= 8) {
-                    //if (teamBlue.length === teamRed.length) {
-                    localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
-                    localStorage.setItem("teamRed", JSON.stringify(teamRed));
+        //if (scree1Active && scree2Active) {
+        if (teamBlue.length && teamRed.length) {
+            if (teamBlue.length <= 8 && teamRed.length <= 8) {
+                //if (teamBlue.length === teamRed.length) {
+                localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
+                localStorage.setItem("teamRed", JSON.stringify(teamRed));
+                if(port?.port)
                     await executecCMD('C');
-                    const resp = await sendCommands();
-                    if (resp) {
-                        //window.location.href = "game-deskt1.html";
-                        setPage(5);
-                    }
-                } else {
-                    alert('El máximo de jugadores es 8');
+                const resp = await sendCommands();
+                if (resp) {
+                    //window.location.href = "game-deskt1.html";
+                    setPage(4);
                 }
-            } else alert('Selecciona posiciones de equipos');
-        } else alert('No se han detectado pantallas conectadas');
+            } else {
+                alert('El máximo de jugadores es 8');
+            }
+        } else alert('Selecciona posiciones de equipos');
+        //} else alert('No se han detectado pantallas conectadas');
     }
+
+    const saveSection = (team) => {
+        if (team === 1) {
+            if (teamBlue.length) {
+                setTurnChose(2);
+            } else alert('Selecciona posiciones de equipo');
+        }
+        if (team === 2) {
+            if (teamRed.length) {
+                start();
+            } else alert('Selecciona posiciones de equipo');
+        }
+    };
 
     const sendCommands = () => {
 
         if (!port?.port) {
-            const bothArrays = teamBlue.concat(teamRed); 
+            const bothArrays = teamBlue.concat(teamRed);
 
             bothArrays.map(item => {
                 if (item.canalesDMX.length) {
@@ -378,7 +392,7 @@ const Assignment = ({ port, setPage }) => {
                                             />
 
                                             <img
-                                                onClick={() => setTurnChose(1)}
+                                                onClick={() => saveSection(2)}
                                                 src={saveimage?.src}
                                                 style={{
                                                     cursor: 'pointer',
@@ -469,7 +483,7 @@ const Assignment = ({ port, setPage }) => {
                                             />
 
                                             <img
-                                                onClick={() => setTurnChose(2)}
+                                                onClick={() => saveSection(1)}
                                                 src={saveimage?.src}
                                                 style={{
                                                     cursor: 'pointer',
