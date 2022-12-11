@@ -100,7 +100,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                             }}
                             onClick={() => changePage(3)}
                         >
-                            <label className="machineFont">MONEDA AL AIRE</label>
+                            <label className="machineFont">ASIGNAR COORDENADAS</label>
                         </div>
                         <div
                             style={{
@@ -111,7 +111,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                             }}
                             onClick={() => changePage(4)}
                         >
-                            <label className="machineFont">ASIGNAR COORDENADAS</label>
+                            <label className="machineFont">MONEDA AL AIRE</label>
                         </div>
                         <div
                             style={{

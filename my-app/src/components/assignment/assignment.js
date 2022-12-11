@@ -8,6 +8,7 @@ const logo = document.getElementById('logo');
 const boxleft = document.getElementById('boxleft');
 const boxright = document.getElementById('boxright');
 const saveimage = document.getElementById('saveimage');
+const clean_btn = document.getElementById('clean_btn');
 
 const acorazado = document.getElementById('acorazado');
 const fragata = document.getElementById('fragata');
@@ -24,16 +25,27 @@ const Assignment = ({ port, setPage }) => {
     const [boatNumberBlue, setBoatNumberBlue] = useState(1);
     const [boatNumberRed, setBoatNumberRed] = useState(1);
     const [turnChose, setTurnChose] = useState(1);
+    const [choseBoat, setChoseBoat] = useState();
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
     const refBtn = useRef(null);
     const refContentMain = useRef(null);
 
+    const validateBoatSize = (lengthBoat, teamArray, boatNumber) => {
+        const lenghtByBoatNumber = teamArray.filter(i => i.boatNumber === boatNumber);
+        if (lengthBoat === lenghtByBoatNumber.length) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     const chooseByBoat = (lengthBoat) => {
+        setChoseBoat(lengthBoat)
         if (turnChose === 1) {
             if (teamBlue.length) {
-                const lenghtByBoatNumber = teamBlue.filter(i => i.boatNumber === boatNumberBlue);
-                if (lengthBoat === lenghtByBoatNumber.length) {
+                const validate = validateBoatSize(lengthBoat, teamBlue, boatNumberBlue);
+                if (validate) {
                     setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
                     countSelectedBlue = 1;
                 } else {
@@ -42,8 +54,8 @@ const Assignment = ({ port, setPage }) => {
             } else alert('Selecciona posiciones para el barco');
         } else {
             if (teamRed.length) {
-                const lenghtByBoatNumber = teamRed.filter(i => i.boatNumber === boatNumberRed);
-                if (lengthBoat === lenghtByBoatNumber.length) {
+                const validate = validateBoatSize(lengthBoat, teamRed, boatNumberRed);
+                if (validate) {
                     setBoatNumberRed(parseInt(boatNumberRed) + 1);
                     countSelectedBlue = 1;
                 } else {
@@ -170,7 +182,7 @@ const Assignment = ({ port, setPage }) => {
                 //if (teamBlue.length === teamRed.length) {
                 localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
                 localStorage.setItem("teamRed", JSON.stringify(teamRed));
-                if(port?.port)
+                if (port?.port)
                     await executecCMD('C');
                 const resp = await sendCommands();
                 if (resp) {
@@ -185,15 +197,37 @@ const Assignment = ({ port, setPage }) => {
     }
 
     const saveSection = (team) => {
+        //console.log('team', team)
         if (team === 1) {
             if (teamBlue.length) {
-                setTurnChose(2);
+                const boatTemporalNumber =  boatNumberBlue - 1;
+                const validate = validateBoatSize(choseBoat, teamBlue, boatTemporalNumber);
+                if(validate){
+                    setTurnChose(2);
+                }else{
+                    alert('Selecciona un tipo de barco');
+                }
             } else alert('Selecciona posiciones de equipo');
         }
         if (team === 2) {
             if (teamRed.length) {
-                start();
+                const boatTemporalNumber =  boatNumberRed - 1;
+                const validate = validateBoatSize(choseBoat, teamRed, boatTemporalNumber);
+                if(validate){
+                    start();
+                }else{
+                    alert('Selecciona un tipo de barco');
+                }
             } else alert('Selecciona posiciones de equipo');
+        }
+    };
+
+    const cleanSection = (team) => {
+        if (team === 1) {
+            setTeamBlue([]);
+        }
+        if (team === 2) {
+            setTeamRed([]);
         }
     };
 
@@ -239,11 +273,12 @@ const Assignment = ({ port, setPage }) => {
     useEffect(() => {
         checkLocalStorage();
         const handleResize = () => {
+
             const widthLeft = refBoxLeft?.current?.offsetWidth;
             if (widthLeft) {
                 const size = (widthLeft - 140) / 7;
                 setSizeBtnPositions(size - 2);
-            }
+            }/*
             const heightLogo = refLogo?.current.offsetHeight;
             //const heightBtn = refBtn?.current.offsetHeight;
             const heightBoxes = refBoxLeft?.current.offsetHeight;
@@ -255,7 +290,7 @@ const Assignment = ({ port, setPage }) => {
                         setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
                     }
                 }
-            }
+            }*/
 
         };
         //localStorage.clear();
@@ -278,222 +313,248 @@ const Assignment = ({ port, setPage }) => {
             }}
         >
             <div
-                ref={refContentMain}
-                style={{
-                    transform: 'scale(.84)'
-                    //top: '50%',
-                    //transform: 'translateY(-50%)',
-                    //height: 'calc(100vh - 100px)'
-                }}
+                className='responsiveDivAssingment'
             >
-                <div className="container"
-                    style={{
-                        //paddingTop: paddingTopContent
-                    }}
-                >
-                    <div className="row">
-                        <div
-                            className="col-sm-12"
-                            style={{
-                                textAlign: 'center',
-                                //marginTop: 30,
-                            }}
-                            ref={refLogo}
-                        >
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div style={{ textAlign: 'center' }}>
                             <img
                                 src={logo?.src}
                                 style={{
-                                    width: '20%',
+                                    width: 200,
+                                    height: 50
                                 }}
                             />
                         </div>
-                        <div className="col-sm-6" style={{ marginTop: -30 }}>
-                            <div
-                                style={{
-                                    backgroundImage: `url(${boxleft?.src})`,
-                                    backgroundPosition: '50% 50%',
-                                    backgroundSize: 'contain',
-                                    backgroundRepeat: 'no-repeat',
-                                    position: 'relative',
-                                    width: '100%',
-                                    //height: 'calc(100vh - 170px)',
-                                }}
-                            >
+                    </div>
 
-                                {turnChose === 1 ?
-                                    <div className="div-array" ref={refBoxLeft}>
-                                        <div className="row">
-                                            <div className="col-sm-6">
-                                                <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
-                                            </div>
-                                            <div
-                                                className="col-sm-8"
-                                                style={{ textAlign: 'right', marginBottom: 10 }}
-                                            >
+                    <div className='col-sm-12'>
+                        <div
+                            style={{
+                                //transform: 'scale(.98)',
+                            }}
+                        >
+                            <div className='row'>
+                                <div className="col-sm-6"
 
-                                            </div>
-                                        </div>
-                                        {listLetters.map((i, key) =>
-                                            <div key={key}>
-                                                {listNumbers.map((j, k) => {
-                                                    //port = port + 3;
-                                                    //count = count + 1;
-
-                                                    //console.log('port', port)
-                                                    return (
-                                                        <button
-                                                            className={`buttons-lists_asg machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
-                                                            style={{
-                                                                width: sizeBtnPositions,
-                                                                height: sizeBtnPositions,
-                                                                fontSize: sizeBtnPositions / 3
-                                                            }}
-                                                            key={k}
-                                                            onClick={() => saveChoice(1, i, j, key, k)}
-                                                        >
-                                                            {`${i}${j}`}
-                                                        </button>
-                                                    )
-                                                })}
-                                            </div>
-                                        )}
-                                    </div>
-                                    :
-                                    <div className="div-array" ref={refBoxLeft}>
-                                        <div style={{ textAlign: 'center' }}>
-                                            <img
-                                                src={portaviones?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block'
-                                                }}
-                                                onClick={() => chooseByBoat(3)}
-                                            />
-                                            <img
-                                                src={acorazado?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block',
-                                                    paddingTop: 30
-                                                }}
-                                                onClick={() => chooseByBoat(2)}
-                                            />
-                                            <img
-                                                src={fragata?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block',
-                                                    paddingTop: 30
-                                                }}
-                                                onClick={() => chooseByBoat(1)}
-                                            />
-
-                                            <img
-                                                onClick={() => saveSection(2)}
-                                                src={saveimage?.src}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    paddingTop: 30,
-                                                    width: 130
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div className="col-sm-6" style={{ marginTop: -30 }}>
-                            <div
-                                style={{
-                                    backgroundImage: `url(${boxright?.src})`,
-                                    backgroundPosition: '50% 50%',
-                                    backgroundSize: 'contain',
-                                    backgroundRepeat: 'no-repeat',
-                                    position: 'relative',
-                                    width: '100%',
-                                    //height: 'calc(100vh - 170px)',
-                                }}
-                            >
-                                {turnChose === 2 ?
-                                    <div className="div-array">
-                                        <div className="row">
-                                            <div className="col-sm-6">
-                                                <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
-                                            </div>
-                                            <div
-                                                className="col-sm-8"
-                                                style={{ textAlign: 'right', marginBottom: 10 }}
-                                            >
-
-                                            </div>
-                                        </div>
-                                        {listLetters.map((i, key) =>
-                                            <div key={key}>
-                                                {listNumbers.map((j, k) =>
-                                                    <button
-                                                        className={`buttons-lists_asg machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
-                                                        style={{
-                                                            width: sizeBtnPositions,
-                                                            height: sizeBtnPositions,
-                                                            fontSize: sizeBtnPositions / 3
-                                                        }}
-                                                        key={k}
-                                                        onClick={() => saveChoice(2, i, j, key, k)}
-                                                    >
-                                                        {`${i}${j}`}
-                                                    </button>
+                                >
+                                    <div
+                                        style={{
+                                            backgroundImage: `url(${boxleft?.src})`,
+                                            backgroundPosition: '50% 50%',
+                                            backgroundSize: 'contain',
+                                            backgroundRepeat: 'no-repeat',
+                                            //position: 'relative',
+                                            width: '100%',
+                                            height: 650,
+                                            //top: -600
+                                            top: 0
+                                        }}
+                                    >
+                                        {turnChose === 1 ?
+                                            <div className="div-array" ref={refBoxLeft}>
+                                                <div className="row">
+                                                    <div className="col-sm-12">
+                                                        <label className='machineFont titleIntructionsAssigment'>1.- Seleccionar coordenadas</label>
+                                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                                    </div>
+                                                </div>
+                                                {listLetters.map((i, key) =>
+                                                    <div key={key}>
+                                                        {listNumbers.map((j, k) => {
+                                                            return (
+                                                                <button
+                                                                    className={`buttons-lists_asg machineFont ${isActive(1, `${i}${j}`) ? 'button-active-b' : ''}`}
+                                                                    style={{
+                                                                        width: sizeBtnPositions,
+                                                                        height: sizeBtnPositions,
+                                                                        fontSize: sizeBtnPositions / 3
+                                                                    }}
+                                                                    key={k}
+                                                                    onClick={() => saveChoice(1, i, j, key, k)}
+                                                                >
+                                                                    {`${i}${j}`}
+                                                                </button>
+                                                            )
+                                                        })}
+                                                    </div>
                                                 )}
                                             </div>
-                                        )}
+                                            :
+                                            <div className="div-array boatsSelection" ref={refBoxLeft}>
+                                                <div className='row'>
+                                                    <div className='col-sm-10' style={{ textAlign: 'left', marginBottom: 30 }}>
+                                                        <label className='machineFont titleIntructionsAssigment'>2.- Haz click para seleccionar tipo de embarcación por cantidad de jugadores</label>
+                                                    </div>
+                                                    <div className='col-sm-2'></div>
+                                                </div>
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <img
+                                                        src={portaviones?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block'
+                                                        }}
+                                                        onClick={() => chooseByBoat(3)}
+                                                    />
+                                                    <img
+                                                        src={acorazado?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block',
+                                                            paddingTop: 30
+                                                        }}
+                                                        onClick={() => chooseByBoat(2)}
+                                                    />
+                                                    <img
+                                                        src={fragata?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block',
+                                                            paddingTop: 30
+                                                        }}
+                                                        onClick={() => chooseByBoat(1)}
+                                                    />
+                                                    <div className='row'>
+                                                        <div className='col-sm-6'>
+                                                            <img
+                                                                onClick={() => cleanSection(2)}
+                                                                src={clean_btn?.src}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: 30,
+                                                                    width: '50%'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className='col-sm-6'>
+                                                            <img
+                                                                onClick={() => saveSection(2)}
+                                                                src={saveimage?.src}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: 30,
+                                                                    width: '50%'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
-                                    :
-                                    <div className="div-array" ref={refBoxLeft}>
-                                        <div style={{ textAlign: 'center' }}>
-                                            <img
-                                                src={portaviones?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block'
-                                                }}
-                                                onClick={() => chooseByBoat(3)}
-                                            />
-                                            <img
-                                                src={acorazado?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block',
-                                                    paddingTop: 30
-                                                }}
-                                                onClick={() => chooseByBoat(2)}
-                                            />
-                                            <img
-                                                src={fragata?.src}
-                                                style={{
-                                                    width: 260,
-                                                    margin: '0 auto',
-                                                    display: 'block',
-                                                    paddingTop: 30
-                                                }}
-                                                onClick={() => chooseByBoat(1)}
-                                            />
-
-                                            <img
-                                                onClick={() => saveSection(1)}
-                                                src={saveimage?.src}
-                                                style={{
-                                                    cursor: 'pointer',
-                                                    paddingTop: 30,
-                                                    width: 130
-                                                }}
-                                            />
-                                        </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div
+                                        style={{
+                                            backgroundImage: `url(${boxright?.src})`,
+                                            backgroundPosition: '50% 50%',
+                                            backgroundSize: 'contain',
+                                            backgroundRepeat: 'no-repeat',
+                                            //position: 'relative',
+                                            width: '100%',
+                                            height: 650,
+                                            //top: -600
+                                            top: 0
+                                        }}
+                                    >
+                                        {turnChose === 2 ?
+                                            <div className="div-array">
+                                                <div className="row">
+                                                    <div className="col-sm-12" style={{ textAlign: 'right' }}>
+                                                        <label className='machineFont titleIntructionsAssigment'>1.- Seleccionar coordenadas</label>
+                                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                                    </div>
+                                                </div>
+                                                {listLetters.map((i, key) =>
+                                                    <div key={key}>
+                                                        {listNumbers.map((j, k) =>
+                                                            <button
+                                                                className={`buttons-lists_asg machineFont ${isActive(2, `${i}${j}`) ? 'button-active-r' : ''}`}
+                                                                style={{
+                                                                    width: sizeBtnPositions,
+                                                                    height: sizeBtnPositions,
+                                                                    fontSize: sizeBtnPositions / 3
+                                                                }}
+                                                                key={k}
+                                                                onClick={() => saveChoice(2, i, j, key, k)}
+                                                            >
+                                                                {`${i}${j}`}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            :
+                                            <div className="div-array boatsSelection" ref={refBoxLeft}>
+                                                <div className='row'>
+                                                    <div className='col-sm-2'></div>
+                                                    <div className='col-sm-10' style={{ textAlign: 'right', marginBottom: 30 }}>
+                                                        <label className='machineFont titleIntructionsAssigment'>2.- Haz click para seleccionar tipo de embarcación por cantidad de jugadores</label>
+                                                    </div>
+                                                </div>
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <img
+                                                        src={portaviones?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block'
+                                                        }}
+                                                        onClick={() => chooseByBoat(3)}
+                                                    />
+                                                    <img
+                                                        src={acorazado?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block',
+                                                            paddingTop: 30
+                                                        }}
+                                                        onClick={() => chooseByBoat(2)}
+                                                    />
+                                                    <img
+                                                        src={fragata?.src}
+                                                        style={{
+                                                            width: 260,
+                                                            margin: '0 auto',
+                                                            display: 'block',
+                                                            paddingTop: 30
+                                                        }}
+                                                        onClick={() => chooseByBoat(1)}
+                                                    />
+                                                    <div className='row'>
+                                                        <div className='col-sm-6'>
+                                                            <img
+                                                                onClick={() => cleanSection(1)}
+                                                                src={clean_btn?.src}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: 30,
+                                                                    width: '50%'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className='col-sm-6'>
+                                                            <img
+                                                                onClick={() => saveSection(1)}
+                                                                src={saveimage?.src}
+                                                                style={{
+                                                                    cursor: 'pointer',
+                                                                    paddingTop: 30,
+                                                                    width: '50%'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
                                     </div>
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>

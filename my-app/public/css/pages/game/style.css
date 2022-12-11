@@ -1,4 +1,3 @@
-
 .buttons-lists_asg {
   background: #bcb5b5;
   border: 2px solid #060606;
@@ -16,8 +15,9 @@
 .div-array {
   width: 100%;
   /*margin: 0 auto;*/
-  padding: 70px;
+  padding: 20px 76px;
 }
+
 .buttons-lists {
   background: #bcb5b5;
   border: 2px solid #060606;
@@ -27,20 +27,22 @@
 .btn-onfucus {
   background: #1975cb;
 }
-.btn-red{
+
+.btn-red {
   background: red;
 }
-.btn-white{
+
+.btn-white {
   background: #ffffff;
 }
 
-.box-lists{
+.box-lists {
   display: inline-block;
   background: transparent;
   border: 2px solid #1ceee5;
 }
 
-.point-red{
+.point-red {
   background: red;
   border-radius: 50%;
   width: 20px;
@@ -48,7 +50,7 @@
   margin: 0 auto;
 }
 
-.point-white{
+.point-white {
   background: #fff;
   border-radius: 50%;
   width: 20px;
@@ -56,16 +58,36 @@
   margin: 0 auto;
 }
 
-.titleIntructions{
+.titleIntructions {
   /*font-size: ;*/
 }
 
-.textIntructions{
+.textIntructions {
   font-size: 18px;
+}
+
+.responsiveDivAssingment {
+  transform: scale(.85);
+  position: relative;
+  top: -15px;
+}
+
+.boatsSelection{
+  padding-top: 30px;
+}
+
+.titleIntructionsAssigment{
+  font-size: 18px;
+  color: #fff;
+  display: block;
 }
 
 @media (max-width: 1135px) {
   .textIntructions {
     font-size: 16px;
+  }
+  .responsiveDivAssingment{
+    transform: scale(.80);
+    top: -20px;
   }
 }
