@@ -231,12 +231,12 @@ const Assignment = ({ port, setPage }) => {
                 setSizeBtnPositions(size - 2);
             }
             const heightLogo = refLogo?.current.offsetHeight;
-            const heightBtn = refBtn?.current.offsetHeight;
+            //const heightBtn = refBtn?.current.offsetHeight;
             const heightBoxes = refBoxLeft?.current.offsetHeight;
-            if (heightBoxes && heightLogo && heightBtn) {
+            if (heightBoxes && heightLogo) {
                 const heightWindow = window?.innerHeight;
                 if (heightWindow) {
-                    const div = heightWindow - (heightBoxes + heightLogo + heightBtn);
+                    const div = heightWindow - (heightBoxes + heightLogo);
                     if (div > 0) {
                         setPaddingTopContent(heightWindow < 800 ? (div / 2) - 40 : (div / 2));
                     }
@@ -350,7 +350,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={portaviones?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block'
                                                 }}
@@ -359,7 +359,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={acorazado?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block',
                                                     paddingTop: 30
@@ -369,7 +369,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={fragata?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block',
                                                     paddingTop: 30
@@ -441,7 +441,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={portaviones?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block'
                                                 }}
@@ -450,7 +450,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={acorazado?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block',
                                                     paddingTop: 30
@@ -460,7 +460,7 @@ const Assignment = ({ port, setPage }) => {
                                             <img
                                                 src={fragata?.src}
                                                 style={{
-                                                    width: '68%',
+                                                    width: 260,
                                                     margin: '0 auto',
                                                     display: 'block',
                                                     paddingTop: 30
@@ -481,23 +481,6 @@ const Assignment = ({ port, setPage }) => {
                                     </div>
                                 }
                             </div>
-                        </div>
-                        <div
-                            className="col-sm-12"
-                            style={{
-                                textAlign: 'center',
-                                marginTop: 20
-                            }}
-                            ref={refBtn}
-                        >
-                            <img
-                                onClick={start}
-                                src={saveimage?.src}
-                                style={{
-                                    cursor: 'pointer'
-                                }}
-                            />
-
                         </div>
                     </div>
                 </div>

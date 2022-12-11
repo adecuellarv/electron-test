@@ -5,7 +5,7 @@ const { useState, useEffect } = require('react');
 
 let port;
 const Index = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(3);
     const [teamWinner, setTeamWinner] = useState('');
     const [showMenu, setShowMenu] = useState(false);
 
@@ -125,13 +125,13 @@ const Index = () => {
                 />
             }
             {page === 3 &&
-                <RamdomTeam
+                <Assignment
+                    port={port}
                     setPage={setPage}
                 />
             }
             {page === 4 &&
-                <Assignment
-                    port={port}
+                <RamdomTeam
                     setPage={setPage}
                 />
             }
