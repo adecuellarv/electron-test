@@ -9,11 +9,9 @@ const Home = ({ startGame }) => {
     return (
         <div className="home-container"
             style={{
-                backgroundImage: `linear-gradient(45deg,rgba(0, 0, 0, 0.30),rgba(0, 0, 0, 0.30) ), url(${bgimage?.src})`,
-                backgroundPosition: '50% 50%',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                position: 'relative'
+                background: '#000',
+                width: '100%',
+                height: '100vh'
             }}
         >
             <div
@@ -34,9 +32,9 @@ const Home = ({ startGame }) => {
                         backgroundSize: 'contain',
                         backgroundRepeat: 'no-repeat',
                         position: 'relative',
-                        width: '50%',
+                        width: '75%',
                         margin: '0 auto',
-                        height: '50%',
+                        height: '75%',
                         top: '50%',
                         transform: 'translateY(-50%)'
                         //
@@ -47,10 +45,10 @@ const Home = ({ startGame }) => {
                     <div
                         style={{
                             position: 'absolute',
-                            width: '25%',
-                            left: '37.5%',
+                            width: '17%',
+                            left: '41.5%',
                             //margin: '0 auto',
-                            bottom: '-20%'
+                            bottom: '-10%'
                         }}
                     >
 
