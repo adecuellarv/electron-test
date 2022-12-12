@@ -9,7 +9,7 @@ const btn_close = document.getElementById('btn_close');
 const btn_closemenu = document.getElementById('btn_closemenu');
 const btn_settings = document.getElementById('btn_settings');
 const btn_back = document.getElementById('btn_back');
-const bginstructions = document.getElementById('bginstructions');
+const bgpopup = document.getElementById('bgpopup');
 
 const Menu = ({ setShowMenu, setPage }) => {
     const [menuType, setMenuType] = useState(1);
@@ -133,7 +133,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                             }}
                             onClick={() => setMenuType(2)}
                         >
-                            <label className="machineFont">INTRUCCIONES</label>
+                            <label className="machineFont">AYUDA</label>
                         </div>
                         <div
                             style={{
@@ -164,7 +164,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                 <div
                     style={{
                         position: 'relative',
-                        backgroundImage: `url(${bginstructions?.src})`,
+                        backgroundImage: `url(${bgpopup?.src})`,
                         backgroundPosition: '50% 50%',
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',

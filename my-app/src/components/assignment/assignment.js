@@ -56,6 +56,7 @@ const Assignment = ({ port, setPage }) => {
                     setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
                     countSelectedBlue = 1;
                     Swal.fire({
+                        icon: 'success',
                         title: 'Guardado',
                         text: 'Con exito',
                         timer: 900,
@@ -89,6 +90,7 @@ const Assignment = ({ port, setPage }) => {
                     setBoatNumberRed(parseInt(boatNumberBlue) + 1);
                     countSelectedRed = 1;
                     Swal.fire({
+                        icon: 'success',
                         title: 'Guardado',
                         text: 'Con exito',
                         timer: 900,

@@ -12,6 +12,7 @@ const barras2 = document.getElementById('barras2');
 const barras3 = document.getElementById('barras3');
 const circles1 = document.getElementById('circles');
 const circles2 = document.getElementById('circles2');
+const standbyimg = document.getElementById('standbyimg');
 
 const mainvideo = document.getElementById('mainvideo');
 
@@ -261,7 +262,7 @@ const ScreenBlue = () => {
 
     return (
         <>
-            {startGame && !starRamdom ?
+            {true ? //startGame && !starRamdom ?
                 <div
                     style={{
                         backgroundImage: `url(${bgimage?.src})`,
@@ -529,7 +530,23 @@ const ScreenBlue = () => {
                         width: '100%',
                         height: '100vh',
                     }}
-                />
+                >
+                    <div
+                        style={{
+                            backgroundImage: `url(${standbyimg?.src})`,
+                            backgroundPosition: '50% 50%',
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                            position: 'relative',
+                            width: '100%',
+                            height: 600,
+                            //top: -600
+                            top: 50
+                        }}
+                    >
+
+                    </div>
+                </div>
             }
         </>
     )

@@ -5,6 +5,7 @@ const bgimage = document.getElementById('bgimage_2');
 const logo = document.getElementById('logo');
 const bgpopup = document.getElementById('bgpopup');
 const coingif = document.getElementById('coingif');
+const static_coin = document.getElementById('static_coin');
 
 const listLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 const listNumbers = [1, 2, 3, 4, 5, 6, 7];
@@ -103,8 +104,8 @@ const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
 
                                         <div>
                                             <div>
-                                                {!starRamdom === 1 ?
-                                                    <img src={coingif?.src} />
+                                                {firstTeam !== '' ?
+                                                    <img src={static_coin?.src} />
                                                     :
                                                     <img src={coingif?.src} />
                                                 }
