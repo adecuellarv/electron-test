@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { SerialPort } = require('serialport')
 const { useState, useEffect } = require('react');
+const audio = document.getElementById('audio');
 
 let port;
 const Index = () => {
@@ -18,7 +19,7 @@ const Index = () => {
             stopbits: 1,
             flowControl: false
         });
-        
+
     }, []);
 
     const startGame = async () => {
@@ -68,7 +69,7 @@ const Index = () => {
             for (const number of listNumbers) {
                 const dmxList = getDMXCode(1, lettle, number, rowNum, columnNum);
                 let countDmx = 0;
-                for(const dmx of dmxList){
+                for (const dmx of dmxList) {
                     const codeToSend = `A${dmx.toString().padStart(3, "0")}@${countDmx === 1 ? '128' : '000'}:000`;
                     await executecCMD(codeToSend);
                     countDmx++;
@@ -88,7 +89,7 @@ const Index = () => {
             for (const number of listNumbers) {
                 const dmxList = getDMXCode(2, lettle, number, rowNum, columnNum);
                 let countDmx = 0;
-                for(const dmx of dmxList){
+                for (const dmx of dmxList) {
                     const codeToSend = `A${dmx.toString().padStart(3, "0")}@${countDmx === 1 ? '128' : '000'}:000`;
                     await executecCMD(codeToSend);
                     countDmx++;
@@ -158,6 +159,16 @@ const Index = () => {
                     setShowMenu={setShowMenu}
                     setPage={setPage}
                 />
+            }
+            {page === 5 &&
+                <audio
+                    autoPlay={true}
+                    controls={false}
+                    loop={true}
+                    src={audio?.src}
+                >
+                    <source src={audio.src} type="audio/mp3" />
+                </audio>
             }
         </>
     )
