@@ -78,7 +78,7 @@ const Instructions = ({ setPage }) => {
                                                 Elegir cada equipo o jugador sus coordenadas colocandose en el tablero real, si son embarcación deberán colocarse juntos para crear su tipo de barco ya sea en posición vertical u horizontal.
                                             </p>
                                             <p className="machineFont textIntructions"><strong>4.- </strong>
-                                                Operador naval guardar las posiciones de cada equipo en el panel de control.
+                                                Operador naval guarda las posiciones de cada equipo en el panel de control.
                                             </p>
                                             <p className="machineFont textIntructions"><strong>5.- </strong>
                                                 Comienza la Batalla Naval.

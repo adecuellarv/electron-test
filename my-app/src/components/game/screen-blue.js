@@ -117,7 +117,7 @@ const ScreenBlue = () => {
     const refLogo = useRef(null);
     const refBoxParentLeft = useRef(null);
     const gifbgRef = useRef(null);
-    const bgFullRef = useRef(null); console.log('bgFullRef', bgFullRef?.current?.offsetTop)
+    const bgFullRef = useRef(null); console.log('videocurrent', videoToShow);
 
     const getColorBtn = (team, row, column) => {
         if (itemsKilled.length) {
@@ -134,7 +134,7 @@ const ScreenBlue = () => {
         }
     };
 
-    const getVideoSuccess = (info) => {
+    const getVideoSuccess = (info) => { debugger
 
         const { totalItems, teamRed, boatNumber } = info;
 
@@ -266,7 +266,7 @@ const ScreenBlue = () => {
 
     return (
         <>
-            {startGame && !starRamdom ?
+            {startGame ?
                 <div
                     style={{
                         backgroundImage: `url(${bgimage?.src})`,
@@ -397,7 +397,7 @@ const ScreenBlue = () => {
                                             >
                                                 <div className="row">
                                                     <div className="col-sm-6">
-                                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
                                                     </div>
                                                 </div>
                                                 <div className="row">

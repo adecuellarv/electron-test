@@ -160,16 +160,16 @@ const Index = () => {
                     setPage={setPage}
                 />
             }
-            {page === 5 &&
-                <audio
-                    autoPlay={true}
-                    controls={false}
-                    loop={true}
-                    src={audio?.src}
-                >
-                    <source src={audio.src} type="audio/mp3" />
-                </audio>
-            }
+
+            <audio
+                autoPlay={true}
+                controls={false}
+                loop={true}
+                src={audio?.src}
+            >
+                <source src={audio.src} type="audio/mp3" />
+            </audio>
+
         </>
     )
 };
