@@ -13,6 +13,7 @@ const barras3 = document.getElementById('barras3');
 const circles1 = document.getElementById('circles');
 const circles2 = document.getElementById('circles2');
 const standbyimg = document.getElementById('standbyimg');
+const gifbgfull = document.getElementById('gifbgfull');
 
 const mainvideo = document.getElementById('mainvideo');
 
@@ -113,7 +114,8 @@ const ScreenRed = () => {
     const [firstTeam, setFirstTeam] = useState('');
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
-    const refBoxParentLeft = useRef(null);
+    //const refBoxParentLeft = useRef(null);
+    const bgFullRef = useRef(null);
 
     const getColorBtn = (team, row, column) => {
         if (itemsKilled.length) {
@@ -318,188 +320,157 @@ const ScreenRed = () => {
                                     }}
                                 />
                             </div>
-                            <div className="col-sm-6" style={{ marginTop: -30 }}>
-                                <div
-                                    style={{
-                                        backgroundImage: `url(${boxleft?.src})`,
-                                        backgroundPosition: '50% 50%',
-                                        backgroundSize: 'contain',
-                                        backgroundRepeat: 'no-repeat',
-                                        position: 'relative',
-                                        width: '100%',
-                                        height: 650,
-                                        //height: 'calc(100vh - 170px)',
-                                    }}
-                                    ref={refBoxParentLeft}
-                                >
-                                    <div className="div-array" ref={refBoxLeft}>
-                                        <div className="row">
-                                            <div className="col-sm-6">
-                                                <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-sm-1"
-                                                style={{
-                                                    marginTop: sizeBtnPositions
-                                                }}
-                                            >
-                                                {listLetters.map((i, key) =>
+                            <div className="col-sm-12">
+                                <div className='row'>
+                                    <div className="col-sm-6" style={{ marginTop: -30 }}>
+
+                                    </div>
+                                    <div className="col-sm-6" style={{ marginTop: -30, position: 'relative' }}>
+                                        <div
+                                            style={{
+                                                width: '90%',
+                                                height: 650,
+                                                position: 'absolute',
+                                                top: bgFullRef?.current?.offsetTop + 45,
+                                                left: 30
+                                            }}
+                                        >
+                                            <div className="row">
+
+                                                <div className="col-sm-12">
                                                     <div
-                                                        key={key}
                                                         style={{
-                                                            paddingRight: 10,
-                                                            width: sizeBtnPositions,
-                                                            height: sizeBtnPositions + 7,
+                                                            position: 'relative'
                                                         }}
                                                     >
-                                                        <label
+                                                        <video
+                                                            controls={false}
+                                                            autoPlay={true}
+                                                            loop={true}
                                                             style={{
-
-
-                                                                textAlign: 'center',
-                                                                color: '#fff'
+                                                                width: '100%'
                                                             }}
-                                                        >{i}</label>
+                                                            ref={videoRef}
+                                                            key={videoToShow}
+                                                        >
+                                                            <source src={videoToShow} />
+                                                        </video>
+                                                        <TimerComponent
+                                                            delayResend={delayResend}
+                                                            setTextFinish={setTextFinish}
+                                                        />
                                                     </div>
-                                                )}
-                                            </div>
-                                            <div className="col-sm-11">
+                                                </div>
 
-                                                {listNumbers.map((j, k) =>
-                                                    <label
-                                                        key={k}
-                                                        className="machineFont"
-                                                        style={{
-                                                            width: sizeBtnPositions,
-                                                            height: sizeBtnPositions,
-                                                            textAlign: 'center',
-                                                            color: '#fff'
-                                                        }}
-                                                    >{j}</label>
-                                                )}
-
-                                                {listLetters.map((i, key) =>
-                                                    <div key={key}>
-                                                        {listNumbers.map((j, k) =>
-                                                            <div
-                                                                className={
-                                                                    `box-lists machineFont`}
-                                                                style={{
-                                                                    width: sizeBtnPositions,
-                                                                    height: sizeBtnPositions,
-                                                                }}
-                                                                key={k}
-
-                                                            >
-                                                                <div
-                                                                    className={getColorBtn(2, i, j)}
-                                                                    style={{
-                                                                        marginTop: sizeBtnPositions - 38
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-6" style={{ marginTop: -30 }}>
-                                <div
-                                    style={{
-                                        backgroundImage: `url(${boxright?.src})`,
-                                        backgroundPosition: '50% 50%',
-                                        backgroundSize: 'contain',
-                                        backgroundRepeat: 'no-repeat',
-                                        position: 'relative',
-                                        width: '100%',
-                                        height: 650,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            width: refBoxLeft?.current?.offsetWidth,
-                                            height: refBoxLeft?.current?.offsetHeight - 10,
-                                            paddingLeft: 20,
-                                            paddingRight: 20,
-                                            paddingTop: 70
-                                        }}
-                                    >
-                                        <div className="row">
-                                            <div className="col-sm-6">
-                                                <img
-                                                    src={barras3?.src}
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="col-sm-6">
-                                                <img
-                                                    src={circles1?.src}
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="col-sm-12">
-                                                <div
-                                                    style={{
-                                                        position: 'relative'
-                                                    }}
-                                                >
-                                                    <video
-                                                        controls={false}
-                                                        autoPlay={true}
-                                                        loop={true}
-                                                        style={{
-                                                            width: '100%'
-                                                        }}
-                                                        ref={videoRef}
-                                                        key={videoToShow}
-                                                    >
-                                                        <source src={videoToShow} />
-                                                    </video>
-                                                    <TimerComponent
-                                                        delayResend={delayResend}
-                                                        setTextFinish={setTextFinish}
-                                                    />
+                            <div className="col-sm-12"
+                                //style={{ marginTop: -30 }}
+                                style={{
+                                    //backgroundImage: gifbgfull
+                                    backgroundImage: `url(${gifbgfull?.src})`,
+                                    backgroundPosition: '50% 50%',
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    position: 'relative',
+                                    width: '100%',
+                                    height: 650,
+                                }}
+                                ref={bgFullRef}
+                            >
+                                <div className='row'>
+                                    <div className="col-sm-6" style={{ marginTop: -30 }}>
+                                        <div
+                                            style={{
+                                                paddingLeft: 80,
+                                                paddingTop: 50
+                                            }}
+                                        >
+                                            <div
+                                                className="div-array"
+                                                ref={refBoxLeft}
+                                            >
+                                                <div className="row">
+                                                    <div className="col-sm-6">
+                                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo rojo</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <img
-                                                    src={barras1?.src}
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <img
-                                                    src={barras2?.src}
-                                                    style={{
-                                                        width: '100%'
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <img
-                                                    src={circles2?.src}
-                                                    style={{
-                                                        width: '100%',
-                                                        marginTop: -30,
-                                                        position: 'relative',
-                                                        zIndex: 1
-                                                    }}
-                                                />
+                                                <div className="row">
+                                                    <div className="col-sm-1"
+                                                        style={{
+                                                            marginTop: sizeBtnPositions
+                                                        }}
+                                                    >
+                                                        {listLetters.map((i, key) =>
+                                                            <div
+                                                                key={key}
+                                                                style={{
+                                                                    paddingRight: 10,
+                                                                    width: sizeBtnPositions,
+                                                                    height: sizeBtnPositions + 7,
+                                                                }}
+                                                            >
+                                                                <label
+                                                                    style={{
+
+
+                                                                        textAlign: 'center',
+                                                                        color: '#fff'
+                                                                    }}
+                                                                >{i}</label>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="col-sm-11">
+
+                                                        {listNumbers.map((j, k) =>
+                                                            <label
+                                                                key={k}
+                                                                className="machineFont"
+                                                                style={{
+                                                                    width: sizeBtnPositions,
+                                                                    height: sizeBtnPositions,
+                                                                    textAlign: 'center',
+                                                                    color: '#fff'
+                                                                }}
+                                                            >{j}</label>
+                                                        )}
+
+                                                        {listLetters.map((i, key) =>
+                                                            <div key={key}>
+                                                                {listNumbers.map((j, k) =>
+                                                                    <div
+                                                                        className={
+                                                                            `box-lists machineFont`}
+                                                                        style={{
+                                                                            width: sizeBtnPositions,
+                                                                            height: sizeBtnPositions,
+                                                                        }}
+                                                                        key={k}
+
+                                                                    >
+                                                                        <div
+                                                                            className={getColorBtn(2, i, j)}
+                                                                            style={{
+                                                                                marginTop: sizeBtnPositions - 38
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
