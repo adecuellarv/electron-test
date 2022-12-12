@@ -105,7 +105,11 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 })
             }
         } else {
-            alert('Selecciona una posición');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Selecciona una posición'
+            })
         }
     };
 
@@ -209,7 +213,11 @@ const Desk1 = ({ port, setPage, setTeamWinner }) => {
                 }, 2000);
             }
         } else {
-            alert('No se ha podido conectar con el puerto COM1');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se ha podido conectar con el puerto COM1'
+            })
         }
     };
 

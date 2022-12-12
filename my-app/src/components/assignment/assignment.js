@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { SerialPort, ReadlineParser } = require('serialport')
 const { useState, useRef, useEffect } = require('react');
+const Swal = require('sweetalert2')
 
 const bgimage = document.getElementById('bgimage_2');
 const logo = document.getElementById('logo');
@@ -39,7 +40,7 @@ const Assignment = ({ port, setPage }) => {
             return false;
         }
     };
-    
+
     const chooseByBoat = (lengthBoat) => {
         setChoseBoat(lengthBoat)
         if (turnChose === 1) {
@@ -54,9 +55,27 @@ const Assignment = ({ port, setPage }) => {
                     });
                     setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
                     countSelectedBlue = 1;
-                    alert('guardado');
-                } else alert('Los participantes para este barco debe ser ' + lengthBoat);
-            } else alert('Selecciona posiciones para el barco');
+                    Swal.fire({
+                        title: 'Guardado',
+                        text: 'Con exito',
+                        timer: 900,
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Los participantes para este barco debe ser ' + lengthBoat
+                    })
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Selecciona posiciones para el barco'
+                })
+            }
         } else {
             if (teamRed.length) {
                 const arrayToCheck = teamRed.filter(i => i.boatNumber === '');
@@ -69,24 +88,28 @@ const Assignment = ({ port, setPage }) => {
                     });
                     setBoatNumberRed(parseInt(boatNumberBlue) + 1);
                     countSelectedRed = 1;
-                    alert('guardado');
-                } else alert('Los participantes para este barco debe ser ' + lengthBoat);
-            } else alert('Selecciona posiciones para el barco');
+                    Swal.fire({
+                        title: 'Guardado',
+                        text: 'Con exito',
+                        timer: 900,
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Los participantes para este barco debe ser ' + lengthBoat
+                    })
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Selecciona posiciones para el barco'
+                })
+            }
         }
-    };
-
-    const saveByBoatBlue = () => {
-        if (teamBlue.length) {
-            setBoatNumberBlue(parseInt(boatNumberBlue) + 1);
-            countSelectedBlue = 1;
-        } else alert('Selecciona posiciones para el barco');
-    };
-
-    const saveByBoatRed = () => {
-        if (teamRed.length) {
-            setBoatNumberRed(parseInt(boatNumberRed) + 1);
-            countSelectedRed = 1;
-        } else alert('Selecciona posiciones para el barco');
     };
 
     const saveChoice = (team, row, column, rowNum, columnNum) => {
@@ -135,11 +158,17 @@ const Assignment = ({ port, setPage }) => {
  
                  newArray = filtered;
              }*/
-             
+
             if (countSelectedBlue <= 3) {
                 setTeamBlue([...newArray]);
                 //countSelectedBlue++;
-            } else alert('El máximo de integrantes por barco es de 3')
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El máximo de integrantes por barco es de 3'
+                })
+            }
 
 
         } else {
@@ -166,7 +195,11 @@ const Assignment = ({ port, setPage }) => {
             if (countSelectedRed <= 3) {
                 setTeamRed([...newArray]);
                 //countSelectedRed++;
-            } else alert('El máximo de integrantes por barco es de 3')
+            } else Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El máximo de integrantes por barco es de 3'
+            })
 
         }
     };
@@ -200,32 +233,59 @@ const Assignment = ({ port, setPage }) => {
                     setPage(4);
                 }
             } else {
-                alert('El máximo de jugadores es 8');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'El máximo de jugadores es 8'
+                })
             }
-        } else alert('Selecciona posiciones de equipos');
-        //} else alert('No se han detectado pantallas conectadas');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Selecciona posiciones de equipos'
+            })
+        }
     }
 
     const saveSection = (team) => {
         if (team === 1) {
             if (teamBlue.length) {
                 const arrayToCheck = teamBlue.filter(i => i.boatNumber === '');
-                if(arrayToCheck.length){
-                    alert('Selecciona un tipo de barco');
-                }else{
+                if (arrayToCheck.length) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Selecciona un tipo de barco'
+                    })
+                } else {
                     setTurnChose(2);
                 }
-            } else alert('Selecciona posiciones de equipo');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Selecciona posiciones de equipo'
+                })
+            }
         }
         if (team === 2) {
             if (teamRed.length) {
                 const arrayToCheck = teamRed.filter(i => i.boatNumber === '');
                 if (arrayToCheck.length) {
-                    alert('Selecciona un tipo de barco');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Selecciona un tipo de barco'
+                    })
                 } else {
                     start();
                 }
-            } else alert('Selecciona posiciones de equipo');
+            } else Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Selecciona posiciones de equipo'
+            })
         }
     };
 
@@ -269,7 +329,11 @@ const Assignment = ({ port, setPage }) => {
             })
             return true;
         } else {
-            alert('No se ha podido conectar con el puerto COM1');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se ha podido conectar con el puerto COM1'
+            })
             return false;
         }
     };
