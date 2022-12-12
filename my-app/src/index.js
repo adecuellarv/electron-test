@@ -108,7 +108,7 @@ const createThreeWindow = () => {
     })
     screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
     //localStorage.setItem("screen2", true);
-    screen2Window.webContents.openDevTools();
+    //screen2Window.webContents.openDevTools();
   } else {
     screen2Window = new BrowserWindow({
       width: 800,
@@ -123,7 +123,7 @@ const createThreeWindow = () => {
     screen2Window.maximize();
     screen2Window.loadFile(path.join(__dirname, 'pages/screen-rojo.html'));
     //localStorage.setItem("screen2", true);
-    screen2Window.webContents.openDevTools();
+    //screen2Window.webContents.openDevTools();
   }
 };
 
