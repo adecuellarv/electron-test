@@ -134,7 +134,7 @@ const ScreenBlue = () => {
         }
     };
 
-    const getVideoSuccess = (info) => { debugger
+    const getVideoSuccess = (info) => {
 
         const { totalItems, teamRed, boatNumber } = info;
 
@@ -397,7 +397,7 @@ const ScreenBlue = () => {
                                             >
                                                 <div className="row">
                                                     <div className="col-sm-6">
-                                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo Rojo</label>
                                                     </div>
                                                 </div>
                                                 <div className="row">

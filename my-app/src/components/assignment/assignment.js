@@ -84,10 +84,10 @@ const Assignment = ({ port, setPage }) => {
                 if (arrayToCheck.length && arrayToCheck.length === lengthBoat) {
                     arrayToCheck.map(i => {
                         const obj = i;
-                        obj.boatNumber = boatNumberBlue;
+                        obj.boatNumber = boatNumberRed;
                         newArrayConcat.push(obj);
                     });
-                    setBoatNumberRed(parseInt(boatNumberBlue) + 1);
+                    setBoatNumberRed(parseInt(boatNumberRed) + 1);
                     countSelectedRed = 1;
                     Swal.fire({
                         icon: 'success',

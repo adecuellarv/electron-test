@@ -21,7 +21,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 700,
     height: 500,
-    //fullscreen: true,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -63,7 +63,7 @@ const createSecondWindow = () => {
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
     //localStorage.setItem("screen1", true);
     // Open the DevTools.
-    screen1Window.webContents.openDevTools();
+    //screen1Window.webContents.openDevTools();
   } else {
     screen1Window = new BrowserWindow({
       width: 800,
@@ -78,7 +78,7 @@ const createSecondWindow = () => {
     screen1Window.maximize();
     screen1Window.loadFile(path.join(__dirname, 'pages/screen-azul.html'));
     //localStorage.setItem("screen1", true);
-    screen1Window.webContents.openDevTools();
+    //screen1Window.webContents.openDevTools();
   }
 };
 
