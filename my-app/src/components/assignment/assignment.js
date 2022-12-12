@@ -33,7 +33,6 @@ const Assignment = ({ port, setPage }) => {
 
     const validateBoatSize = (lengthBoat, teamArray, boatNumber) => {
         const lenghtByBoatNumber = teamArray.filter(i => i.boatNumber === boatNumber);
-        //console.log('lenghtByBoatNumber', lenghtByBoatNumber)
         if (lengthBoat === lenghtByBoatNumber.length) {
             return true;
         } else {
