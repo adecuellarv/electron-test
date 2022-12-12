@@ -2,6 +2,7 @@ const { useState } = require('react');
 const React = require('react');
 const ReactDOM = require('react-dom/client');
 const { ipcRenderer } = require('electron');
+const Swal = require('sweetalert2');
 const bgimage = document.getElementById('bgimage_2');
 const bgmenu = document.getElementById('bgmenu');
 const btn_menu = document.getElementById('menu');
@@ -25,10 +26,27 @@ const Menu = ({ setShowMenu, setPage }) => {
 
         ipcRenderer.send('screen1:time', value);
         ipcRenderer.send('screen2:time', value);
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Tiempo cambiado',
+            text: 'Con exito',
+            timer: 900,
+            showCancelButton: false,
+            showConfirmButton: false
+        })
     }
 
     const sendScreens = () => {
         ipcRenderer.send('main:createscreens', true);
+        Swal.fire({
+            icon: 'success',
+            title: 'Envio de pantallas',
+            text: 'Realizado con exito',
+            timer: 900,
+            showCancelButton: false,
+            showConfirmButton: false
+        })
     };
 
     return (
