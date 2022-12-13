@@ -110,7 +110,7 @@ const Index = () => {
 
     const executecCMD = async (code) => {
         await wait(100)
-        if (!port?.port) {
+        if (port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }

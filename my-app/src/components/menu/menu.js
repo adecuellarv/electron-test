@@ -83,7 +83,7 @@ const Menu = ({ setShowMenu, setPage }) => {
 
     const cleanBoard = async () => {
         const code = 'C';
-        if (!port?.port) {
+        if (port?.port) {
             port.write(`${code}\r`);
             console.log(`${code}\r`);
         }

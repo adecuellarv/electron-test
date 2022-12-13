@@ -227,12 +227,13 @@ const Assignment = ({ port, setPage }) => {
                 //if (teamBlue.length === teamRed.length) {
                 localStorage.setItem("teamBlue", JSON.stringify(teamBlue));
                 localStorage.setItem("teamRed", JSON.stringify(teamRed));
-                //if (!port?.port)
-                    //await executecCMD('C');
-                //const resp = await sendCommands();
+                if (port?.port)
+                    await executecCMD('C');
+
+                await sendCommands();
                 //if (resp) {
                     //window.location.href = "game-deskt1.html";
-                    setPage(4);
+                setPage(4);
                 //}
             } else {
                 Swal.fire({
@@ -318,7 +319,7 @@ const Assignment = ({ port, setPage }) => {
 
     const sendCommands = () => {
 
-        if (!port?.port) {
+        if (port?.port) {
             const bothArrays = teamBlue.concat(teamRed);
 
             bothArrays.map(item => {
