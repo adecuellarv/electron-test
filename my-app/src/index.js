@@ -21,7 +21,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 700,
     height: 500,
-    //fullscreen: true,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -69,6 +69,7 @@ const createSecondWindow = () => {
       width: 800,
       height: 700,
       title: "Pantalla equipo azul",
+      fullscreen: true,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,
@@ -114,6 +115,7 @@ const createThreeWindow = () => {
       width: 800,
       height: 700,
       title: "Pantalla equipo rojo",
+      fullscreen: true,
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
         nodeIntegration: true,

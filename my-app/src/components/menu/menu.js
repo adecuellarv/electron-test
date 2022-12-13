@@ -49,6 +49,46 @@ const Menu = ({ setShowMenu, setPage }) => {
         })
     };
 
+    const seTGame = () => {
+        Swal.fire({
+            title: 'Reiniciar',
+            text: "¿Esta seguro que desea reiniciar el juego?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Reiniciar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              
+                localStorage.clear();
+                ipcRenderer.send('screen1:teamRedFailed', []);
+                ipcRenderer.send('screen1:teamRed', []);
+                ipcRenderer.send('screen1:winner', '');
+                ipcRenderer.send('screen1:startRamdomTeam', false);
+                ipcRenderer.send('screen1:startGame', false);
+                ipcRenderer.send('screen1:winRamdomTeam', '');
+                ipcRenderer.send('screen2:teamRedFailed', []);
+                ipcRenderer.send('screen2:teamRed', []);
+                ipcRenderer.send('screen2:winner', '');
+                ipcRenderer.send('screen2:startRamdomTeam', false);
+                ipcRenderer.send('screen2:startGame', false);
+                ipcRenderer.send('screen2:winRamdomTeam', '');
+                cleanBoard();
+                changePage(1)
+            }
+          })
+        
+    };
+
+    const cleanBoard = async () => {
+        const code = 'C';
+        if (!port?.port) {
+            port.write(`${code}\r`);
+            console.log(`${code}\r`);
+        }
+    }
+
     return (
         <div className="background-menu"
             style={{
@@ -171,7 +211,7 @@ const Menu = ({ setShowMenu, setPage }) => {
                                 marginTop: 10,
                                 cursor: 'pointer'
                             }}
-                            onClick={() => changePage(1)}
+                            onClick={seTGame}
                         >
                             <label className="machineFont">REINICIAR JUEGO</label>
                         </div>

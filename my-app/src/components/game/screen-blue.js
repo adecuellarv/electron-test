@@ -32,8 +32,8 @@ const large_success3 = document.getElementById('large_success3');
 
 let timer, firstDelay;
 const TimerComponent = ({ delayResend }) => {
-    const time = localStorage.getItem('time');
-    const [seconds, setSeconds] = useState(time);
+    const time = localStorage.getItem('timer');
+    const [seconds, setSeconds] = useState(time ? time : delayResend);
     //const [firstDelay, setFirstDelay] = useState();
     const [change, setChange] = useState(false);
     
