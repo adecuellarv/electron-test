@@ -1,15 +1,10 @@
 @font-face {
   font-family: 'SF Fedora V1';
-  src: url('d0a4a8c2da10d0e56b1271bf6a0d117d.eot'); /* IE9*/
-  src: url('d0a4a8c2da10d0e56b1271bf6a0d117d.eot?#iefix')
-      format('embedded-opentype'),
-    /* IE6-IE8 */ url('d0a4a8c2da10d0e56b1271bf6a0d117d.woff2') format('woff2'),
-    /* chrome、firefox */ url('d0a4a8c2da10d0e56b1271bf6a0d117d.woff')
+  src: 
+    /* chrome、firefox */ url('SFFedoraTitles.woff')
       format('woff'),
-    /* chrome、firefox */ url('d0a4a8c2da10d0e56b1271bf6a0d117d.ttf')
-      format('truetype'),
-    /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-      url('d0a4a8c2da10d0e56b1271bf6a0d117d.svg#SF Fedora V1') format('svg'); /* iOS 4.1- */
+    /* chrome、firefox */ url('SFFedoraTitles.ttf')
+      format('truetype');
 }
 
 .fedoraFont {

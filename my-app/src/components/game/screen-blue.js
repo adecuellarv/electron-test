@@ -287,7 +287,7 @@ const ScreenBlue = () => {
                     }}
                 >
                     <div
-                        className='responsiveDivAssingment'
+                        //className='responsiveDivAssingment'
                     >
 
                         {textFinish &&
@@ -326,7 +326,8 @@ const ScreenBlue = () => {
                                 <img
                                     src={logo?.src}
                                     style={{
-                                        width: '20%',
+                                        width: '13%',
+                                        marginTop: 50
                                     }}
                                 />
                             </div>
@@ -338,10 +339,10 @@ const ScreenBlue = () => {
                                     <div className="col-sm-6" style={{ marginTop: -30, position: 'relative' }}>
                                         <div
                                             style={{
-                                                width: '90%',
-                                                height: 650,
+                                                width: '80%',
+                                                height: 'auto',
                                                 position: 'absolute',
-                                                top: bgFullRef?.current?.offsetTop + 45,
+                                                top: bgFullRef?.current?.offsetTop + 85,
                                                 left: 30
                                             }}
                                         >
@@ -387,7 +388,8 @@ const ScreenBlue = () => {
                                     backgroundRepeat: 'no-repeat',
                                     position: 'relative',
                                     width: '100%',
-                                    height: 650,
+                                    height: 980,
+                                    marginTop: -100
                                 }}
                                 ref={bgFullRef}
                             >
@@ -395,8 +397,8 @@ const ScreenBlue = () => {
                                     <div className="col-sm-6" style={{ marginTop: -30 }}>
                                         <div
                                             style={{
-                                                paddingLeft: 80,
-                                                paddingTop: 50
+                                                paddingLeft: 150,
+                                                paddingTop: 130
                                             }}
                                         >
                                             <div 
@@ -405,7 +407,7 @@ const ScreenBlue = () => {
                                             >
                                                 <div className="row">
                                                     <div className="col-sm-6">
-                                                        <label className="machineFont" style={{ color: '#ff0000', fontSize: 22, marginBottom: 10 }}>Equipo Rojo</label>
+                                                        <label className="fedoraFont" style={{ color: '#ff0000', fontSize: 28, marginBottom: 10 }}>Equipo Rojo</label>
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -424,9 +426,10 @@ const ScreenBlue = () => {
                                                                 }}
                                                             >
                                                                 <label
+                                                                    className='machineFont'
                                                                     style={{
 
-
+                                                                        fontSize: 28,
                                                                         textAlign: 'center',
                                                                         color: '#fff'
                                                                     }}
@@ -444,7 +447,8 @@ const ScreenBlue = () => {
                                                                     width: sizeBtnPositions,
                                                                     height: sizeBtnPositions,
                                                                     textAlign: 'center',
-                                                                    color: '#fff'
+                                                                    color: '#fff',
+                                                                    fontSize: 28
                                                                 }}
                                                             >{j}</label>
                                                         )}
@@ -516,9 +520,9 @@ const ScreenBlue = () => {
                             backgroundRepeat: 'no-repeat',
                             position: 'relative',
                             width: '100%',
-                            height: 600,
+                            height: 800,
                             //top: -600
-                            top: 50
+                            top: 100
                         }}
                     >
 

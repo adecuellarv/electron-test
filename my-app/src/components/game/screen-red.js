@@ -115,7 +115,8 @@ const ScreenRed = () => {
     const [firstTeam, setFirstTeam] = useState('');
     const refBoxLeft = useRef(null);
     const refLogo = useRef(null);
-    //const refBoxParentLeft = useRef(null);
+    const refBoxParentLeft = useRef(null);	
+    const gifbgRef = useRef(null);	
     const bgFullRef = useRef(null);
 
     const getColorBtn = (team, row, column) => {
@@ -260,7 +261,7 @@ const ScreenRed = () => {
                         }
                     }
                 }
-            }
+           }
         };
 
         window.addEventListener("resize", handleResize);
@@ -283,7 +284,7 @@ const ScreenRed = () => {
                     }}
                 >
                     <div
-                        className='responsiveDivAssingment'
+                        //className='responsiveDivAssingment'
                     >
 
                         {textFinish &&
@@ -322,7 +323,8 @@ const ScreenRed = () => {
                                 <img
                                     src={logo?.src}
                                     style={{
-                                        width: '20%',
+                                        width: '13%',
+                                        marginTop: 50
                                     }}
                                 />
                             </div>
@@ -334,10 +336,10 @@ const ScreenRed = () => {
                                     <div className="col-sm-6" style={{ marginTop: -30, position: 'relative' }}>
                                         <div
                                             style={{
-                                                width: '90%',
-                                                height: 650,
+                                                width: '80%',
+                                                height: 'auto',
                                                 position: 'absolute',
-                                                top: bgFullRef?.current?.offsetTop + 45,
+                                                top: bgFullRef?.current?.offsetTop + 85,
                                                 left: 30
                                             }}
                                         >
@@ -383,7 +385,8 @@ const ScreenRed = () => {
                                     backgroundRepeat: 'no-repeat',
                                     position: 'relative',
                                     width: '100%',
-                                    height: 650,
+                                    height: 1050,
+                                    marginTop: -100
                                 }}
                                 ref={bgFullRef}
                             >
@@ -391,8 +394,8 @@ const ScreenRed = () => {
                                     <div className="col-sm-6" style={{ marginTop: -30 }}>
                                         <div
                                             style={{
-                                                paddingLeft: 80,
-                                                paddingTop: 50
+                                                paddingLeft: 190,
+                                                paddingTop: 130
                                             }}
                                         >
                                             <div
@@ -401,7 +404,7 @@ const ScreenRed = () => {
                                             >
                                                 <div className="row">
                                                     <div className="col-sm-6">
-                                                        <label className="machineFont" style={{ color: '#1975cb', fontSize: 22, marginBottom: 10 }}>Equipo azul</label>
+                                                        <label className="fedoraFont" style={{ color: '#1975cb', fontSize: 28, marginBottom: 10 }}>Equipo azul</label>
                                                     </div>
                                                 </div>
                                                 <div className="row">
@@ -420,9 +423,10 @@ const ScreenRed = () => {
                                                                 }}
                                                             >
                                                                 <label
+                                                                    className='machineFont'
                                                                     style={{
 
-
+                                                                        fontSize: 28,
                                                                         textAlign: 'center',
                                                                         color: '#fff'
                                                                     }}
@@ -440,7 +444,8 @@ const ScreenRed = () => {
                                                                     width: sizeBtnPositions,
                                                                     height: sizeBtnPositions,
                                                                     textAlign: 'center',
-                                                                    color: '#fff'
+                                                                    color: '#fff',
+                                                                    fontSize: 28
                                                                 }}
                                                             >{j}</label>
                                                         )}
@@ -511,9 +516,9 @@ const ScreenRed = () => {
                             backgroundRepeat: 'no-repeat',
                             position: 'relative',
                             width: '100%',
-                            height: 600,
+                            height: 800,
                             //top: -600
-                            top: 50
+                            top: 100
                         }}
                     >
 

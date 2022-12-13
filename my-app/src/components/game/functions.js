@@ -59,11 +59,11 @@ const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
         >
             <div
                 style={{
-                    transform: 'scale(.80)'
+                    transform: 'scale(1)'
                 }}
             >
                 <div
-                    className="container"
+                    className=""
                     style={{
                         //paddingTop: paddingTopContent
                     }}
@@ -73,13 +73,13 @@ const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
                             className="col-sm-12"
                             style={{
                                 textAlign: 'center',
-                                //marginTop: 30,
+                                marginTop: 30,
                             }}
                         >
                             <img
                                 src={logo?.src}
                                 style={{
-                                    width: '20%',
+                                    width: '15%',
                                 }}
                             />
                         </div>
@@ -91,14 +91,19 @@ const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
                                     backgroundSize: 'contain',
                                     backgroundRepeat: 'no-repeat',
                                     position: 'relative',
-                                    width: '100%',
-                                    height: '100vh',
+                                    width: 1734,
+                                    height: 888,
+                                    margin: '0 auto',
+                                    marginTop: -30
+                                    //width: '100%',
+                                    //height: ,
+                                    //height: '100vh',
                                     //height: 'calc(100vh - 170px)',
                                 }}
                             >
                                 <div className='row'>
                                     <div className="col-sm-12" style={{
-                                        paddingTop: 140,
+                                        paddingTop: 150,
                                         textAlign: 'center'
                                     }}>
 
@@ -111,10 +116,10 @@ const RamdomTeamScreen = ({ starRamdom, firstTeam }) => {
                                                 }
                                             </div>
                                             <div>
-                                                <p className="machineFont" style={{ fontSize: 22 }}>
+                                                <p className="machineFont" style={{ fontSize: 60 }}>
                                                     Primer turno
                                                 </p>
-                                                <p className="machineFont" style={{ fontSize: 20 }}>{firstTeam ? firstTeam : temporalTeamChose}</p>
+                                                <p className="machineFont" style={{ fontSize: 60 }}>{firstTeam ? firstTeam : temporalTeamChose}</p>
                                             </div>
 
                                         </div>
