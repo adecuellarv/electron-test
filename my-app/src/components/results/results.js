@@ -7,7 +7,7 @@ const btn_start_again = document.getElementById('btn_start_again');
 
 
 const Results = ({ setPage, teamWinner }) => {
-    
+
     const start = () => {
         localStorage.clear();
         ipcRenderer.send('screen1:teamRedFailed', []);
@@ -56,14 +56,23 @@ const Results = ({ setPage, teamWinner }) => {
                         width: '30%',
                     }}
                 />
-
-                <h1
-                    className='machineFont'
-                    style={{
-                        fontSize: 78,
-                        color: '#1975cb'
-                    }}
-                >Equipo {teamWinner} <br />vencedor</h1>
+                {teamWinner ?
+                    <h1
+                        className='machineFont'
+                        style={{
+                            fontSize: 78,
+                            color: '#1975cb'
+                        }}
+                    >Equipo {teamWinner} <br />vencedor</h1>
+                    :
+                    <h1
+                        className='machineFont'
+                        style={{
+                            fontSize: 78,
+                            color: '#1975cb'
+                        }}
+                    >Fin del juego</h1>
+                }
             </div>
             <div
                 style={{
@@ -78,8 +87,8 @@ const Results = ({ setPage, teamWinner }) => {
                         cursor: 'pointer'
                     }}
                     onClick={start}
-                >INICIO 
-                    <img 
+                >INICIO
+                    <img
                         src={btn_start_again?.src}
                         style={{
                             width: 50

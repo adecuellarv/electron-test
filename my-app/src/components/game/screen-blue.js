@@ -32,13 +32,16 @@ const large_success3 = document.getElementById('large_success3');
 
 let timer, firstDelay;
 const TimerComponent = ({ delayResend }) => {
-    const [seconds, setSeconds] = useState(delayResend);
+    const time = localStorage.getItem('time');
+    const [seconds, setSeconds] = useState(time);
     //const [firstDelay, setFirstDelay] = useState();
     const [change, setChange] = useState(false);
+    
 
     useEffect(() => {
         if (seconds === 0) {
             clearInterval(timer);
+            ipcRenderer.send('main:endgame', true);
             //setTextFinish('Tiempo finalizado');
         }
         if (change) {
@@ -202,6 +205,7 @@ const ScreenBlue = () => {
     useEffect(() => {
         ipcRenderer.on('screen1:time', (e, time) => {
             setDelayResend(time);
+            localStorage.setItem("timer", time);
         });
     }, []);
 
@@ -236,6 +240,10 @@ const ScreenBlue = () => {
             setFirstTeam(winRamdomTeam);
         });
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem("timer", 480);
+    },[]);
 
     useEffect(() => {
         const handleResize = () => {

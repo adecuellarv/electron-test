@@ -32,7 +32,8 @@ const large_success3 = document.getElementById('large_success3');
 
 let timer, firstDelay;
 const TimerComponent = ({ delayResend }) => {
-    const [seconds, setSeconds] = useState(delayResend);
+    const time = localStorage.getItem('time');
+    const [seconds, setSeconds] = useState(time);
     //const [firstDelay, setFirstDelay] = useState();
     const [change, setChange] = useState(false);
 
@@ -200,6 +201,7 @@ const ScreenRed = () => {
     useEffect(() => {
         ipcRenderer.on('screen2:time', (e, time) => {
             setDelayResend(time);
+            localStorage.setItem("timer", time);
         });
     }, []);
 
@@ -236,6 +238,10 @@ const ScreenRed = () => {
     }, []);
 
     useEffect(() => {
+        localStorage.setItem("timer", 480);
+    },[]);
+
+    useEffect(() => {
         const handleResize = () => {
             if (startGame) {
                 const widthLeft = refBoxLeft?.current?.offsetWidth;
@@ -260,7 +266,7 @@ const ScreenRed = () => {
         window.addEventListener("resize", handleResize);
         handleResize();
         return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    }, [startGame]);
 
     return (
         <>

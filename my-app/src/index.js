@@ -21,7 +21,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 700,
     height: 500,
-    fullscreen: true,
+    //fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -155,6 +155,11 @@ ipcMain.on('main:createscreens', (e, statusScreen) => {
   if (!screen2Window) {
     createThreeWindow();
   }
+})
+
+ipcMain.on('main:endgame', (e, statusScreen) => {
+  mainWindow.webContents.send('main:endgame', statusScreen);
+  //screen1Window.close();
 })
 
 ipcMain.on('screen1:teamRed', (e, statusScreen) => {

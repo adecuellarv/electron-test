@@ -11,6 +11,12 @@ const Index = () => {
     const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
+        ipcRenderer.on('main:endgame', (e, endgame) => {
+            setPage(6);
+        });
+    }, []);
+
+    useEffect(() => {
         port = new SerialPort({
             path: 'COM1',
             baudRate: 115200,
